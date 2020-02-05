@@ -1,59 +1,51 @@
 <template>
   <div id="example1">
-    <hot-table :settings="settings" width="800">
-      <hot-column title="Part Number" width="100">
-      </hot-column>
-      <hot-column :settings="secondColumnSettings" width="100">
-      </hot-column>
-      <div v-for="n in descendants" :key="'col' + n">
-      <hot-column :title="'DESC ' + n" width="100"></hot-column>
-      <hot-column :title="'Q/ASSY ' + n" width="100"></hot-column>
-      </div>
+    <hot-table :settings="settings">
     </hot-table>
     <b-button @click="check">CHECK</b-button>
-
-    <p>title: {{ $route.params.title }}</p>
-    <p># Items: {{ $route.params.items_number }}</p>
-    <p>Descendants: {{ $route.params.max_descendants }}</p>
   </div>
 </template>
 
 <script>
-import { HotTable, HotColumn } from "@handsontable/vue";
+import { HotTable } from "@handsontable/vue";
 import Handsontable from "handsontable";
 
 export default {
   components: {
     HotTable,
-    HotColumn
+    // HotColumn
   },
   data() {
     return {
-      data: Handsontable.helper.createSpreadsheetData(2, 5),
-      secondColumnSettings: {
-        title: "Item Type"
-      },
       descendants: 0,
       settings: {
         data: [],
-        colHeaders: true,
+        colHeaders: ['Part Number', 'Item Type'],
+        colWidths: 100,
         rowHeaders: true,
         licenseKey: "non-commercial-and-evaluation",
         contextMenu: {
           items: {
-            col_left: { },
+            col_left: {
+            },
             col_right: {},
             remove_col: {},
+            separator: Handsontable.plugins.ContextMenu.SEPARATOR,
             row_above: {
               name: "Insert row above"
             },
             row_below: {},
             remove_row: {},
-            separator: Handsontable.plugins.ContextMenu.SEPARATOR,
             clear_custom: {
               name: "Clear all cells",
               callback: function() {
                 this.clear();
+              }
+            },
+            add_cols: {
+              name: "Add new column",
+              callback: function() {
+                console.log(this)
               }
             }
           }
@@ -64,12 +56,16 @@ export default {
   methods: {
     check(){
       console.log(this.settings.data)
+      this.settings.colHeaders.push('DESC ' + 4,'Q/ASSY ' + 4)
     }
   },
   created() {
     this.descendants = this.$route.params.max_descendants * 1
   },
   mounted() {
+    for(let n=1; n<= this.descendants; n++) {
+      this.settings.colHeaders.push('DESC ' + n,'Q/ASSY ' + n)
+    }
     for (let i = 1; i <= this.$route.params.items_number; i++) {
       this.settings.data.push([100 * i,'MAT'])
     }
@@ -78,8 +74,6 @@ export default {
         this.settings.data[row].push(null);
       }
     }
-  },
-  watch: {
   }
 };
 </script>

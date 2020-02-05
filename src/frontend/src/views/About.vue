@@ -12,7 +12,7 @@
     </b-list-group>
 
     <br><br>
-    <1b-button @click="saludar">Click</1  b-button>
+    <b-button @click="saludar">Click</b-button>
   </div>
 </template>
 
