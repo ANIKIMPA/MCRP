@@ -6,6 +6,9 @@
     <b-nav class="bg-white border">
         <b-dropdown id="dropdown-left" text="File" variant="white" class="m-2">
             <ModuleListModal/>
+            <b-dropdown-item href="#">Open</b-dropdown-item>
+            <b-dropdown-item href="#">Save</b-dropdown-item>
+            <b-dropdown-item href="#">Save As...</b-dropdown-item>
             <b-dropdown-item href="#">New Window</b-dropdown-item>
             <b-dropdown-item href="#">Open...</b-dropdown-item>
         </b-dropdown>
