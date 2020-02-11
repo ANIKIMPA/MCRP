@@ -1,55 +1,82 @@
 <template lang="html">
-    <div class="container">
-        <div class="row">
-            <div class="col text-left">
-                <h2>Listado de Items</h2>
+    <b-container>
+        <AddItem/>
+        <h3>Items</h3>
 
-                <div class="col-md-12">
-                    <b-table striped hover :items="items" :fields="fields">
-
-                    </b-table>
-                </div>
+        <div class="items">
+            <div v-for="item in allItems" :key="item.id" class="item">
+                <div>Part Number: {{ item.part_number }}</div>
+                <div>Type: {{ item.tipo }}</div>
+                <div>Parent: {{ item.parent }}</div>
+                <div>Qty: {{ item.qty }}</div>
             </div>
         </div>
-    </div>
+    </b-container>
 </template>
 
 <script>
-import axios from "axios";
+import { mapGetters, mapActions } from 'vuex';
+import AddItem from '@/components/AddItem.vue';
 
 export default {
-    data() {
-        return {
-            items: []
-        }
-    },
-    computed: {
-        fields() {
-            return [
-                { text: "Part Number", key: "part_number" },
-                { text: "Type", key: "tipo" },
-                { text: "Action", key: "action" }
-            ]
-        }
-    },
+    name: "items",
+    components: { AddItem },
     methods: {
-        getItems() {
-            const path = "http://localhost:8000/api/v1.0/items/"
-            axios.get(path).then((response) => {
-                this.items = response.data
-            })
-            .catch(() => {
-                // console.log(error)
-            })
-        }
+        ...mapActions(['fetchItems']),
     },
-
+    computed: mapGetters(['allItems']),
     created() {
-        this.getItems()
-    },
+        this.fetchItems();
+    }
 }
 </script>
 
 <style lang="css" scoped>
-
+.items {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1rem;
+}
+.item {
+  border: 1px solid #ccc;
+  background: #41b883;
+  padding: 1rem;
+  border-radius: 5px;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+}
+i {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  color: #fff;
+  cursor: pointer;
+}
+.legend {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+}
+.complete-box {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #35495e;
+}
+.incomplete-box {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background: #41b883;
+}
+.is-complete {
+  background: #35495e;
+  color: #fff;
+}
+@media (max-width: 500px) {
+  .items {
+    grid-template-columns: 1fr;
+  }
+}
 </style>

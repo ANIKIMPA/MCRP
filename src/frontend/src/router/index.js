@@ -13,7 +13,7 @@ const routes = [
     component: Welcome
   },
   {
-    path: '/home/:title/:items_number/:max_descendants',
+    path: '/home/:title/:items_number',
     name: 'home',
     component: Home
   },
@@ -26,7 +26,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/item',
+    path: '/items',
     name: 'ListItem',
     component: ListItem
   }

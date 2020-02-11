@@ -4,38 +4,47 @@
       <b-navbar-brand href="#" @click="goHome">STORM 5.0</b-navbar-brand>
     </b-navbar>
     <b-nav class="bg-white border">
-        <b-dropdown id="dropdown-left" text="File" variant="white" class="m-2">
-            <ModuleListModal/>
-            <b-dropdown-item href="#">Open</b-dropdown-item>
-            <b-dropdown-item href="#">Save</b-dropdown-item>
-            <b-dropdown-item href="#">Save As...</b-dropdown-item>
-            <b-dropdown-item href="#">New Window</b-dropdown-item>
-            <b-dropdown-item href="#">Open...</b-dropdown-item>
-        </b-dropdown>
+      <b-dropdown id="dropdown-left" text="File" variant="white" class="m-2">
+        <ModuleListModal />
+        <b-dropdown-item href="#">Open</b-dropdown-item>
+        <b-dropdown-item href="#">New Window</b-dropdown-item>
+        <b-dropdown-item href="#">Open...</b-dropdown-item>
+        <b-dropdown-item @click="check" href="#">Check</b-dropdown-item>
+      </b-dropdown>
 
-        <b-dropdown id="dropdown-right" right text="Edit" variant="white" class="m-2">
-            <b-dropdown-item href="#">Copy</b-dropdown-item>
-            <b-dropdown-item href="#">Paste</b-dropdown-item>
-        </b-dropdown>
+      
+      <b-dropdown
+        id="dropdown-right"
+        right
+        text="Edit"
+        variant="white"
+        class="m-2"
+      >
+        <b-dropdown-item href="#">Copy</b-dropdown-item>
+        <b-dropdown-item href="#">Paste</b-dropdown-item>
+      </b-dropdown>
     </b-nav>
   </div>
 </template>
 
 <script>
-import ModuleListModal from "./modals/ModuleListModal"
+import ModuleListModal from "./modals/ModuleListModal";
 export default {
-    components: { ModuleListModal },
-    methods: {
-      goHome() {
-        this.$router.push('/')
-      }
+  components: { ModuleListModal },
+  methods: {
+    goHome() {
+      this.$router.push("/");
+    },
+    check(e) {
+      e.preventDefault()
     }
+  }
 };
 </script>
 
 <style>
-.bg-second{
-    background-color: #5e646b;
-    color: white !important;
+.bg-second {
+  background-color: #5e646b;
+  color: white !important;
 }
 </style>
