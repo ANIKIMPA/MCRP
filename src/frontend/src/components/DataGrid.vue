@@ -1,6 +1,6 @@
 <template>
   <div id="example1">
-    <hot-table :settings="settings"> </hot-table>
+    <hot-table ref="wrapper" :settings="settings"> </hot-table>
 
     <b-toast id="my-toast" variant="success" solid>
       <template v-slot:toast-title>
@@ -28,6 +28,7 @@ export default {
   data() {
     return {
       fileId: this.$route.params.file,
+      hotRef: null,
       funcion: function(context) {
         context.addItem({
           part_number: null,
@@ -106,7 +107,11 @@ export default {
     ...mapActions(["storeItems", "updateItem", "addItem"]),
     check() {
     }
-  }
+  },
+  mounted: function() {
+    this.hotRef = this.$refs.wrapper.hotInstance;
+    this.$store.commit('updateItems', this.hotRef.getSourceData());
+  },
 };
 </script>
 

@@ -12,7 +12,7 @@ const actions = {
     // Obtener lista de items
     async fetchItems({ commit }) {
         await axios.get("http://localhost:8000/api/v1.0/items/").then((response) => {
-            commit('setItems', response.data);
+            commit('updateItems', response.data);
         })
         .catch((error) => {
             console.log(error)
@@ -36,15 +36,11 @@ const actions = {
           console.log(error);
       })
     },
-
-    async storeItems({ commit }, items) {
-        commit('setItems', items);
-    }
 };
 
 const mutations = {
   // Set all items to state
-  setItems: (state, items) => (state.items = items),
+  updateItems: (state, items) => (state.items = items),
 
   //Add item to state
   newItem: (state, item) => state.items.push(item),
