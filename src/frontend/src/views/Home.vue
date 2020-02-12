@@ -1,22 +1,22 @@
 <template>
-  <b-container fluid class="bv-example-row bv-example-row-flex-cols py-2">
-    <DataGrid />
-  </b-container>
+  <b-container class="bv-example-row bv-example-row-flex-cols">
+
+  <b-row align-v="center" class="h-200">
+    <b-col><h1>Welcome to Storm 5.0</h1></b-col>
+  </b-row>
+</b-container>
 </template>
 
 <script>
-import DataGrid from "@/components/DataGrid";
 export default {
-  name: "home",
+  name: 'home',
   components: {
-    DataGrid
   }
-};
+}
 </script>
 
 <style scoped>
-.h-200 {
-  height: 200px;
-  background-color: aqua;
-}
+  .h-200 {
+    height: 200px;
+  }
 </style>

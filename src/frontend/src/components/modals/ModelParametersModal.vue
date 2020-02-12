@@ -61,10 +61,9 @@ export default {
 
         // Redirect to home page
         this.$router.push({
-          name: "home",
+          name: "files",
           params: {
-            title: this.title,
-            items_number: this.items_number
+            file: this.getFirstFile.id,
           }
         });
       }

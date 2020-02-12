@@ -10,6 +10,8 @@
       </template>
       Saved successfully!
     </b-toast>
+
+    <button @click="check">Check</button>
   </div>
 </template>
 
@@ -18,13 +20,23 @@ import { HotTable } from "@handsontable/vue";
 import { mapActions } from "vuex";
 
 export default {
+  name: "file",
   components: {
     HotTable
     // HotColumn
   },
   data() {
     return {
-      items: [],
+      fileId: this.$route.params.file,
+      funcion: function(context) {
+        context.addItem({
+          part_number: null,
+          tipo: "MAT",
+          parent: null,
+          qty: 1,
+          file: this.fileId,
+        })
+      },
       settings: {
         data: [],
         colHeaders: ["Part Number", "Item Type", "PARENT", "Q/ASSY"],
@@ -34,17 +46,25 @@ export default {
           if (changes) {
             changes.forEach(([row]) => {
               try {
+                console.log(this.settings.data[row]);
                 this.updateItem(this.settings.data[row]);
-                this.$bvToast.show('my-toast')
-              }
-              catch(error) {
-                console(error)
+                this.$bvToast.show("my-toast");
+              } catch (error) {
+                console(error);
               }
             });
           }
         },
         beforeRender: () => {
-          this.storeItems(this.settings.data);
+          // this.storeItems(this.settings.data);
+        },
+        afterRender: () => {
+          this.settings.contextMenu.items.insert_row = {}
+          this.settings.contextMenu.items.insert_row.name = "Insert new row"
+          this.settings.contextMenu.items.insert_row.callback = this.funcion(this)
+        },
+        beforeOnCellMouseDown: () => {
+          console.log("aqui")
         },
         columns: [
           {
@@ -68,29 +88,23 @@ export default {
         rowHeaders: true,
         licenseKey: "non-commercial-and-evaluation",
         className: "htMiddle htCenter",
-        contextMenu: [
-          "row_above",
-          "row_below",
-          "---------",
-          "remove_row",
-          "---------",
-          "undo",
-          "redo",
-          "---------",
-          "make_read_only",
-          "---------",
-          "alignment",
-          "---------",
-          "copy",
-          "cut"
-        ]
+        caritas: "Carita",
+        contextMenu: {
+          items: {
+            remove_row: {},
+            "---------": {},
+            undo: {},
+            redo: {},
+            copy: {},
+            cut: {},
+          }
+        }
       }
     };
   },
   methods: {
-    ...mapActions(["storeItems", "updateItem"]),
+    ...mapActions(["storeItems", "updateItem", "addItem"]),
     check() {
-      console.log();
     }
   }
 };

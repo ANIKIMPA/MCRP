@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Welcome from '../views/Welcome.vue'
 import Home from '../views/Home.vue'
+import File from '../views/File.vue'
 import ListItem from '@/components/item/ListItem'
 
 Vue.use(VueRouter)
@@ -9,13 +9,13 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'welcome',
-    component: Welcome
-  },
-  {
-    path: '/home/:title/:items_number',
     name: 'home',
     component: Home
+  },
+  {
+    path: '/files/:file',
+    name: 'files',
+    component: File
   },
   {
     path: '/about',
