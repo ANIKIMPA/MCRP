@@ -1,6 +1,6 @@
 <template>
   <div id="example1">
-    <hot-table ref="wrapper" :settings="settings"> </hot-table>
+    <hot-table ref="wrapper" :settings="settings"></hot-table>
 
     <b-toast id="my-toast" variant="success" solid>
       <template v-slot:toast-title>
@@ -12,6 +12,7 @@
     </b-toast>
 
     <button @click="check">Check</button>
+    <button @click="addRow">Add new row</button>
   </div>
 </template>
 
@@ -27,17 +28,7 @@ export default {
   },
   data() {
     return {
-      fileId: this.$route.params.file,
       hotRef: null,
-      funcion: function(context) {
-        context.addItem({
-          part_number: null,
-          tipo: "MAT",
-          parent: null,
-          qty: 1,
-          file: this.fileId,
-        })
-      },
       settings: {
         data: [],
         colHeaders: ["Part Number", "Item Type", "PARENT", "Q/ASSY"],
@@ -47,7 +38,6 @@ export default {
           if (changes) {
             changes.forEach(([row]) => {
               try {
-                console.log(this.settings.data[row]);
                 this.updateItem(this.settings.data[row]);
                 this.$bvToast.show("my-toast");
               } catch (error) {
@@ -55,17 +45,6 @@ export default {
               }
             });
           }
-        },
-        beforeRender: () => {
-          // this.storeItems(this.settings.data);
-        },
-        afterRender: () => {
-          this.settings.contextMenu.items.insert_row = {}
-          this.settings.contextMenu.items.insert_row.name = "Insert new row"
-          this.settings.contextMenu.items.insert_row.callback = this.funcion(this)
-        },
-        beforeOnCellMouseDown: () => {
-          console.log("aqui")
         },
         columns: [
           {
@@ -97,7 +76,7 @@ export default {
             undo: {},
             redo: {},
             copy: {},
-            cut: {},
+            cut: {}
           }
         }
       }
@@ -105,13 +84,21 @@ export default {
   },
   methods: {
     ...mapActions(["storeItems", "updateItem", "addItem"]),
-    check() {
-    }
+    addRow() {
+      this.addItem({
+        part_number: null,
+        tipo: "MAT",
+        parent: null,
+        qty: 1,
+        file: this.$route.params.file
+      });
+    },
+    check() {}
   },
   mounted: function() {
     this.hotRef = this.$refs.wrapper.hotInstance;
-    this.$store.commit('updateItems', this.hotRef.getSourceData());
-  },
+    this.$store.commit("updateItems", this.hotRef.getSourceData());
+  }
 };
 </script>
 

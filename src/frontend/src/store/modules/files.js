@@ -1,11 +1,12 @@
 import axios from 'axios';
 
 const state = {
-    files: []
+    files: [],
+    fileSelected: {}
 };
 
 const getters = {
-    getAllFiles: (state) => state.files,
+    allFiles: (state) => state.files,
     getFirstFile: (state) => state.files[0],
 };
 
@@ -42,6 +43,9 @@ const actions = {
 const mutations = {
   // Set all files to state
   setFiles: (state, files) => (state.files = files),
+
+  // Set file selected to state
+  setFile: (state, file) => (state.fileSelected = file),
 
   //Add file to state
   newFile: (state, file) => state.files.unshift(file),

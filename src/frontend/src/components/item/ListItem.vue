@@ -16,7 +16,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import AddItem from '@/components/AddItem.vue';
+import AddItem from './AddItem.vue';
 
 export default {
     name: "items",

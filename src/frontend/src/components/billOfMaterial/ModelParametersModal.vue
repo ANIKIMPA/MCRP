@@ -44,10 +44,8 @@ export default {
     ...mapState(["files"])
   },
   created() {
-    this.$store.subscribe((mutation, state) => {
-      if (mutation.type === 'newFile') {
-        console.log(`newFile to ${state.files}`);
-        
+    this.$store.subscribe((mutation) => {
+      if (mutation.type === 'newFile') {        
         // Add items to the file
         for (let i = 1; i <= this.items_number; i++) {
           this.addItem({
