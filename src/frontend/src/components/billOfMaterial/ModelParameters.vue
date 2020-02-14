@@ -1,5 +1,5 @@
 <template>
-	<b-modal size="lg" id="modal-multi-2" title="MRP (MAST): Model Parameters" @ok="GoHome">
+	<b-modal size="lg" id="modal-multi-2" title="MRP (BOM): Model Parameters" @ok="GoHome">
 		<div class="form-group row">
 			<label class="col-form-label col-2" for="title">Title:</label>
 			<div class="col-10">
@@ -18,7 +18,7 @@
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
 export default {
-	name: "mastModelParameters",
+	name: "bomModelParameters",
 	data() {
 		return {
 			title: "",
@@ -57,7 +57,7 @@ export default {
 		...mapActions(["addItem", "createNewFile"]),
 		GoHome() {
 			// Create new file
-			this.createNewFile({ title: this.title, tipo: "Master Schedule" });
+			this.createNewFile({ title: this.title, tipo: "Bill of Material" });
 		}
 	}
 };

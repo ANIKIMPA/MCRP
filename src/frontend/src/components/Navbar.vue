@@ -20,19 +20,16 @@
 
     <ModuleListModal />
     <DataConfigurationModal @fileSelected="saveFile" />
-    <ModelParametersModal :tipo="fileTypeSelected" />
   </div>
 </template>
 
 <script>
 import ModuleListModal from "./billOfMaterial/ModuleListModal";
 import DataConfigurationModal from "./DataConfigurationModal";
-import ModelParametersModal from "./billOfMaterial/ModelParametersModal";
 export default {
   components: {
     ModuleListModal,
     DataConfigurationModal,
-    ModelParametersModal
   },
   data() {
     return {

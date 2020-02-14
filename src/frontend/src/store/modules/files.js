@@ -1,43 +1,53 @@
-import axios from 'axios';
+import axios from "axios";
 
 const state = {
-    files: [],
-    fileSelected: {}
+  files: [],
+  fileSelected: {
+    name: "Niovan"
+  }
 };
 
+// Computed
 const getters = {
-    allFiles: (state) => state.files,
-    getFirstFile: (state) => state.files[0],
+  allFiles: state => state.files,
+  getFirstFile: state => state.files[0]
 };
 
+// Methods
 const actions = {
-    // Obtener lista de files
-    async fetchFiles({ commit }) {
-        await axios.get("http://localhost:8000/api/v1.0/files/").then((response) => {
-            commit('setFiles', response.data);
-        })
-        .catch((error) => {
-            console.log(error)
-        });
-    },
-    // Agregar file
-    createNewFile({ commit }, file) {
-        axios.post("http://localhost:8000/api/v1.0/files/", file).then((response) => {
-            commit("newFile", response.data)
-        })
-        .catch((error) => {
-            console.log(error)
-        });
-    },
+  // Obtener lista de files
+  async fetchFiles({ commit }) {
+    await axios
+      .get("http://localhost:8000/api/v1.0/files/")
+      .then(response => {
+        commit("setFiles", response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
+  // Agregar file
+  createNewFile({ commit }, file) {
+    axios
+      .post("http://localhost:8000/api/v1.0/files/", file)
+      .then(response => {
+        commit("newFile", response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
 
-    async updateFile({ commit }, file) {
-      await axios.put(`http://localhost:8000/api/v1.0/files/${file.id}/`, file).then((response) => {
-          commit('updateFile', response.data);
+  async updateFile({ commit }, file) {
+    await axios
+      .put(`http://localhost:8000/api/v1.0/files/${file.id}/`, file)
+      .then(response => {
+        commit("updateFile", response.data);
       })
-      .catch((error) => {
-          console.log(error);
-      })
-    },
+      .catch(error => {
+        console.log(error);
+      });
+  }
 };
 
 const mutations = {
@@ -60,8 +70,8 @@ const mutations = {
 };
 
 export default {
-    state,
-    getters,
-    actions,
-    mutations
+  state,
+  getters,
+  actions,
+  mutations
 };
