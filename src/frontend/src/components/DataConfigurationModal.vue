@@ -52,6 +52,7 @@
 
 <script>
 import FileListModal from "./FileListModal";
+import { mapGetters } from "vuex"
 export default {
 	components: {
 		FileListModal,
@@ -77,8 +78,11 @@ export default {
 	},
 	methods: {
 		getFileSelected() {
-			this.fileTitle = this.$store.state.fileSelected.title;
+			this.fileTitle = this.fileSelected.title;
 		}
+	},
+	computed: {
+		...mapGetters(["fileSelected"])
 	}
 };
 </script>

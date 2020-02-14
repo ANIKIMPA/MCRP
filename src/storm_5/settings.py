@@ -86,28 +86,28 @@ WSGI_APPLICATION = 'storm_5.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
     'default': {
-        'ENGINE' : 'django.db.backends.mysql',
-        'USER' : 'root',
-        'PASSWORD':'2015065',
-        'NAME' : 'uprb_storm',
-        'HOST':'localhost',
-        'PORT' : '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            # Tell MySQLdb to connect with 'utf8mb4' character set
-            'charset': 'utf8mb4',
-        },
-        # Tell Django to build the test database with the 'utf8mb4' character set
-        'TEST': {
-            'CHARSET': 'utf8mb4',
-            'COLLATION': 'utf8mb4_unicode_ci',
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+    # 'default': {
+    #     'ENGINE' : 'django.db.backends.mysql',
+    #     'USER' : 'root',
+    #     'PASSWORD':'2015065',
+    #     'NAME' : 'uprb_storm',
+    #     'HOST':'localhost',
+    #     'PORT' : '3306',
+    #     'OPTIONS': {
+    #         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+    #         # Tell MySQLdb to connect with 'utf8mb4' character set
+    #         'charset': 'utf8mb4',
+    #     },
+    #     # Tell Django to build the test database with the 'utf8mb4' character set
+    #     'TEST': {
+    #         'CHARSET': 'utf8mb4',
+    #         'COLLATION': 'utf8mb4_unicode_ci',
+    #     }
+    # }
 }
 
 
@@ -160,3 +160,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media')
 MEDIA_URL = '/media/'
+
+
+REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}

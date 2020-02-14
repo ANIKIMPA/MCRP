@@ -5,7 +5,6 @@
 			<b-col>
 				<h1>Welcome to Storm 5.0</h1>
 			</b-col>
-			<h2>{{ file }}</h2>
 		</b-row>
 	</b-container>
 </template>
@@ -13,15 +12,6 @@
 <script>
 export default {
 	name: "home",
-	data() {
-		return {};
-	},
-	components: {},
-	computed: {
-		file() {
-			return this.$store.state.fileSelected.name;
-		}
-	}
 };
 </script>
 

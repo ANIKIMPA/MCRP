@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from .models import LoginLevel
+from rest_framework import viewsets
+from .serializers import LoginLevelSerializer
 
-# Create your views here.
+class LoginLevelViewSet(viewsets.ModelViewSet):
+    queryset = LoginLevel.objects.all().order_by('-date_joined')
+    serializer_class = LoginLevelSerializer

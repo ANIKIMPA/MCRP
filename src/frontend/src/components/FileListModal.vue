@@ -10,13 +10,14 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
 	name: "fileListModal",
 	methods: {
-		...mapActions(["fetchFiles"]),
+		...mapActions(["fetchFiles", "fetchItems"]),
+		...mapMutations(["setFile"]),
 		ReturnSelected(file) {
-			this.$store.commit("setFile", file);
+			this.setFile(file);
 			this.$bvModal.hide("file-store");
 			this.$emit("fileSelected");
 		}
@@ -24,7 +25,9 @@ export default {
 	created() {
 		this.fetchFiles();
 	},
-	computed: mapGetters(["allFiles"])
+	computed: {
+		...mapGetters(["allFiles"]),
+	}
 };
 </script>
 

@@ -1,16 +1,18 @@
 import axios from "axios";
 
+// Computed
 const state = {
   files: [],
   fileSelected: {
-    name: "Niovan"
+    title: ""
   }
 };
 
 // Computed
 const getters = {
   allFiles: state => state.files,
-  getFirstFile: state => state.files[0]
+  getFirstFile: state => state.files[0],
+  fileSelected: state => state.fileSelected
 };
 
 // Methods
@@ -50,6 +52,7 @@ const actions = {
   }
 };
 
+// Methods
 const mutations = {
   // Set all files to state
   setFiles: (state, files) => (state.files = files),

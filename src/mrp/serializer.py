@@ -4,9 +4,9 @@ from rest_framework import serializers
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
         model = File
-        fields = "__all__"
+        fields = ('id', 'title', 'tipo')
 
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = "__all__"
+        fields = ('id', 'part_number', 'tipo', 'parent', 'qty', 'file')
