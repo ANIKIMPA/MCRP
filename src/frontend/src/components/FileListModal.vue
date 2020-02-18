@@ -15,18 +15,19 @@ export default {
 	name: "fileListModal",
 	methods: {
 		...mapActions(["fetchFiles", "fetchItems"]),
-		...mapMutations(["setFile"]),
+		...mapMutations(["setBomFile"]),
 		ReturnSelected(file) {
-			this.setFile(file);
+			this.setBomFile(file);
+			this.fetchItems(file.id);
 			this.$bvModal.hide("file-store");
-			this.$emit("fileSelected");
+			this.$emit("bomFile");
 		}
 	},
 	created() {
 		this.fetchFiles();
 	},
 	computed: {
-		...mapGetters(["allFiles"]),
+		...mapGetters(["allFiles"])
 	}
 };
 </script>

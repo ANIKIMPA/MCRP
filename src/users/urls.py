@@ -1,7 +1,10 @@
-from rest_framework import routers
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import LoginLevelViewSet
 
-router = routers.DefaultRouter()
-router.register("loginLevels", LoginLevelViewSet)
+router = DefaultRouter()
+router.register(r'users', LoginLevelViewSet)
 
-urlpatterns = router.urls
+urlpatterns = [
+    path('', include(router.urls)),
+]

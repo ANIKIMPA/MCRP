@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
 	name: "bomModelParameters",
 	data() {
@@ -26,12 +26,11 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters(["getFirstFile"]),
-		...mapState(["files"])
+		...mapGetters(["bomFile"])
 	},
 	created() {
-		this.$store.subscribe(mutation => {
-			if (mutation.type === "newFile") {
+		this.$store.subscribe((mutation) => {
+			if (mutation.type === "newBomFile") {
 				// Add items to the file
 				for (let i = 1; i <= this.items_number; i++) {
 					this.addItem({
@@ -39,7 +38,7 @@ export default {
 						tipo: "MAT",
 						parent: null,
 						qty: 1,
-						file: this.getFirstFile.id
+						file: this.bomFile.id
 					});
 				}
 
@@ -47,17 +46,17 @@ export default {
 				this.$router.push({
 					name: "files",
 					params: {
-						file: this.getFirstFile.id
+						file: this.bomFile.id
 					}
 				});
 			}
-		});
+		})
 	},
 	methods: {
-		...mapActions(["addItem", "createNewFile"]),
+		...mapActions(["addItem", "createNewBomFile"]),
 		GoHome() {
 			// Create new file
-			this.createNewFile({ title: this.title, tipo: "Bill of Material" });
+			this.createNewBomFile({ title: this.title, tipo: "Bill of Material" });
 		}
 	}
 };

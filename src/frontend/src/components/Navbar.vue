@@ -19,7 +19,7 @@
     </b-nav>
 
     <ModuleListModal />
-    <DataConfigurationModal @fileSelected="saveFile" />
+    <DataConfigurationModal @bomFile="saveFile" />
   </div>
 </template>
 

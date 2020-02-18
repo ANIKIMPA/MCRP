@@ -39,20 +39,20 @@
 				</b-col>
 			</b-row>
 
-			<template v-slot:modal-footer="{ ok, cancel }">
+			<template v-slot:modal-footer="{ ok, cancel, close }">
 				<b-button variant="secondary" @click="cancel()">Cancel</b-button>
-				<b-button v-b-modal.modal-multi-2 variant="primary">OK</b-button>
+				<b-button v-b-modal.modal-multi-2 @click="close()" variant="primary">OK</b-button>
 			</template>
 		</b-modal>
 
-		<FileListModal @fileSelected="getFileSelected" />
+		<FileListModal @bomFile="getFileSelected" />
 		<component :is="fileTypeSelected"></component>
 	</div>
 </template>
 
 <script>
 import FileListModal from "./FileListModal";
-import { mapGetters } from "vuex"
+import { mapGetters } from "vuex";
 export default {
 	components: {
 		FileListModal,
@@ -69,20 +69,21 @@ export default {
 	watch: {
 		fileTypeSelected: function() {
 			if (this.fileTypeSelected.trim() != "") {
-				this.$emit("fileSelected", this.fileTypeSelected);
+				this.$emit("bomFile", this.fileTypeSelected);
 			}
 		}
 	},
 	mounted() {
-		this.$emit("fileSelected", this.fileTypeSelected);
+		this.$emit("bomFile", this.fileTypeSelected);
 	},
 	methods: {
 		getFileSelected() {
-			this.fileTitle = this.fileSelected.title;
-		}
+			this.fileTitle = this.bomFile.title;
+		},
+		close() {}
 	},
 	computed: {
-		...mapGetters(["fileSelected"])
+		...mapGetters(["bomFile"])
 	}
 };
 </script>

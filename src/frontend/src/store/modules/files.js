@@ -2,17 +2,24 @@ import axios from "axios";
 
 // Computed
 const state = {
-  files: [],
-  fileSelected: {
-    title: ""
+  allFiles: [],
+  files: {
+    bomFile: {
+      title: "",
+      tipo: ""
+    },
+    mastFile: {
+      title: "",
+      tipo: ""
+    }
   }
 };
 
 // Computed
 const getters = {
-  allFiles: state => state.files,
-  getFirstFile: state => state.files[0],
-  fileSelected: state => state.fileSelected
+  allFiles: state => state.allFiles,
+  bomFile: state => state.files.bomFile,
+  mastFile: state => state.files.mastFile
 };
 
 // Methods
@@ -20,7 +27,7 @@ const actions = {
   // Obtener lista de files
   async fetchFiles({ commit }) {
     await axios
-      .get("http://localhost:8000/api/v1.0/files/")
+      .get("http://localhost:8000/api/v1.0/mrp/files/")
       .then(response => {
         commit("setFiles", response.data);
       })
@@ -29,22 +36,21 @@ const actions = {
       });
   },
   // Agregar file
-  createNewFile({ commit }, file) {
+  createNewBomFile({ commit }, file) {
     axios
-      .post("http://localhost:8000/api/v1.0/files/", file)
+      .post("http://localhost:8000/api/v1.0/mrp/files/", file)
       .then(response => {
-        commit("newFile", response.data);
+        commit("newBomFile", response.data);
       })
       .catch(error => {
         console.log(error);
       });
   },
-
-  async updateFile({ commit }, file) {
-    await axios
-      .put(`http://localhost:8000/api/v1.0/files/${file.id}/`, file)
+  createNewMastFile({ commit }, file) {
+    axios
+      .post("http://localhost:8000/api/v1.0/mrp/files/", file)
       .then(response => {
-        commit("updateFile", response.data);
+        commit("setMastFile", response.data);
       })
       .catch(error => {
         console.log(error);
@@ -55,21 +61,12 @@ const actions = {
 // Methods
 const mutations = {
   // Set all files to state
-  setFiles: (state, files) => (state.files = files),
-
-  // Set file selected to state
-  setFile: (state, file) => (state.fileSelected = file),
+  setFiles: (state, files) => (state.allFiles = files),
 
   //Add file to state
-  newFile: (state, file) => state.files.unshift(file),
-
-  // Update file in state
-  updateFile: (state, updFile) => {
-    const index = state.files.findIndex(file => file.id === updFile.id);
-    if (index !== -1) {
-      state.files.splice(index, 1, updFile);
-    }
-  }
+  newBomFile: (state, file) => (state.files.bomFile = file),
+  setBomFile: (state, file) => (state.files.bomFile = file),
+  setMastFile: (state, file) => (state.files.mastFile = file)
 };
 
 export default {
