@@ -10,8 +10,7 @@
       </template>
       Saved successfully!
     </b-toast>
-
-    <button @click="check">Check</button>
+    
     <button @click="addRow">Add new row</button>
   </div>
 </template>
@@ -68,7 +67,6 @@ export default {
         rowHeaders: true,
         licenseKey: "non-commercial-and-evaluation",
         className: "htMiddle htCenter",
-        caritas: "Carita",
         contextMenu: {
           items: {
             remove_row: {},
@@ -92,8 +90,7 @@ export default {
         qty: 1,
         file: this.$route.params.file
       });
-    },
-    check() {}
+    }
   },
   mounted: function() {
     this.hotRef = this.$refs.wrapper.hotInstance;

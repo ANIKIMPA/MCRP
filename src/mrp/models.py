@@ -39,18 +39,18 @@ class Item(models.Model):
         return self.part_number
 
 
-class MasterSchedule(models.Model):
+class Period(models.Model):
     part_number = models.CharField(max_length=12, blank=True, null=True)
-    period = models.CharField(max_length=20, blank=True, null=True)
+    data = models.CharField(max_length=20, blank=True, null=True)
     order = models.PositiveIntegerField(blank=True, null=True)
     file = models.ForeignKey(File, related_name='masters_schedules', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['order']
+        ordering = ['file', 'part_number', 'order']
         verbose_name = 'Master Schedule'
         verbose_name_plural = 'Masters Schedules'
 
     def __str__(self):
-        return f"Part Number: {self.part_number}, Period {self.order}: {self.period}"
+        return f"File: {self.file}, Part Number: {self.part_number}, Period {self.order}: {self.period}"

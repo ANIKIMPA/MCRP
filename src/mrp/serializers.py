@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Item, File, MasterSchedule
+from .models import Item, File, Period
 
 
 class FileSerializer(serializers.ModelSerializer):
@@ -18,7 +18,7 @@ class ItemSerializer(serializers.ModelSerializer):
         fields = ('id', 'part_number', 'tipo', 'parent', 'qty', 'file')
 
 
-class MasterScheduleSerializer(serializers.ModelSerializer):
+class PeriodSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MasterSchedule
-        fields = ('id', 'part_number', 'period', 'order', 'file')
+        model = Period
+        fields = ('id', 'part_number', 'order', 'file')

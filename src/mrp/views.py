@@ -1,5 +1,5 @@
-from .models import File, Item, MasterSchedule
-from .serializers import FileSerializer, ItemSerializer, MasterScheduleSerializer
+from .models import File, Item, Period
+from .serializers import FileSerializer, ItemSerializer, PeriodSerializer
 from rest_framework.response import Response
 from rest_framework import permissions, viewsets
 from .permissions import IsOwnerOrReadOnly
@@ -33,25 +33,25 @@ class ItemViewSet(viewsets.ModelViewSet):
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
-class MasterScheduleViewSet(viewsets.ModelViewSet):
-    queryset = MasterSchedule.objects.all()
-    serializer_class = MasterScheduleSerializer
+class PeriodViewSet(viewsets.ModelViewSet):
+    queryset = Period.objects.all()
+    serializer_class = PeriodSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def list(self, request):
-        queryset = MasterSchedule.objects.filter(file=6)
-        serializer = MasterScheduleSerializer(queryset, many=True)
+        queryset = Period.objects.filter(file=6)
+        serializer = PeriodSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def create(self, request):
-        serializer = MasterScheduleSerializer(data=request.data)
+        serializer = PeriodSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['get'])
-    def get_masters_schedules(self, request, file_id):
-        queryset = MasterSchedule.objects.filter(file=file_id)
-        serializer = MasterScheduleSerializer(queryset, many=True)
+    def get_periods(self, request, file_id):
+        queryset = Period.objects.filter(file=file_id)
+        serializer = PeriodSerializer(queryset, many=True)
         return Response(serializer.data)

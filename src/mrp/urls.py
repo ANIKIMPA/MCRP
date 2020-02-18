@@ -15,17 +15,17 @@ file_items = views.FileViewSet.as_view({
     'get': 'get_items'
 })
 
-file_masters_schedules = views.MasterScheduleViewSet.as_view({
+file_masters_schedules = views.PeriodViewSet.as_view({
     'get': 'get_masters_schedules'
 })
 
 router = DefaultRouter()
 router.register(r'files', views.FileViewSet)
 router.register(r'items', views.ItemViewSet)
-router.register(r'masters-schedules', views.MasterScheduleViewSet)
+router.register(r'periods', views.PeriodViewSet)
 
 urlpatterns = [
     path('files/<int:file_id>/items', file_items, name='file-items'),
-    path('files/<int:file_id>/masters-schedules', file_masters_schedules, name='file-masters-schedules'),
+    path('files/<int:file_id>/periods', file_masters_schedules, name='file-periods'),
     path('', include(router.urls)),
 ]

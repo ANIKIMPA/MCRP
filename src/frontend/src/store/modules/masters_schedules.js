@@ -1,36 +1,7 @@
 import axios from "axios";
 
 const state = {
-  masters_schedules: [
-    { part_number: "600", period: null, order: 1, file_id: 22 },
-    { part_number: "600", period: null, order: 2, file_id: 22 },
-    { part_number: "600", period: null, order: 3, file_id: 22 },
-    { part_number: "600", period: null, order: 4, file_id: 22 },
-    { part_number: "600", period: null, order: 5, file_id: 22 },
-    { part_number: "600", period: null, order: 6, file_id: 22 },
-    { part_number: "600", period: null, order: 7, file_id: 22 },
-    { part_number: "700", period: null, order: 1, file_id: 22 },
-    { part_number: "700", period: null, order: 2, file_id: 22 },
-    { part_number: "700", period: null, order: 3, file_id: 22 },
-    { part_number: "700", period: null, order: 4, file_id: 22 },
-    { part_number: "700", period: null, order: 5, file_id: 22 },
-    { part_number: "700", period: null, order: 6, file_id: 22 },
-    { part_number: "700", period: null, order: 7, file_id: 22 },
-    { part_number: "bin", period: null, order: 1, file_id: 22 },
-    { part_number: "bin", period: null, order: 2, file_id: 22 },
-    { part_number: "bin", period: null, order: 3, file_id: 22 },
-    { part_number: "bin", period: null, order: 4, file_id: 22 },
-    { part_number: "bin", period: null, order: 5, file_id: 22 },
-    { part_number: "bin", period: null, order: 6, file_id: 22 },
-    { part_number: "bin", period: null, order: 7, file_id: 22 },
-    { part_number: "fhdjg", period: null, order: 1, file_id: 22 },
-    { part_number: "fhdjg", period: null, order: 2, file_id: 22 },
-    { part_number: "fhdjg", period: null, order: 3, file_id: 22 },
-    { part_number: "fhdjg", period: null, order: 4, file_id: 22 },
-    { part_number: "fhdjg", period: null, order: 5, file_id: 22 },
-    { part_number: "fhdjg", period: null, order: 6, file_id: 22 },
-    { part_number: "fhdjg", period: null, order: 7, file_id: 22 },
-  ]
+  masters_schedules: []
 };
 
 const getters = {
@@ -42,7 +13,7 @@ const actions = {
   async fetchMastersSchedules({ commit }, file_id) {
     await axios
       .get(
-        `http://localhost:8000/api/v1.0/mrp/files/${file_id}/masters-schedules`
+        `http://localhost:8000/api/v1.0/mrp/files/${file_id}/periods`
       )
       .then(response => {
         commit("updateMastersSchedules", response.data);
@@ -53,7 +24,7 @@ const actions = {
   },
   // Agregar master_schedule
   addMasterSchedule({ commit }, master_schedule) {
-    axios.post("http://localhost:8000/api/v1.0/mrp/masters-schedules/", master_schedule)
+    axios.post("http://localhost:8000/api/v1.0/mrp/periods/", master_schedule)
       .then(response => {
         commit("newMasterSchedule", response.data);
       })
@@ -65,7 +36,7 @@ const actions = {
   async updateMasterSchedule({ commit }, master_schedule) {
     await axios
       .put(
-        `http://localhost:8000/api/v1.0/mrp/masters-schedules/${master_schedule.id}/`,
+        `http://localhost:8000/api/v1.0/mrp/periods/${master_schedule.id}/`,
         master_schedule
       )
       .then(response => {
@@ -83,8 +54,16 @@ const mutations = {
     (state.masters_schedules = masters_schedules),
 
   //Add master_schedule to state
-  newMasterSchedule: (state, master_schedule) =>
-    state.masters_schedules.push(master_schedule),
+  newMasterSchedule: (state, master_schedule) => {
+    let idx = state.masters_schedules.findIndex((mast) => mast.part_number == master_schedule.part_number)
+
+    if (idx >= 0) {
+      state.masters_schedules[idx][`period${master_schedule.order}`] = master_schedule.period;
+    } else {
+      master_schedule[`period${master_schedule.order}`] = master_schedule.period;
+      state.masters_schedules.push({...master_schedule});
+    }
+  },
 
   // Update master_schedule in state
   updateMasterSchedule: (state, updMasterSchedule) => {
