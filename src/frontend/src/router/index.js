@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import File from '../views/File.vue'
-import MasterSchedule from '../views/MasterSchedule.vue'
+import billOfMaterial from '@/components/billOfMaterial/DataGrid'
+import MasterSchedule from '@/components/masterSchedule/MasterSchedule.vue'
 
 Vue.use(VueRouter)
 
@@ -13,12 +13,12 @@ const routes = [
     component: Home
   },
   {
-    path: '/files/:file',
-    name: 'files',
-    component: File
+    path: '/bill-of-material/:file',
+    name: 'bill_of_material',
+    component: billOfMaterial
   },
   {
-    path: '/master_schedule/:file',
+    path: '/master-schedule/:file',
     name: 'master_schedule',
     component: MasterSchedule
   },

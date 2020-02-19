@@ -48,18 +48,6 @@ class PeriodViewSet(viewsets.ModelViewSet):
     serializer_class = PeriodSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    def list(self, request):
-        queryset = Period.objects.filter(file=6)
-        serializer = PeriodSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def create(self, request):
-        serializer = PeriodSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
     @action(detail=True, methods=['get'])
     def get_periods(self, request, file_id):
         queryset = Period.objects.filter(file=file_id)

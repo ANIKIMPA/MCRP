@@ -45,7 +45,7 @@ export default {
 
 				// Redirect to home page
 				this.$router.push({
-					name: "files",
+					name: "bill_of_material",
 					params: {
 						file: this.bomFile.id
 					}

@@ -1,11 +1,13 @@
 import axios from "axios";
 
 const state = {
-  periods: []
+  periods: [],
+  convertedPeriods: []
 };
 
 const getters = {
-  getAllPeriods: state => state.periods
+  getAllPeriods: state => state.periods,
+  getAllConvertedPeriods: state => state.convertedPeriods
 };
 
 const actions = {
@@ -14,7 +16,7 @@ const actions = {
     await axios
       .get(`http://localhost:8000/api/v1.0/mrp/mast-files/${file_id}/periods`)
       .then(response => {
-        commit("updatePeriods", response.data);
+        commit("setPeriods", response.data);
       })
       .catch(error => {
         console.log(error);
@@ -47,14 +49,24 @@ const actions = {
 const mutations = {
   // Set all periods to state
   updatePeriods: (state, periods) => {
+    state.periods = periods
+
     for (let i = 0; i < periods.length; i++) {
-      createNeWPeriod(state, periods[i])
+      convertPeriod(state, periods[i])
+    }
+  },
+  setPeriods: (state, periods) => {
+    state.periods = [...periods]
+
+    for (let i = 0; i < periods.length; i++) {
+      convertPeriod(state, periods[i])
     }
   },
 
   //Add period to state
   newPeriod: (state, period) => {
-    createNeWPeriod(state, period)
+    state.periods.push(period)
+    convertPeriod(state, period)
   },
 
   // Update period in state
@@ -62,6 +74,19 @@ const mutations = {
     const index = state.periods.findIndex(period => period.id === updPeriod.id);
     if (index !== -1) {
       state.periods.splice(index, 1, updPeriod);
+    }
+
+
+    // Update converted period
+    let idx = state.convertedPeriods.findIndex(
+      mast => mast.part_number == updPeriod.part_number
+    );
+  
+    if (idx >= 0) {
+      state.convertedPeriods[idx][`period${updPeriod.order}`] = updPeriod.data;
+    } else {
+      updPeriod[`period${updPeriod.order}`] = updPeriod.data;
+      state.convertedPeriods.splice(idx, 1, { ...updPeriod });
     }
   }
 };
@@ -74,15 +99,15 @@ export default {
 };
 
 
-function createNeWPeriod(state, period) {
-  let idx = state.periods.findIndex(
+function convertPeriod(state, period) {
+  let idx = state.convertedPeriods.findIndex(
     mast => mast.part_number == period.part_number
   );
 
   if (idx >= 0) {
-    state.periods[idx][`period${period.order}`] = null;
+    state.convertedPeriods[idx][`${period.id}`] = period.data;
   } else {
-    period[`period${period.order}`] = null;
-    state.periods.push({ ...period });
+    period[`${period.id}`] = period.data;
+    state.convertedPeriods.push({ ...period });
   }
 }

@@ -31,7 +31,7 @@ class Item(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['part_number']
+        ordering = ['id']
         verbose_name = 'Item'
         verbose_name_plural = 'Items'
 
@@ -66,8 +66,8 @@ class Period(models.Model):
 
     class Meta:
         ordering = ['file', 'part_number', 'order']
-        verbose_name = 'Master Schedule'
-        verbose_name_plural = 'Masters Schedules'
+        verbose_name = 'Period'
+        verbose_name_plural = 'Periods'
 
     def __str__(self):
         return f"File: {self.file}, Part Number: {self.part_number}, Period {self.order}: {self.data}"

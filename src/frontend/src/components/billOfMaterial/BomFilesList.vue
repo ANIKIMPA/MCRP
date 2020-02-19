@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<b-button :disabled="!createFromBomFile" variant="outline-secondary" @click="openModal">Browse...</b-button>
-		<b-modal id="file-store" v-model="modalOpenned" title="Browse File" hide-footer>
+        <li @click="openModal">BOM Files</li>
+		<b-modal id="bom-file-list" v-model="modalOpenned" title="Bill of Material Files" hide-footer>
 			<p class="mb-2">Select BOM File:</p>
 			<b-list-group class="overflow-auto mh-300">
 				<b-list-group-item button v-for="file in allBomFiles" @click="ReturnSelected(file)" :key="file.id">{{ file.title }}</b-list-group-item>
@@ -13,10 +13,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
-	name: "fileListModal",
-	props: {
-		createFromBomFile: Boolean
-	},
+	name: "BomfileList",
 	data() {
 		return {
 			modalOpenned: false

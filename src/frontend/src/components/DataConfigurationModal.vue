@@ -21,7 +21,7 @@
 									<b-form-checkbox v-model="createFromBomFile" :value="true" :unchecked-value="false">Create from BOM file:</b-form-checkbox>
 								</b-col>
 								<b-col cols="4">
-									<b-button :disabled="!createFromBomFile" variant="outline-secondary" v-b-modal.file-store>Browse...</b-button>
+									<FileListModal @bomFile="getFileSelected" :createFromBomFile="createFromBomFile" />
 								</b-col>
 							</b-row>
 						</b-form-group>
@@ -45,7 +45,6 @@
 			</template>
 		</b-modal>
 
-		<FileListModal @bomFile="getFileSelected" />
 		<component :is="fileTypeSelected"></component>
 	</div>
 </template>

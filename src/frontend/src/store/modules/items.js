@@ -15,7 +15,7 @@ const actions = {
     await axios
       .get(`http://localhost:8000/api/v1.0/mrp/bom-files/${file_id}/items`)
       .then(response => {
-        commit("updateItems", response.data);
+        commit("setItems", response.data);
       })
       .catch(error => {
         console.log(error);
@@ -48,6 +48,7 @@ const actions = {
 const mutations = {
   // Set all items to state
   updateItems: (state, items) => (state.items = items),
+  setItems: (state, items) => (state.items = items),
 
   //Add item to state
   newItem: (state, item) => state.items.push(item),

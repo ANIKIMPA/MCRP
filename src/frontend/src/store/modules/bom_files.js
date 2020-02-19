@@ -18,12 +18,23 @@ const getters = {
 
 // Methods
 const actions = {
-  // Obtener lista de files
-  async fetchBomFiles({ commit }) {
+  // Obtener lista de bom files
+  async fetchAllBomFiles({ commit }) {
     await axios
       .get("http://localhost:8000/api/v1.0/mrp/bom-files/")
       .then(response => {
         commit("setBomFiles", response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
+  
+  async fetchBomFile({ commit }, file_id) {
+    await axios
+      .get(`http://localhost:8000/api/v1.0/mrp/bom-files/${file_id}/`)
+      .then(response => {
+        commit("setBomFile", response.data);
       })
       .catch(error => {
         console.log(error);
