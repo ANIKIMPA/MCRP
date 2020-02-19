@@ -13,7 +13,7 @@ const actions = {
   // Obtener lista de items
   async fetchItems({ commit }, file_id) {
     await axios
-      .get(`http://localhost:8000/api/v1.0/mrp/files/${file_id}/items`)
+      .get(`http://localhost:8000/api/v1.0/mrp/bom-files/${file_id}/items`)
       .then(response => {
         commit("updateItems", response.data);
       })

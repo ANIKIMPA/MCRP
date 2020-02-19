@@ -1,12 +1,15 @@
 from .models import LoginLevel
 from rest_framework import serializers
-from mrp.models import File
+from mrp.models import BomFile, MastFile
 
 
 class LoginLevelSerializer(serializers.HyperlinkedModelSerializer):
-    files = serializers.PrimaryKeyRelatedField(
-        many=True, queryset=File.objects.all())
+    bom_files = serializers.PrimaryKeyRelatedField( required=False,
+        many=True, queryset=BomFile.objects.all())
+
+    mast_files = serializers.PrimaryKeyRelatedField( required=False,
+        many=True, queryset=MastFile.objects.all())
 
     class Meta:
         model = LoginLevel
-        fields = ['id', 'username', 'email', 'files']
+        fields = ['id', 'username', 'email', 'bom_files', 'mast_files']

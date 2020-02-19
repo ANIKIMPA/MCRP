@@ -3,7 +3,7 @@
 		<b-modal id="file-store" title="Browse File" hide-footer>
 			<p class="mb-2">Select BOM File:</p>
 			<b-list-group class="overflow-auto mh-300">
-				<b-list-group-item button v-for="file in allFiles" @click="ReturnSelected(file)" :key="file.id">{{ file.title }}</b-list-group-item>
+				<b-list-group-item button v-for="file in allBomFiles" @click="ReturnSelected(file)" :key="file.id">{{ file.title }}</b-list-group-item>
 			</b-list-group>
 		</b-modal>
 	</div>
@@ -14,7 +14,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 export default {
 	name: "fileListModal",
 	methods: {
-		...mapActions(["fetchFiles", "fetchItems"]),
+		...mapActions(["fetchBomFiles", "fetchItems"]),
 		...mapMutations(["setBomFile"]),
 		ReturnSelected(file) {
 			this.setBomFile(file);
@@ -23,11 +23,11 @@ export default {
 			this.$emit("bomFile");
 		}
 	},
-	created() {
-		this.fetchFiles();
+	mounted() {
+		this.fetchBomFiles();
 	},
 	computed: {
-		...mapGetters(["allFiles"])
+		...mapGetters(["allBomFiles"])
 	}
 };
 </script>

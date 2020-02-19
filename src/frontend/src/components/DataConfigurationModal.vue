@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import FileListModal from "./FileListModal";
+import FileListModal from "./masterSchedule/FileListModal";
 import { mapGetters } from "vuex";
 export default {
 	components: {

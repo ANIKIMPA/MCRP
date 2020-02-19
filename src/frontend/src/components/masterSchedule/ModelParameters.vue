@@ -46,15 +46,15 @@ export default {
 		};
 	},
 	computed: {
-		...mapGetters(["mastFile", "bomFile", 'getMasterItems'])
+		...mapGetters(["mastFile", "getMasterItems"])
 	},
 	mounted() {
 		this.$store.subscribe(mutation => {
-			if (mutation.type === "setMastFile") {
+			if (mutation.type === "newMastFile") {
 				// Add items to the file
 				for (let i = 0; i < this.getMasterItems.length; i++) {
 					for (let num = 1; num <= this.form.planning_horizon_length; num++) {
-						this.addMasterSchedule({
+						this.addPeriod({
 							part_number: this.getMasterItems[i].part_number,
 							period: null,
 							order: num,
@@ -65,18 +65,23 @@ export default {
 
 				// Redirect to home page
 				this.$router.push({
-					name: 'master_schedule',
+					name: "master_schedule",
 					params: {
-						numberOfPeriods: this.form.planning_horizon_length
+						file: this.mastFile.id
 					}
 				});
 			}
 		});
 	},
 	methods: {
-		...mapActions(["addMasterSchedule", "createNewMastFile"]),
+		...mapActions(["addPeriod", "createNewMastFile"]),
 		onSubmit() {
-			this.createNewMastFile({ title: this.form.title, tipo: "Master Schedule" });
+			this.createNewMastFile({
+				title: this.form.title,
+				number_of_items: this.getMasterItems.length,
+				planning_horizon_length: this.form.planning_horizon_length,
+				number_time_buckets: this.form.number_time_buckets
+			});
 		}
 	}
 };

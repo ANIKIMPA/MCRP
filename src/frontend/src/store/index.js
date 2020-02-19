@@ -1,8 +1,9 @@
 import Vuex from "vuex";
 import Vue from "vue";
 import items from "./modules/items";
-import files from "./modules/files";
-import masters_schedules from "./modules/masters_schedules";
+import bom_files from "./modules/bom_files";
+import mast_files from "./modules/mast_files";
+import periods from "./modules/periods";
 
 Vue.use(Vuex);
 
@@ -10,7 +11,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
     items,
-    files,
-    masters_schedules
+    mast_files,
+    bom_files,
+    periods
   }
 });

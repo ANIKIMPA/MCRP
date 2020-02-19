@@ -1,5 +1,5 @@
-from .models import File, Item, Period
-from .serializers import FileSerializer, ItemSerializer, PeriodSerializer
+from .models import BomFile, Item, MastFile, Period
+from .serializers import BomFileSerializer, ItemSerializer, MastFileSerializer, PeriodSerializer
 from rest_framework.response import Response
 from rest_framework import permissions, viewsets
 from .permissions import IsOwnerOrReadOnly
@@ -7,13 +7,13 @@ from rest_framework.decorators import action
 from rest_framework import status
 
 
-class FileViewSet(viewsets.ModelViewSet):
+class BomFileViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions.
     """
-    queryset = File.objects.all()
-    serializer_class = FileSerializer
+    queryset = BomFile.objects.all()
+    serializer_class = BomFileSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
     #                       IsOwnerOrReadOnly]
 
@@ -31,6 +31,16 @@ class ItemViewSet(viewsets.ModelViewSet):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class MastFileViewSet(viewsets.ModelViewSet):
+    queryset = MastFile.objects.all()
+    serializer_class = MastFileSerializer
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+    #                       IsOwnerOrReadOnly]
+
+    # def perform_create(self, serializer):
+    #     serializer.save(owner=self.request.user)
 
 
 class PeriodViewSet(viewsets.ModelViewSet):

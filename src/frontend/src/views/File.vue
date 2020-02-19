@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import DataGrid from "@/components/DataGrid";
+import DataGrid from "@/components/billOfMaterial/DataGrid";
 export default {
   name: "file",
   components: {

@@ -81,7 +81,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["storeItems", "updateItem", "addItem"]),
+    ...mapActions(["updateItem", "addItem"]),
     addRow() {
       this.addItem({
         part_number: null,

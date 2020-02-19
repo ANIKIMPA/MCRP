@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import ModuleListModal from "./billOfMaterial/ModuleListModal";
+import ModuleListModal from "./ModuleListModal";
 import DataConfigurationModal from "./DataConfigurationModal";
 export default {
   components: {

@@ -11,21 +11,22 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
 
-file_items = views.FileViewSet.as_view({
+file_items = views.BomFileViewSet.as_view({
     'get': 'get_items'
 })
 
-file_masters_schedules = views.PeriodViewSet.as_view({
-    'get': 'get_masters_schedules'
+file_periods = views.PeriodViewSet.as_view({
+    'get': 'get_periods'
 })
 
 router = DefaultRouter()
-router.register(r'files', views.FileViewSet)
+router.register(r'bom-files', views.BomFileViewSet)
 router.register(r'items', views.ItemViewSet)
+router.register(r'mast-files', views.MastFileViewSet)
 router.register(r'periods', views.PeriodViewSet)
 
 urlpatterns = [
-    path('files/<int:file_id>/items', file_items, name='file-items'),
-    path('files/<int:file_id>/periods', file_masters_schedules, name='file-periods'),
+    path('bom-files/<int:file_id>/items', file_items, name='file-items'),
+    path('mast-files/<int:file_id>/periods', file_periods, name='file-periods'),
     path('', include(router.urls)),
 ]

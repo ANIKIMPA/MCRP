@@ -29,10 +29,10 @@ export default {
 		...mapGetters(["bomFile"])
 	},
 	created() {
-		this.$store.subscribe((mutation) => {
+		this.$store.subscribe(mutation => {
 			if (mutation.type === "newBomFile") {
 				// Add items to the file
-				console.log("items_number: " + this.items_number)
+				console.log("items_number: " + this.items_number);
 				for (let i = 1; i <= this.items_number; i++) {
 					this.addItem({
 						part_number: 100 * i,
@@ -51,13 +51,16 @@ export default {
 					}
 				});
 			}
-		})
+		});
 	},
 	methods: {
 		...mapActions(["addItem", "createNewBomFile"]),
 		GoHome() {
 			// Create new file
-			this.createNewBomFile({ title: this.title, tipo: "Bill of Material" });
+			this.createNewBomFile({
+				title: this.title,
+				number_of_items: this.items_number
+			});
 		}
 	}
 };
