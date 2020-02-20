@@ -32,7 +32,6 @@ export default {
 		this.$store.subscribe(mutation => {
 			if (mutation.type === "newBomFile") {
 				// Add items to the file
-				console.log("items_number: " + this.items_number);
 				for (let i = 1; i <= this.items_number; i++) {
 					this.addItem({
 						part_number: 100 * i,

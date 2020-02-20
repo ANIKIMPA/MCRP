@@ -23,7 +23,7 @@
 							<li class="parent">Open... <span class="expand">»</span>
 							<ul class="child">
 								<BomFilesList />
-								<li>MAST Files</li>
+								<MastFilesList />
 							</ul>
 						</li>
 						<li @click="goHome">Close</li>
@@ -50,11 +50,13 @@
 import ModuleListModal from "./ModuleListModal";
 import DataConfigurationModal from "./DataConfigurationModal";
 import BomFilesList from "./billOfMaterial/BomFilesList"
+import MastFilesList from "./masterSchedule/MastFilesList"
 export default {
 	components: {
 		ModuleListModal,
 		DataConfigurationModal,
-		BomFilesList
+		BomFilesList,
+		MastFilesList
 	},
 	data() {
 		return {
@@ -88,6 +90,6 @@ ul{list-style: none;margin: 0;padding: 0px; min-width:10em;}
 ul ul ul{left: 100%;top: 0;margin-left:1px;}
 li:hover {background-color: #95B4CA;}
 .parent li:hover {background-color: #F0F0F0;}
-li{ cursor: pointer; }
+li{ cursor: pointer; z-index: 200; }
 .expand{font-size:12px;float:right;margin-right:5px;}
 </style>

@@ -19,7 +19,7 @@ const getters = {
 // Methods
 const actions = {
   // Obtener lista de files
-  async fetchallMastFiles({ commit }) {
+  async fetchAllMastFiles({ commit }) {
     await axios
       .get("http://localhost:8000/api/v1.0/mrp/mast-files/")
       .then(response => {

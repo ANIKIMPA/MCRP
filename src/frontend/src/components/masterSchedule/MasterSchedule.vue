@@ -14,12 +14,14 @@
 </template>
 
 <script>
+import store from '@/store'
 import { HotTable } from "@handsontable/vue";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapState } from "vuex";
 // import Handsontable from 'handsontable';
 
 export default {
   name: "master_schedule",
+  store,
   components: {
     HotTable
     // HotColumn
@@ -59,11 +61,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getAllPeriods", "getAllConvertedPeriods", "mastFile"])
+    ...mapGetters(["getAllPeriods", "getAllConvertedPeriods", "mastFile"]),
+    ...mapState({
+      mast_files: state => state.mastFile
+    })
   },
-  mounted: function() {
+  
+  mounted() {
     this.fetchMastFile(this.$route.params.file);
-    this.fetchPeriods(this.$route.params.file);
 
     this.$store.subscribe(mutation => {
       if (mutation.type === "setPeriods") {
@@ -83,6 +88,11 @@ export default {
         this.settings.data = this.getAllConvertedPeriods;
       }
     });
+  },
+  watch: {
+    mastFile() {
+      this.fetchPeriods(this.$route.params.file);
+    }
   },
   methods: {
     ...mapActions(["fetchMastFile", "fetchPeriods", "updatePeriod"])

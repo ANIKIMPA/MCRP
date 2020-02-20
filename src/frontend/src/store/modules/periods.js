@@ -57,6 +57,7 @@ const mutations = {
   },
   setPeriods: (state, periods) => {
     state.periods = [...periods]
+    state.convertedPeriods = []
 
     for (let i = 0; i < periods.length; i++) {
       convertPeriod(state, periods[i])

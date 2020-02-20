@@ -97,7 +97,6 @@ export default {
       for (let i = 0; i < this.getAllItems.length; i++) {
         part_numbers.push(this.getAllItems[i].part_number);
       }
-      console.log(part_numbers);
 
       return part_numbers;
     }

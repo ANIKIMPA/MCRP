@@ -13,7 +13,7 @@ class BomFile(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['title']
+        ordering = ['-created_date', 'title']
         verbose_name = 'BomFile'
         verbose_name_plural = 'BomFiles'
 
@@ -48,7 +48,7 @@ class MastFile(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['title']
+        ordering = ['-created_date', 'title']
         verbose_name = 'MastFile'
         verbose_name_plural = 'MastFiles'
 

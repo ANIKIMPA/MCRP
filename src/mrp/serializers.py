@@ -8,7 +8,7 @@ class BomFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BomFile
-        fields = ('id', 'owner', 'title', 'number_of_items', 'items')
+        fields = ('id', 'owner', 'title', 'number_of_items', 'items', 'created_date')
 
 
 class ItemSerializer(serializers.ModelSerializer):
@@ -23,7 +23,7 @@ class MastFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MastFile
-        fields = ('id', 'owner', 'title', 'periods',
+        fields = ('id', 'owner', 'title', 'periods', 'created_date',
                   'number_of_items', 'planning_horizon_length', 'number_time_buckets')
 
 
