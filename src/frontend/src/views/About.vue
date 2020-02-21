@@ -1,58 +1,71 @@
 <template>
   <div>
-		<form @submit="onSubmit">
-			<div class="form-group">
-				<label for="part_number">Part Number</label>
-				<input type="text" id="part_number" v-model="form.part_number">
-			</div>
-			<div class="form-group">
-				<label for="period">Period</label>
-				<input type="text" id="period" v-model="form.period">
-			</div>
-			<div class="form-group">
-				<label for="order">Order</label>
-				<input type="text" id="order" v-model="form.order">
-			</div>
-
-			<button type="submit">Submit</button>
-		</form>
-			<button @click="check">Check</button>
+    <!-- <hot-table id="hottable" :settings="settings"></hot-table> -->
+    <div id="tablita"></div>
   </div>
 </template>
 
 <script>
+// import { HotTable } from "@handsontable/vue";
+import Handsontable from "handsontable";
 export default {
+  components: {
+    // HotTable
+  },
   data() {
     return {
-			id: 1,
-			form: {
-				id: Number,
-				part_number: "",
-				order: "",
-				file: 6
-			},
-      masters_schedules: []
+      hotRef: null,
+      settings: {
+        data: [
+			["544", "2t4"]
+		],
+        colHeaders: ["Part Number", "Parent", "QTY"],
+        stretchH: "all",
+        colWidths: 100,
+        afterChange: changes => {
+          if (changes) {
+            changes.forEach(([row, prop, oldValue, newValue]) => {
+              row;
+              oldValue;
+              newValue;
+              console.log(prop);
+            });
+          }
+        },
+        cells: function(row, column, prop) {
+          const cellProperties = {};
+          const visualRowIndex = this.instance.toVisualRow(row);
+          const visualColIndex = this.instance.toVisualColumn(column);
+
+          if (visualRowIndex === 0 && visualColIndex === 0) {
+            cellProperties.readOnly = true;
+          }
+
+          return cellProperties;
+        },
+
+        rowHeights: 40,
+        rowHeaders: true,
+        licenseKey: "non-commercial-and-evaluation",
+        className: "htMiddle htCenter"
+      }
     };
   },
   methods: {
-    onSubmit(e) {
-			e.preventDefault();
-			this.form.id = this.id;
+    // 	  this.setCellMetaObject = function(row, column, prop) {
+    //     if (typeof prop === 'object') {
+    //       objectEach(prop, (value, key) => {
+    //         this.setCellMeta(row, column, key, value);
+    //       });
+    //     }
+    //   };
+  },
+  mounted() {
+    const container1 = document.getElementById("tablita");
+    this.hotRef = new Handsontable(container1, this.settings);
 
-			let idx = this.masters_schedules.findIndex((mast) => mast.part_number == this.form.part_number)
-
-			if (idx >= 0) {
-				this.masters_schedules[idx][`period${this.form.order}`] = null;
-			} else {
-				this.form[`period${this.form.order}`] = null
-				this.masters_schedules.push({...this.form});
-			}
-			
-			this.id++
-		},
-		check() {
-			console.log(this.masters_schedules)
-		}
+    this.hotRef.setDataAtCell(0, 1, "Ford");
+    this.hotRef.setCellMetaObject(0, 0, { part_number: "90" });
   }
 };
 </script>

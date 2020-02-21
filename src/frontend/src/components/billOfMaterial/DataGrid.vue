@@ -1,5 +1,7 @@
 <template>
   <div id="example1">
+    <h3 class="title">{{ bomFile.title }}</h3>
+
     <hot-table :settings="settings"></hot-table>
 
     <b-toast id="my-toast" variant="success" solid>
@@ -10,7 +12,7 @@
       </template>
       Saved successfully!
     </b-toast>
-
+    
     <b-button  class="position-absolute btnAddItem" variant="info" @click="addRow">Add new item</b-button>
   </div>
 </template>
@@ -90,7 +92,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getAllItems"]),
+    ...mapGetters(["getAllItems", "bomFile"]),
     allPartNumbers() {
       let part_numbers = [];
 
@@ -121,7 +123,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @import "~handsontable/dist/handsontable.full.css";
 
 .handsontable.listbox td.htDimmed {
@@ -139,7 +141,17 @@ export default {
 }
 
 .btnAddItem {
-  top: 65px;
+  top: 62px;
+  left: 30%;
+}
+
+.title {
+  position: absolute;
+  top: 10px;
+  color: #ffffff;
+  z-index: 200;
   left: 50%;
+  width: 200px;
+  margin-left: -100px;
 }
 </style>

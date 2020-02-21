@@ -21,4 +21,8 @@ export default {
   text-align: center;
 }
 
+.modal-dialog {
+  margin-top: 60px !important;
+}
+
 </style>

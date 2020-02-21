@@ -1,5 +1,5 @@
 <template>
-	<b-modal size="lg" id="modal-multi-2" title="MRP (MAST): Model Parameters" @ok="onSubmit">
+	<b-modal size="lg" id="modal-parameters" title="MRP (MAST): Model Parameters" @ok="onSubmit">
 		<form>
 			<div class="form-group row">
 				<label class="col-form-label col-2" for="title">Title:</label>
@@ -12,7 +12,7 @@
 				<!-- Numero de Items padres terminados -->
 				<label class="col-form-label col-9" for="master_items">Number of Items Master Scheduled:</label>
 				<div class="col-3">
-					<input type="number" class="form-control" min="1" :value="this.getMasterItems.length" readonly id="master_items" />
+					<input type="number" class="form-control" min="1" v-model="form.numberItems" :readonly="createFromBomFile" id="master_items" />
 				</div>
 			</div>
 			<div class="form-group row">
@@ -36,12 +36,16 @@
 import { mapActions, mapGetters } from "vuex";
 export default {
 	name: "mastModelParameters",
+	props: {
+		createFromBomFile: Boolean
+	},
 	data() {
 		return {
 			form: {
 				title: "Master Scheduled",
 				planning_horizon_length: 0,
-				number_time_buckets: 0
+				number_time_buckets: 0,
+				numberItems : 1
 			}
 		};
 	},
@@ -49,17 +53,38 @@ export default {
 		...mapGetters(["mastFile", "getMasterItems"])
 	},
 	mounted() {
+		this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
+			if(modalId === "modal-parameters")
+				if(this.createFromBomFile) {
+					this.form.numberItems = this.getMasterItems.length;
+					console.log("aqui")
+				}
+		})
+
 		this.$store.subscribe(mutation => {
 			if (mutation.type === "newMastFile") {
 				// Add items to the file
-				for (let i = 0; i < this.getMasterItems.length; i++) {
-					for (let num = 1; num <= this.form.planning_horizon_length; num++) {
-						this.addPeriod({
-							part_number: this.getMasterItems[i].part_number,
-							period: null,
-							order: num,
-							file: this.mastFile.id
-						});
+				if(this.createFromBomFile) {
+					for (let i = 0; i < this.getMasterItems.length; i++) {
+						for (let num = 1; num <= this.form.planning_horizon_length; num++) {
+							this.addPeriod({
+								part_number: this.getMasterItems[i].part_number,
+								period: null,
+								order: num,
+								file: this.mastFile.id
+							});
+						}
+					}
+				} else {
+					for (let i = 0; i < this.form.numberItems; i++) {
+						for (let num = 1; num <= this.form.planning_horizon_length; num++) {
+							this.addPeriod({
+								part_number: 100 * num,
+								period: null,
+								order: num,
+								file: this.mastFile.id
+							});
+						}
 					}
 				}
 

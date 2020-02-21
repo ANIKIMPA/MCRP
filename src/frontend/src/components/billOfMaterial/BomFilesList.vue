@@ -51,7 +51,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .mh-300 {
   max-height: 300px;
 }

@@ -1,5 +1,5 @@
 <template>
-	<b-modal size="lg" id="modal-multi-2" title="MRP (BOM): Model Parameters" @ok="GoHome">
+	<b-modal size="lg" id="modal-parameters" title="MRP (BOM): Model Parameters" @ok="GoHome">
 		<div class="form-group row">
 			<label class="col-form-label col-2" for="title">Title:</label>
 			<div class="col-10">

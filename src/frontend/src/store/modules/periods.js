@@ -43,6 +43,22 @@ const actions = {
       .catch(error => {
         console.log(error);
       });
+  },
+
+  async updatePeriodsPartNumber({ commit }, part_number) {
+    for(let i=0; i<state.periods.length; i++) {
+      state.periods[i].part_number = part_number
+      console.log(state.periods[i].part_number)
+
+      await axios
+        .put(`http://localhost:8000/api/v1.0/mrp/periods/${state.periods[i].id}/`, state.periods[i])
+        .then(response => {
+          commit("updatePeriod", response.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
   }
 };
 

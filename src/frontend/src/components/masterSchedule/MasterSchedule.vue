@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h3 class="title">{{ mastFile.title }}</h3>
     <hot-table :settings="settings"></hot-table>
 
     <b-toast id="my-toast" variant="success" solid>
@@ -39,12 +40,19 @@ export default {
             changes.forEach(([row, prop, oldValue, newValue]) => {
               row;
               oldValue;
+              console.log(prop)
               try {
-                let period = this.getAllPeriods.find(
-                  period => period.id == prop
-                );
-                period.data = newValue;
-                this.updatePeriod(period);
+                // Editar part number
+                if(prop == "part_number")
+                  this.updatePeriodsPartNumber(newValue);
+                else {
+                  // Editar data del period
+                  let period = this.getAllPeriods.find(
+                    period => period.id == prop
+                  );
+                  period.data = newValue;
+                  this.updatePeriod(period);
+                }
                 this.$bvToast.show("my-toast");
               } catch (error) {
                 console.log(error);
@@ -74,8 +82,7 @@ export default {
       if (mutation.type === "setPeriods") {
         this.settings.columns.push({
           data: "part_number",
-          allowEmpty: false,
-          readOnly: true
+          allowEmpty: false
         });
         for (let i = 0; i < this.mastFile.planning_horizon_length * 1; i++) {
           this.settings.colHeaders.push("Period " + (i + 1));
@@ -95,11 +102,21 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchMastFile", "fetchPeriods", "updatePeriod"])
+    ...mapActions(["fetchMastFile", "fetchPeriods", "updatePeriod", "updatePeriodsPartNumber"])
   }
 };
 </script>
 
-<style>
+<style scoped>
 @import "~handsontable/dist/handsontable.full.css";
+
+.title {
+  position: absolute;
+  top: 10px;
+  color: #ffffff;
+  z-index: 200;
+  left: 50%;
+  width: 200px;
+  margin-left: -100px;
+}
 </style>

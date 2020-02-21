@@ -51,6 +51,7 @@ import ModuleListModal from "./ModuleListModal";
 import DataConfigurationModal from "./DataConfigurationModal";
 import BomFilesList from "./billOfMaterial/BomFilesList"
 import MastFilesList from "./masterSchedule/MastFilesList"
+import { mapGetters } from "vuex";
 export default {
 	components: {
 		ModuleListModal,
@@ -71,7 +72,10 @@ export default {
 		saveFile(fileType) {
 			this.fileTypeSelected = fileType
 		}
-	}
+	},
+	computed: {
+		...mapGetters(["lastOpenedFile"])
+	},
 };
 </script>
 

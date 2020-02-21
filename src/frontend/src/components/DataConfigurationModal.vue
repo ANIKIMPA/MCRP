@@ -41,11 +41,11 @@
 
 			<template v-slot:modal-footer="{ ok, cancel, close }">
 				<b-button variant="secondary" @click="cancel()">Cancel</b-button>
-				<b-button v-b-modal.modal-multi-2 @click="close()" variant="primary">OK</b-button>
+				<b-button v-b-modal.modal-parameters :disabled="createFromBomFile && fileTitle.trim() == ''" @click="close()" variant="primary">OK</b-button>
 			</template>
 		</b-modal>
 
-		<component :is="fileTypeSelected"></component>
+		<component :is="fileTypeSelected" :createFromBomFile="createFromBomFile"></component>
 	</div>
 </template>
 
