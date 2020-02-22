@@ -6,7 +6,7 @@ const state = {
 
 const getters = {
   getAllItems: state => state.items,
-  getMasterItems: state => state.items.filter((item) => item.parent == null)
+  getMasterItems: state => state.items.filter(item => item.parent == null)
 };
 
 const actions = {
@@ -19,6 +19,7 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
+        commit("throwError", error.response.data.data[0], { root: true });
       });
   },
   // Agregar item
@@ -30,6 +31,7 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
+        commit("throwError", error.response.data.data[0], { root: true });
       });
   },
 
@@ -41,6 +43,7 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
+        commit("throwError", error.response.data.data[0], { root: true });
       });
   }
 };

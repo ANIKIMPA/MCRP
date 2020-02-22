@@ -32,7 +32,7 @@ export default {
             });
           }
         },
-        cells: function(row, column, prop) {
+        cells: function(row, column) {
           const cellProperties = {};
           const visualRowIndex = this.instance.toVisualRow(row);
           const visualColIndex = this.instance.toVisualColumn(column);

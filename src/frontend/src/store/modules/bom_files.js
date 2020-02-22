@@ -27,9 +27,10 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
+        commit("throwError", error.response.data.data[0], { root: true });
       });
   },
-  
+
   async fetchBomFile({ commit }, file_id) {
     await axios
       .get(`http://localhost:8000/api/v1.0/mrp/bom-files/${file_id}/`)
@@ -38,16 +39,19 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
+        commit("throwError", error.response.data.data[0], { root: true });
       });
-	},
-	
+  },
+
   createNewBomFile({ commit }, file) {
-    axios.post("http://localhost:8000/api/v1.0/mrp/bom-files/", file)
+    axios
+      .post("http://localhost:8000/api/v1.0/mrp/bom-files/", file)
       .then(response => {
         commit("newBomFile", response.data);
       })
       .catch(error => {
         console.log(error);
+        commit("throwError", error.response.data.data[0], { root: true });
       });
   }
 };

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="title">{{ mastFile.title }}</h3>
+    <label class="title">{{ mastFile.title }}</label>
     <hot-table :settings="settings"></hot-table>
 
     <b-toast id="my-toast" variant="success" solid>
@@ -34,28 +34,17 @@ export default {
         data: [],
         colHeaders: ["Part Number"],
         stretchH: "all",
-        colWidths: 100,
+        colWidths: 50,
         afterChange: changes => {
           if (changes) {
             changes.forEach(([row, prop, oldValue, newValue]) => {
-              row;
               oldValue;
-              console.log(prop)
-              try {
-                // Editar part number
-                if(prop == "part_number")
-                  this.updatePeriodsPartNumber(newValue);
-                else {
-                  // Editar data del period
-                  let period = this.getAllPeriods.find(
-                    period => period.id == prop
-                  );
-                  period.data = newValue;
-                  this.updatePeriod(period);
-                }
-                this.$bvToast.show("my-toast");
-              } catch (error) {
-                console.log(error);
+              // Editar part number
+              if(prop == "part_number") {
+                this.updatePeriodsPartNumber({ oldValue, newValue });
+              }
+              else {
+                this.updatePeriod({ row, prop, newValue });
               }
             });
           }
@@ -64,7 +53,10 @@ export default {
         rowHeights: 40,
         rowHeaders: true,
         licenseKey: "non-commercial-and-evaluation",
-        className: "htMiddle htCenter"
+        className: "htMiddle htCenter",
+        contextMenu: true,
+        manualColumnResize: true,
+        manualRowResize: true
       }
     };
   },
@@ -75,7 +67,7 @@ export default {
     })
   },
   
-  mounted() {
+  created() {
     this.fetchMastFile(this.$route.params.file);
 
     this.$store.subscribe(mutation => {
@@ -87,12 +79,16 @@ export default {
         for (let i = 0; i < this.mastFile.planning_horizon_length * 1; i++) {
           this.settings.colHeaders.push("Period " + (i + 1));
           this.settings.columns.push({
-            data: this.getAllPeriods[i].id,
+            data: this.getAllPeriods[i].order,
             allowEmpty: true
           });
         }
         
         this.settings.data = this.getAllConvertedPeriods;
+      }
+
+      if(mutation.type === "updatedPeriod") {
+        this.$bvToast.show("my-toast");
       }
     });
   },
@@ -112,11 +108,11 @@ export default {
 
 .title {
   position: absolute;
-  top: 10px;
+  top: 16px;
   color: #ffffff;
   z-index: 200;
   left: 50%;
-  width: 200px;
-  margin-left: -100px;
+  width: 600px;
+  margin-left: -300px;
 }
 </style>

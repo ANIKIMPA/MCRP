@@ -68,6 +68,7 @@ class Period(models.Model):
         ordering = ['file', 'part_number', 'order']
         verbose_name = 'Period'
         verbose_name_plural = 'Periods'
+        unique_together = ("file", "part_number", "order",)
 
     def __str__(self):
         return f"File: {self.file}, Part Number: {self.part_number}, Period {self.order}: {self.data}"

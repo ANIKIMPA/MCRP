@@ -20,6 +20,7 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
+        commit("throwError", error.response.data.data[0], { root: true });
       });
   },
   // Agregar period
@@ -31,32 +32,48 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
+        commit("throwError", error.response.data.data[0], { root: true });
       });
   },
 
-  async updatePeriod({ commit }, period) {
+  async updatePeriod({ state, commit }, params) {
+    console.log(params);
+    const part_number = state.convertedPeriods[params.row].part_number;
+    const mPeriod = state.periods.find(
+      mPeriod =>
+        mPeriod.part_number == part_number && mPeriod.order == params.prop
+    );
+    mPeriod.data = params.newValue;
+
     await axios
-      .put(`http://localhost:8000/api/v1.0/mrp/periods/${period.id}/`, period)
+      .put(`http://localhost:8000/api/v1.0/mrp/periods/${mPeriod.id}/`, mPeriod)
       .then(response => {
-        commit("updatePeriod", response.data);
+        commit("updatedPeriod", response.data);
       })
       .catch(error => {
         console.log(error);
+        commit("throwError", error.response.data.data[0], { root: true });
       });
   },
 
-  async updatePeriodsPartNumber({ commit }, part_number) {
-    for(let i=0; i<state.periods.length; i++) {
-      state.periods[i].part_number = part_number
-      console.log(state.periods[i].part_number)
+  async updatePeriodsPartNumber({ commit }, params) {
+    let mPeriods = state.periods.filter(
+      mPeriod => mPeriod.part_number == params.oldValue
+    );
+    for (let i = 0; i < mPeriods.length; i++) {
+      mPeriods[i].part_number = params.newValue;
 
       await axios
-        .put(`http://localhost:8000/api/v1.0/mrp/periods/${state.periods[i].id}/`, state.periods[i])
+        .put(
+          `http://localhost:8000/api/v1.0/mrp/periods/${mPeriods[i].id}/`,
+          mPeriods[i]
+        )
         .then(response => {
-          commit("updatePeriod", response.data);
+          commit("updatedPeriod", response.data);
         })
         .catch(error => {
           console.log(error);
+          commit("throwError", error.response.data.data[0], { root: true });
         });
     }
   }
@@ -65,40 +82,39 @@ const actions = {
 const mutations = {
   // Set all periods to state
   updatePeriods: (state, periods) => {
-    state.periods = periods
+    state.periods = periods;
 
     for (let i = 0; i < periods.length; i++) {
-      convertPeriod(state, periods[i])
+      convertPeriod(state, periods[i]);
     }
   },
   setPeriods: (state, periods) => {
-    state.periods = [...periods]
-    state.convertedPeriods = []
+    state.periods = [...periods];
+    state.convertedPeriods = [];
 
     for (let i = 0; i < periods.length; i++) {
-      convertPeriod(state, periods[i])
+      convertPeriod(state, periods[i]);
     }
   },
 
   //Add period to state
   newPeriod: (state, period) => {
-    state.periods.push(period)
-    convertPeriod(state, period)
+    state.periods.push(period);
+    convertPeriod(state, period);
   },
 
   // Update period in state
-  updatePeriod: (state, updPeriod) => {
+  updatedPeriod: (state, updPeriod) => {
     const index = state.periods.findIndex(period => period.id === updPeriod.id);
     if (index !== -1) {
       state.periods.splice(index, 1, updPeriod);
     }
 
-
     // Update converted period
     let idx = state.convertedPeriods.findIndex(
       mast => mast.part_number == updPeriod.part_number
     );
-  
+
     if (idx >= 0) {
       state.convertedPeriods[idx][`period${updPeriod.order}`] = updPeriod.data;
     } else {
@@ -115,16 +131,15 @@ export default {
   mutations
 };
 
-
 function convertPeriod(state, period) {
   let idx = state.convertedPeriods.findIndex(
     mast => mast.part_number == period.part_number
   );
 
   if (idx >= 0) {
-    state.convertedPeriods[idx][`${period.id}`] = period.data;
+    state.convertedPeriods[idx][`${period.order}`] = period.data;
   } else {
-    period[`${period.id}`] = period.data;
+    period[`${period.order}`] = period.data;
     state.convertedPeriods.push({ ...period });
   }
 }

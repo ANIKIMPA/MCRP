@@ -1,6 +1,6 @@
 <template>
   <div id="example1">
-    <h3 class="title">{{ bomFile.title }}</h3>
+    <label class="title">{{ bomFile.title }}</label>
 
     <hot-table :settings="settings"></hot-table>
 
@@ -103,7 +103,7 @@ export default {
       return part_numbers;
     }
   },
-  mounted: function() {
+  created: function() {
     this.fetchBomFile(this.$route.params.file);
     this.fetchItems(this.$route.params.file);
 
@@ -147,11 +147,11 @@ export default {
 
 .title {
   position: absolute;
-  top: 10px;
+  top: 16px;
   color: #ffffff;
   z-index: 200;
   left: 50%;
-  width: 200px;
-  margin-left: -100px;
+  width: 600px;
+  margin-left: -300px;
 }
 </style>

@@ -27,9 +27,10 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
+        commit("throwError", error.response.data.data[0], { root: true });
       });
   },
-  
+
   async fetchMastFile({ commit }, file_id) {
     await axios
       .get(`http://localhost:8000/api/v1.0/mrp/mast-files/${file_id}/`)
@@ -38,9 +39,10 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
+        commit("throwError", error.response.data.data[0], { root: true });
       });
-	},
-	
+  },
+
   createNewMastFile({ commit }, file) {
     axios
       .post("http://localhost:8000/api/v1.0/mrp/mast-files/", file)
@@ -49,6 +51,7 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
+        commit("throwError", error.response.data.data[0], { root: true });
       });
   }
 };
