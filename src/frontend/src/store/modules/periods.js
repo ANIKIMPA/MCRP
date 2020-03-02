@@ -20,7 +20,7 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
-        commit("throwError", error.response.data.data[0], { root: true });
+        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   },
   // Agregar period
@@ -32,7 +32,7 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
-        commit("throwError", error.response.data.data[0], { root: true });
+        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   },
 
@@ -52,7 +52,7 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
-        commit("throwError", error.response.data.data[0], { root: true });
+        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   },
 
@@ -73,7 +73,7 @@ const actions = {
         })
         .catch(error => {
           console.log(error);
-          commit("throwError", error.response.data.data[0], { root: true });
+          commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
         });
     }
   }

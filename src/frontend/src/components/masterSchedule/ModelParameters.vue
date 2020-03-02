@@ -79,7 +79,7 @@ export default {
 					for (let i = 0; i < this.form.numberItems; i++) {
 						for (let num = 1; num <= this.form.planning_horizon_length; num++) {
 							this.addPeriod({
-								part_number: 100 * num,
+								part_number: null,
 								period: null,
 								order: num,
 								file: this.mastFile.id

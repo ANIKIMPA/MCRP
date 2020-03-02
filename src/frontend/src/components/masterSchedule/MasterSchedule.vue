@@ -80,6 +80,7 @@ export default {
           this.settings.colHeaders.push("Period " + (i + 1));
           this.settings.columns.push({
             data: this.getAllPeriods[i].order,
+            type: "numeric",
             allowEmpty: true
           });
         }

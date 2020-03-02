@@ -34,7 +34,7 @@ export default {
 				// Add items to the file
 				for (let i = 1; i <= this.items_number; i++) {
 					this.addItem({
-						part_number: 100 * i,
+						part_number: null,
 						tipo: "MAT",
 						parent: null,
 						qty: 1,

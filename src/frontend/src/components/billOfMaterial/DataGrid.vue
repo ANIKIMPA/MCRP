@@ -37,12 +37,7 @@ export default {
         afterChange: changes => {
           if (changes) {
             changes.forEach(([row]) => {
-              try {
-                this.updateItem(this.settings.data[row]);
-                this.$bvToast.show("my-toast");
-              } catch (error) {
-                console(error);
-              }
+              this.updateItem(this.settings.data[row]);
             });
           }
         },
@@ -113,10 +108,15 @@ export default {
           data: "parent",
           type: 'dropdown',
           source: this.allPartNumbers
-          // editor: "select",
-          // selectOptions: this.allPartNumbers
         });
         this.settings.data = this.getAllItems;
+      } else if(mutation.type === "updateItem") {
+        this.$bvToast.show("my-toast");
+        this.settings.columns[3] = ({
+          data: "parent",
+          type: 'dropdown',
+          source: this.allPartNumbers
+        });
       }
     });
   }
