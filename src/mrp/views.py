@@ -1,5 +1,16 @@
-from .models import BomFile, Item, MastFile, Period
-from .serializers import BomFileSerializer, ItemSerializer, MastFileSerializer, PeriodSerializer
+from .models import (
+    BomFile, BomItem, MastFile, Period, InvFile, InvItem, ItemMasterFile, ItemMaster
+)
+from .serializers import (
+    BomFileSerializer,
+    ItemSerializer,
+    MastFileSerializer,
+    PeriodSerializer,
+    InvFileSerializer,
+    InvItemSerializer,
+    ItemMasterFileSerializer,
+    ItemMasterSerializer,
+)
 from rest_framework.response import Response
 from rest_framework import permissions, viewsets
 from .permissions import IsOwnerOrReadOnly
@@ -18,8 +29,8 @@ class BomFileViewSet(viewsets.ModelViewSet):
     #                       IsOwnerOrReadOnly]
 
     @action(detail=True, methods=['get'])
-    def get_items(self, request, file_id):
-        queryset = Item.objects.all().filter(file=file_id)
+    def get_bom_items(self, request, file_id):
+        queryset = BomItem.objects.all().filter(file=file_id)
         serializer = ItemSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -28,7 +39,7 @@ class BomFileViewSet(viewsets.ModelViewSet):
 
 
 class ItemViewSet(viewsets.ModelViewSet):
-    queryset = Item.objects.all()
+    queryset = BomItem.objects.all()
     serializer_class = ItemSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
@@ -52,4 +63,47 @@ class PeriodViewSet(viewsets.ModelViewSet):
     def get_periods(self, request, file_id):
         queryset = Period.objects.filter(file=file_id)
         serializer = PeriodSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+class InvFileViewSet(viewsets.ModelViewSet):
+    queryset = InvFile.objects.all()
+    serializer_class = InvFileSerializer
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+    #                       IsOwnerOrReadOnly]
+
+    # def perform_create(self, serializer):
+    #     serializer.save(owner=self.request.user)
+
+
+class InvItemViewSet(viewsets.ModelViewSet):
+    queryset = InvItem.objects.all()
+    serializer_class = InvItemSerializer
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @action(detail=True, methods=['get'])
+    def get_inv_items(self, request, file_id):
+        queryset = InvItem.objects.filter(file=file_id)
+        serializer = InvItemSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class ItemMasterFileViewSet(viewsets.ModelViewSet):
+    queryset = ItemMasterFile.objects.all()
+    serializer_class = ItemMasterFileSerializer
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+    #                       IsOwnerOrReadOnly]
+
+    # def perform_create(self, serializer):
+    #     serializer.save(owner=self.request.user)
+
+
+class ItemMasterViewSet(viewsets.ModelViewSet):
+    queryset = ItemMaster.objects.all()
+    serializer_class = ItemMasterSerializer
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    @action(detail=True, methods=['get'])
+    def get_items_masters(self, request, file_id):
+        queryset = ItemMaster.objects.filter(file=file_id)
+        serializer = ItemMasterSerializer(queryset, many=True)
         return Response(serializer.data)

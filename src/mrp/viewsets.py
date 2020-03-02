@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from .models import Item, File
+from .models import BomItem, File
 from .serializers import FileSerializer, ItemSerializer
 from rest_framework import viewsets
 from .permissions import IsOwnerOrReadOnly
@@ -42,7 +42,7 @@ class FileViewSet(viewsets.ModelViewSet):
 #     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 #     def get(self, request):
-#         items = Item.objects.all()
+#         items = BomItem.objects.all()
 #         serializer = ItemSerializer(items, many=True)
 #         return Response(serializer.data)
 
@@ -65,8 +65,8 @@ class FileViewSet(viewsets.ModelViewSet):
 
 #     def get_object(self, pk):
 #         try:
-#             file = Item.objects.get(pk=pk)
-#         except Item.DoesNotExist:
+#             file = BomItem.objects.get(pk=pk)
+#         except BomItem.DoesNotExist:
 #             raise Http404
 
 #     def get(self, request, pk):

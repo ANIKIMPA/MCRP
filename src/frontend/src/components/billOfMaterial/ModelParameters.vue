@@ -33,7 +33,7 @@ export default {
 			if (mutation.type === "newBomFile") {
 				// Add items to the file
 				for (let i = 1; i <= this.items_number; i++) {
-					this.addItem({
+					this.addBomItem({
 						part_number: null,
 						tipo: "MAT",
 						parent: null,
@@ -53,7 +53,7 @@ export default {
 		});
 	},
 	methods: {
-		...mapActions(["addItem", "createNewBomFile"]),
+		...mapActions(["addBomItem", "createNewBomFile"]),
 		GoHome() {
 			// Create new file
 			this.createNewBomFile({

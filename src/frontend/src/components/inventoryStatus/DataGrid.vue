@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label class="title">{{ mastFile.title }}</label>
+    <label class="title">{{ invFile.title }}</label>
     <hot-table :settings="settings"></hot-table>
 
     <b-toast id="my-toast" variant="success" solid>
@@ -21,7 +21,7 @@ import { mapGetters, mapActions, mapState } from "vuex";
 // import Handsontable from 'handsontable';
 
 export default {
-  name: "master_schedule",
+  name: "inventory_status",
   store,
   components: {
     HotTable
@@ -39,7 +39,7 @@ export default {
           if (changes) {
             changes.forEach(([row, prop, oldValue, newValue]) => {
               oldValue;
-              this.updateInvItem({ row, prop, newValue });
+                this.updatePeriod({ row, prop, newValue });
             });
           }
         },
@@ -55,45 +55,45 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getAllInvItems", "getAllConvertedInvItems", "mastFile"]),
+    ...mapGetters(["getAllPeriods", "getAllConvertedPeriods", "invFile"]),
     ...mapState({
-      mast_files: state => state.mastFile
+      inv_files: state => state.invFile
     })
   },
   
   created() {
-    this.fetchInvFile(this.$route.params.file);
+    this.fetchMastFile(this.$route.params.file);
 
     this.$store.subscribe(mutation => {
-      if (mutation.type === "setInvItems") {
+      if (mutation.type === "setPeriods") {
         this.settings.columns.push({
           data: "part_number",
           allowEmpty: false
         });
-        for (let i = 0; i < this.mastFile.planning_horizon_length * 1; i++) {
-          this.settings.colHeaders.push("InvItem " + (i + 1));
+        for (let i = 0; i < this.invFile.planning_horizon_length * 1; i++) {
+          this.settings.colHeaders.push("Period " + (i + 1));
           this.settings.columns.push({
-            data: this.getAllInvItems[i].order,
+            data: this.getAllPeriods[i].order,
             type: "numeric",
             allowEmpty: true
           });
         }
         
-        this.settings.data = this.getAllConvertedInvItems;
+        this.settings.data = this.getAllConvertedPeriods;
       }
 
-      if(mutation.type === "updatedInvItem") {
+      if(mutation.type === "updatedPeriod") {
         this.$bvToast.show("my-toast");
       }
     });
   },
   watch: {
-    mastFile() {
-      this.fetchInvItems(this.$route.params.file);
+    invFile() {
+      this.fetchPeriods(this.$route.params.file);
     }
   },
   methods: {
-    ...mapActions(["fetchInvFile", "fetchInvItems", "updateInvItem"])
+    ...mapActions(["fetchMastFile", "fetchPeriods", "updatePeriod", "updatePeriodsPartNumber"])
   }
 };
 </script>

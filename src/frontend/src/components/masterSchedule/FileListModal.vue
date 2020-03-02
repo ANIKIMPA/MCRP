@@ -31,11 +31,11 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions(["fetchAllBomFiles", "fetchItems"]),
+		...mapActions(["fetchAllBomFiles", "fetchBomItems"]),
 		...mapMutations(["setBomFile"]),
 		ReturnSelected(file) {
 			this.setBomFile(file);
-			this.fetchItems(file.id);
+			this.fetchBomItems(file.id);
 			this.$bvModal.hide("file-store");
 			this.$emit("bomFile");
 		},

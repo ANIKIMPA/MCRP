@@ -37,7 +37,7 @@ export default {
         afterChange: changes => {
           if (changes) {
             changes.forEach(([row]) => {
-              this.updateItem(this.settings.data[row]);
+              this.updateBomItem(this.settings.data[row]);
             });
           }
         },
@@ -74,9 +74,9 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["updateItem", "addItem", "fetchBomFile", "fetchItems"]),
+    ...mapActions(["updateBomItem", "addBomItem", "fetchBomFile", "fetchBomItems"]),
     addRow() {
-      this.addItem({
+      this.addBomItem({
         part_number: null,
         tipo: "MAT",
         parent: null,
@@ -87,12 +87,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getAllItems", "bomFile"]),
+    ...mapGetters(["getAllBomItems", "bomFile"]),
     allPartNumbers() {
       let part_numbers = [];
 
-      for (let i = 0; i < this.getAllItems.length; i++) {
-        part_numbers.push(this.getAllItems[i].part_number);
+      for (let i = 0; i < this.getAllBomItems.length; i++) {
+        part_numbers.push(this.getAllBomItems[i].part_number);
       }
 
       return part_numbers;
@@ -100,17 +100,17 @@ export default {
   },
   created: function() {
     this.fetchBomFile(this.$route.params.file);
-    this.fetchItems(this.$route.params.file);
+    this.fetchBomItems(this.$route.params.file);
 
     this.$store.subscribe(mutation => {
-      if (mutation.type === "setItems") {
+      if (mutation.type === "setBomItems") {
         this.settings.columns.push({
           data: "parent",
           type: 'dropdown',
           source: this.allPartNumbers
         });
-        this.settings.data = this.getAllItems;
-      } else if(mutation.type === "updateItem") {
+        this.settings.data = this.getAllBomItems;
+      } else if(mutation.type === "updateBomItem") {
         this.$bvToast.show("my-toast");
         this.settings.columns[3] = ({
           data: "parent",

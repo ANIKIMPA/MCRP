@@ -6,14 +6,13 @@
 					<b-form-group label="File Type" class="h-92 border p-2">
 						<b-form-radio v-model="fileTypeSelected" name="file-type" value="bomModelParameters">Bill of Material</b-form-radio>
 						<b-form-radio v-model="fileTypeSelected" name="file-type" value="mastModelParameters">Master Schedule</b-form-radio>
-						<b-form-radio v-model="fileTypeSelected" name="file-type" value>Inventory Status</b-form-radio>
+						<b-form-radio v-model="fileTypeSelected" name="file-type" value="invModelParameters">Inventory Status</b-form-radio>
 						<b-form-radio v-model="fileTypeSelected" name="file-type" value>Item Master</b-form-radio>
 						<b-form-radio v-model="fileTypeSelected" name="file-type" value>Resource Capacity</b-form-radio>
 					</b-form-group>
 				</b-col>
 				<b-col cols="8">
-					<div v-if="
-              fileTypeSelected != 'bomModelParameters' && fileTypeSelected != ''" class="border p-2 my-3">
+					<div v-if="fileTypeSelected != 'bomModelParameters' && fileTypeSelected != ''" class="border p-2 my-3">
 						<b-form-group>
 							<b-row align-h="between" align-v="center">
 
@@ -56,7 +55,8 @@ export default {
 	components: {
 		FileListModal,
 		bomModelParameters: () => import("./billOfMaterial/ModelParameters"),
-		mastModelParameters: () => import("./masterSchedule/ModelParameters")
+		mastModelParameters: () => import("./masterSchedule/ModelParameters"),
+		invModelParameters: () => import("./inventoryStatus/ModelParameters"),
 	},
 	data() {
 		return {

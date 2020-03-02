@@ -4,7 +4,7 @@
 			<div class="form-group row">
 				<label class="col-form-label col-2" for="title">Title:</label>
 				<div class="col-10">
-					<input type="text" class="form-control" v-model="form.title" id="title" />
+					<input type="text" class="form-control" v-model="form.title" id="title"/>
 				</div>
 			</div>
 
@@ -25,7 +25,7 @@
 			<div class="form-group row">
 				<label class="col-form-label col-9" for="number_time_buckets">Number of Time Buckets per Year:</label>
 				<div class="col-3">
-					<input type="number" class="form-control" v-model="form.number_time_buckets" min="1" value="1" id="number_time_buckets" />
+					<input type="number" class="form-control" v-model="form.number_time_buckets" min="1" value="1" id="number_time_buckets" readonly />
 				</div>
 			</div>
 		</form>
@@ -56,8 +56,11 @@ export default {
 		this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
 			if(modalId === "modal-parameters")
 				if(this.createFromBomFile) {
+					this.form.title = this.getMasterItems[0].part_number;
 					this.form.numberItems = this.getMasterItems.length;
-					console.log("aqui")
+				} else {
+					this.form.title = null
+					this.form.numberItems = 1
 				}
 		})
 
@@ -100,13 +103,21 @@ export default {
 	},
 	methods: {
 		...mapActions(["addPeriod", "createNewMastFile"]),
-		onSubmit() {
-			this.createNewMastFile({
-				title: this.form.title,
-				number_of_items: this.getMasterItems.length,
-				planning_horizon_length: this.form.planning_horizon_length,
-				number_time_buckets: this.form.number_time_buckets
-			});
+		onSubmit(e) {
+			e.preventDefault();
+
+			if(this.form.title && this.form.title.trim() != "") {
+				this.createNewMastFile({
+					title: this.form.title,
+					number_of_items: this.getMasterItems.length,
+					planning_horizon_length: this.form.planning_horizon_length,
+					number_time_buckets: this.form.number_time_buckets
+				});
+
+				this.$nextTick(() => {
+					this.$bvModal.hide('modal-parameters')
+				})
+			}
 		}
 	}
 };
