@@ -19,11 +19,11 @@
 				<!-- Número de periodos -->
 				<label class="col-form-label col-9" for="lead_time">Maximal Lead Time in Time Buckets:</label>
 				<div class="col-3">
-					<input type="number" class="form-control" v-model="form.lead_time" min="1" value="1" id="lead_time" />
+					<input type="number" class="form-control" v-model="form.lead_time" min="1" value="1" id="lead_time" readonly/>
 				</div>
 			</div>
 			<div class="form-group row">
-				<label class="col-form-label col-9" for="number_of_periods">Maximal # of InvItems for Firm Planned Orders:</label>
+				<label class="col-form-label col-9" for="number_of_periods">Maximal # of Periods for Firm Planned Orders:</label>
 				<div class="col-3">
 					<input type="number" class="form-control" v-model="form.number_of_periods" min="1" value="1" id="number_of_periods" readonly />
 				</div>
@@ -81,18 +81,18 @@ export default {
                             safe_stock: 0,
                             on_hand: 0,
                             past_due: 0,
-                            receipts: null,
+                            receipts: "0",
                             file: this.invFile.id
                         });
 					}
 				} else {
 					for (let i = 0; i < this.form.number_of_items; i++) {
                         this.addInvItem({
-                            part_number: this.getAllBomItems[i].part_number,
+                            part_number: null,
                             safe_stock: 0,
                             on_hand: 0,
                             past_due: 0,
-                            receipts:null,
+                            receipts: "0",
                             file: this.invFile.id
                         });
 					}
@@ -116,7 +116,7 @@ export default {
 			if(this.form.title && this.form.title.trim() != "") {
 				this.createNewInvFile({
 					title: this.form.title,
-					number_of_items: this.getAllBomItems.length,
+					number_of_items: this.form.number_of_items,
 					lead_time: this.form.lead_time,
                     number_of_periods: this.form.number_of_periods,
                     annual_carrying: this.form.annual_carrying

@@ -39,7 +39,7 @@ router.register(r'items-masters', views.ItemMasterViewSet)
 urlpatterns = [
     path('bom-files/<int:file_id>/bom-items', file_bom_items, name='file-bom-items'),
     path('mast-files/<int:file_id>/periods', file_periods, name='file-periods'),
-    path('mast-files/<int:file_id>/inv-items', file_inv_items, name='file-inv-items'),
-    path('mast-files/<int:file_id>/items-masters', file_items_masters, name='file-items-masters'),
+    path('inv-files/<int:file_id>/inv-items', file_inv_items, name='file-inv-items'),
+    path('item-master-files/<int:file_id>/items-masters', file_items_masters, name='file-items-masters'),
     path('', include(router.urls)),
 ]

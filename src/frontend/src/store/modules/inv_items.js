@@ -38,7 +38,7 @@ const actions = {
     await axios
       .put(`http://localhost:8000/api/v1.0/mrp/inv-items/${item.id}/`, item)
       .then(response => {
-        commit("updateInvItem", response.data);
+        commit("updatedInvItem", response.data);
       })
       .catch(error => {
         console.log(error);
@@ -50,13 +50,26 @@ const actions = {
 const mutations = {
   // Set all invItems to state
   updateInvItems: (state, invItems) => (state.invItems = invItems),
-  setInvItems: (state, invItems) => (state.invItems = invItems),
+  setInvItems: (state, invItems) => {
+    let items = []
+
+    invItems.forEach(item => {
+      items.push(convertReceipts(item))
+    });
+
+    state.invItems = items
+  },
 
   //Add item to state
-  newInvItem: (state, item) => state.invItems.push(item),
-
+  newInvItem: (state, item) => {
+    const newItem = convertReceipts(item)
+    
+    state.invItems.push(newItem)
+  },
   // Update item in state
-  updateInvItem: (state, updItem) => {
+  updatedInvItem: (state, item) => {
+    const updItem = convertReceipts(item)
+
     const index = state.invItems.findIndex(item => item.id === updItem.id);
     if (index !== -1) {
       state.invItems.splice(index, 1, updItem);
@@ -70,3 +83,12 @@ export default {
   actions,
   mutations
 };
+
+function convertReceipts(item) {
+  let receipts = item.receipts.split(",");
+  for(let i=0; i<receipts.length; i++) {
+    item[`receipt${i + 1}`] = receipts[i]
+  }
+
+  return item
+}

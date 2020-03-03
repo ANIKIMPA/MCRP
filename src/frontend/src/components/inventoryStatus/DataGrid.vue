@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label class="title">{{ invFile.title }}</label>
+    <label class="title">Inventory Status: {{ invFile.title }}</label>
     <hot-table :settings="settings"></hot-table>
 
     <b-toast id="my-toast" variant="success" solid>
@@ -11,6 +11,8 @@
       </template>
       Saved successfully!
     </b-toast>
+
+    <b-button  class="position-absolute btnAddReceipt" variant="info" @click="addReceipt">Add Receipt</b-button>
   </div>
 </template>
 
@@ -21,7 +23,7 @@ import { mapGetters, mapActions, mapState } from "vuex";
 // import Handsontable from 'handsontable';
 
 export default {
-  name: "inventory_status",
+  name: "InventoryStatus",
   store,
   components: {
     HotTable
@@ -32,18 +34,41 @@ export default {
       hotRef: null,
       settings: {
         data: [],
-        colHeaders: ["Part Number"],
+        colHeaders: ["Part Number", "Safe Stock", "On Hand", "Past Due"],
         stretchH: "all",
         colWidths: 50,
         afterChange: changes => {
           if (changes) {
-            changes.forEach(([row, prop, oldValue, newValue]) => {
-              oldValue;
-                this.updatePeriod({ row, prop, newValue });
+            changes.forEach(([row], prop, oldValue, newValue) => {
+              if(!isNaN(newValue)) {
+                // Obteniendo todos los keys que empiecen con receipt      
+                let keys = Object.keys(this.settings.data[row]).filter(key => key.startsWith('receipt') && key != "receipts")
+                // Guardando todos los receipts en la propiedad receipts
+                this.settings.data[row].receipts = keys.map(key => this.settings.data[row][key]).join(',')
+  
+                this.updateInvItem(this.settings.data[row])
+              }
             });
           }
         },
-        columns: [],
+        columns: [
+          {
+            data: "part_number",
+            allowEmpty: false
+          },
+          {
+            data: "safe_stock",
+            allowEmpty: false
+          },
+          {
+            data: "on_hand",
+            allowEmpty: false
+          },
+          {
+            data: "past_due",
+            allowEmpty: false
+          }          
+        ],
         rowHeights: 40,
         rowHeaders: true,
         licenseKey: "non-commercial-and-evaluation",
@@ -55,45 +80,57 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getAllPeriods", "getAllConvertedPeriods", "invFile"]),
+    ...mapGetters(["getAllInvItems", "getAllInvItems", "invFile"]),
     ...mapState({
       inv_files: state => state.invFile
-    })
+    }),
+    countReceipts() {
+      return this.settings.data[0].receipts.split(",").length;
+    }
   },
   
   created() {
-    this.fetchMastFile(this.$route.params.file);
+    this.fetchInvFile(this.$route.params.file);
 
     this.$store.subscribe(mutation => {
-      if (mutation.type === "setPeriods") {
-        this.settings.columns.push({
-          data: "part_number",
-          allowEmpty: false
-        });
-        for (let i = 0; i < this.invFile.planning_horizon_length * 1; i++) {
-          this.settings.colHeaders.push("Period " + (i + 1));
+      if (mutation.type === "setInvItems") {
+        for(let i = 1; i <= Object.keys(this.getAllInvItems[0]).length - 7; i++) {
+          this.settings.colHeaders.push("Receipt " + i);
           this.settings.columns.push({
-            data: this.getAllPeriods[i].order,
+            data: "receipt" + i,
             type: "numeric",
-            allowEmpty: true
+            allowEmpty: false
           });
         }
         
-        this.settings.data = this.getAllConvertedPeriods;
+        this.settings.data = this.getAllInvItems;
       }
 
-      if(mutation.type === "updatedPeriod") {
+      if(mutation.type === "updatedInvItem") {
         this.$bvToast.show("my-toast");
       }
     });
   },
   watch: {
     invFile() {
-      this.fetchPeriods(this.$route.params.file);
+      this.fetchInvItems(this.$route.params.file);
     }
   },
   methods: {
-    ...mapActions(["fetchMastFile", "fetchPeriods", "updatePeriod", "updatePeriodsPartNumber"])
+    ...mapActions(["fetchInvFile", "fetchInvItems", "updateInvItem", "updateInvItemsPartNumber"]),
+    addReceipt() {
+      this.settings.colHeaders.push(`Receipt  ${this.countReceipts + 1}`);
+      this.settings.columns.push({
+        data: `receipt${this.countReceipts + 1}`,
+        type: "numeric",
+        allowEmpty: false
+      });
+
+      this.settings.data.forEach(item => {
+        item.receipts += ",0";
+        this.updateInvItem(item)
+      })
+    }
   }
 };
 </script>
@@ -109,5 +146,10 @@ export default {
   left: 50%;
   width: 600px;
   margin-left: -300px;
+}
+
+.btnAddReceipt {
+  top: 62px;
+  left: 30%;
 }
 </style>

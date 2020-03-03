@@ -1,6 +1,6 @@
 <template>
   <div id="example1">
-    <label class="title">{{ bomFile.title }}</label>
+    <label class="title">Bill of Material: {{ bomFile.title }}</label>
 
     <hot-table :settings="settings"></hot-table>
 
@@ -22,7 +22,7 @@ import { HotTable } from "@handsontable/vue";
 import { mapActions, mapGetters } from "vuex";
 
 export default {
-  name: "billOfMaterial",
+  name: "BillOfMaterial",
   components: {
     HotTable
     // HotColumn
@@ -56,6 +56,11 @@ export default {
             allowEmpty: false
           }
         ],
+        afterOnCellMouseOver: (event, cellCoords, td) => {
+          console.log(event)
+          console.log(cellCoords)
+          console.log(td)
+        },
         rowHeights: 40,
         rowHeaders: true,
         licenseKey: "non-commercial-and-evaluation",
@@ -115,6 +120,7 @@ export default {
         this.settings.columns[3] = ({
           data: "parent",
           type: 'dropdown',
+          allowEmpty: true,
           source: this.allPartNumbers
         });
       }

@@ -4,6 +4,8 @@ import bomItems from "./modules/bom_items";
 import bom_files from "./modules/bom_files";
 import mast_files from "./modules/mast_files";
 import periods from "./modules/periods";
+import invFiles from "./modules/inv_files";
+import invItems from "./modules/inv_items";
 import error from "./modules/error";
 
 Vue.use(Vuex);
@@ -15,6 +17,8 @@ export default new Vuex.Store({
     mast_files,
     bom_files,
     periods,
+    invFiles,
+    invItems,
     error
   }
 });
