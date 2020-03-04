@@ -25,6 +25,7 @@
 								<BomFilesList />
 								<MastFilesList />
 								<InvFilesList />
+								<ItemMasterFilesList />
 							</ul>
 						</li>
 						<li @click="goHome">Close</li>
@@ -53,6 +54,7 @@ import DataConfigurationModal from "./DataConfigurationModal";
 import BomFilesList from "./billOfMaterial/BomFilesList"
 import MastFilesList from "./masterSchedule/MastFilesList"
 import InvFilesList from "./inventoryStatus/FilesList"
+import ItemMasterFilesList from "./itemMaster/FilesList"
 import { mapGetters } from "vuex";
 export default {
 	components: {
@@ -60,7 +62,8 @@ export default {
 		DataConfigurationModal,
 		BomFilesList,
 		MastFilesList,
-		InvFilesList
+		InvFilesList,
+		ItemMasterFilesList,
 	},
 	data() {
 		return {

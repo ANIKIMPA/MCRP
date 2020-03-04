@@ -61,5 +61,5 @@ class ItemMasterFileSerializer(serializers.ModelSerializer):
 class ItemMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model = ItemMaster
-        fields = ('id', 'part_number', 'clase', 'lot_size', 'multiple', 'lead_time', 'scrap_percent',
-            'unit_value', 'order_cost', 'demand')
+        fields = ('id', 'part_number', 'clase', 'lot_size', 'multiple', 'lead_time', 'yield_percent',
+            'unit_value', 'order_cost', 'carrying_cost', 'demand')

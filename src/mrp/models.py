@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 from users.models import LoginLevel
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Create your models here.
 
@@ -95,9 +96,9 @@ class InvFile(models.Model):
 
 class InvItem(models.Model):
     part_number = models.CharField(max_length=12, blank=True, null=True)
-    safe_stock = models.PositiveIntegerField(blank=True, null=True)
-    on_hand = models.PositiveIntegerField(blank=True, null=True)
-    past_due = models.PositiveIntegerField(blank=True, null=True)
+    safe_stock = models.PositiveIntegerField(default=0)
+    on_hand = models.PositiveIntegerField(default=0)
+    past_due = models.PositiveIntegerField(default=0)
     receipts = models.CharField(max_length=250, blank=True, null=True)
     file = models.ForeignKey(InvFile, related_name='inv_items', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -130,13 +131,14 @@ class ItemMasterFile(models.Model):
 class ItemMaster(models.Model):
     part_number = models.CharField(max_length=12, blank=True, null=True)
     clase = models.CharField(max_length=50, blank=True, null=True)
-    lot_size = models.CharField(max_length=50, blank=True, null=True)
-    multiple = models.PositiveIntegerField(blank=True, null=True)
-    lead_time = models.PositiveIntegerField(blank=True, null=True)
-    scrap_percent = models.PositiveIntegerField(blank=True, null=True)
-    unit_value = models.PositiveIntegerField(blank=True, null=True)
-    order_cost = models.PositiveIntegerField(blank=True, null=True)
-    demand = models.PositiveIntegerField(blank=True, null=True)
+    lot_size = models.CharField(max_length=5, blank=True, null=True)
+    multiple = models.PositiveIntegerField(default=0)
+    lead_time = models.PositiveIntegerField(default=0)
+    yield_percent = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
+    unit_value = models.PositiveIntegerField(default=0)
+    order_cost = models.DecimalField(default=0, max_digits=10, decimal_places=2, validators=[MaxValueValidator(100), MinValueValidator(0)])
+    carrying_cost = models.DecimalField(default=0, max_digits=10, decimal_places=2, validators=[MaxValueValidator(100), MinValueValidator(0)])
+    demand = models.PositiveIntegerField(default=0)
     file = models.ForeignKey(ItemMasterFile, related_name='inv_items', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)

@@ -5,7 +5,7 @@
       <p class="mb-2">Select BOM File:</p>
       <b-list-group class="overflow-auto mh-300">
         <b-list-group-item button v-for="file in allBomFiles" @click="openBom(file)" :key="file.id" class="d-flex justify-content-between">
-			<span><i class="far fa-file-alt"></i> {{ file.title }}</span> <small style="font-style: italic;">{{ file.created_date | formatDate }}</small>
+			<span><i class="fas fa-file-alt"></i> {{ file.title }}</span> <small style="font-style: italic;">{{ file.created_date | formatDate }}</small>
 		</b-list-group-item>
       </b-list-group>
     </b-modal>

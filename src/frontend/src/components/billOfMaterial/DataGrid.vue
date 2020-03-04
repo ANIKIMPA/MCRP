@@ -44,7 +44,12 @@ export default {
         columns: [
           {
             data: "part_number",
-            allowEmpty: false
+            validator: function(value, callback) {
+              if(!value || value.trim() == "")
+                callback(false)
+              else
+                callback(true)
+            }
           },
           {
             data: "tipo",

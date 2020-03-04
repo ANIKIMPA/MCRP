@@ -67,8 +67,8 @@ const mutations = {
     state.invItems.push(newItem)
   },
   // Update item in state
-  updatedInvItem: (state, item) => {
-    const updItem = convertReceipts(item)
+  updatedInvItem: (state, invItem) => {
+    const updItem = convertReceipts(invItem)
 
     const index = state.invItems.findIndex(item => item.id === updItem.id);
     if (index !== -1) {

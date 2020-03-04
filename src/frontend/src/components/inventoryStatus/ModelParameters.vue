@@ -50,7 +50,7 @@ export default {
 			form: {
 				title: "Inventory Status",
 				lead_time: 0,
-				number_of_periods: 0,
+				number_of_periods: 1,
                 number_of_items : 1,
                 annual_carrying: 0,
 			}

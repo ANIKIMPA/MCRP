@@ -4,6 +4,7 @@
     <hot-table :settings="settings"></hot-table>
 
     <b-button  class="position-absolute btnAddReceipt" variant="info" @click="addReceipt">Add Receipt</b-button>
+    <b-button  class="position-absolute" variant="info" @click="check">Check</b-button>
   </div>
 </template>
 
@@ -31,21 +32,9 @@ export default {
         afterChange: changes => {
           if (changes) {
             changes.forEach(([row, prop, oldValue, newValue]) => {
-              oldValue;
-              if(!newValue || newValue.trim() == "") {
-                this.$bvToast.toast("Cell cannot be empty.", {
-                  title: "Storm 5.0",
-                  solid: true,
-                  variant: 'danger'
-                })
-              } else if(isNaN(newValue) && prop !== "part_number") {
-                this.$bvToast.toast("A valid integer is required.", {
-                  title: "Storm 5.0",
-                  solid: true,
-                  variant: 'danger'
-                })
-              }
-              else {
+              prop
+              oldValue
+              if(newValue && newValue.trim() != "") {
                 // Obteniendo todos los keys que empiecen con receipt      
                 let keys = Object.keys(this.settings.data[row]).filter(key => key.startsWith('receipt') && key != "receipts")
                 // Guardando todos los receipts en la propiedad receipts
@@ -59,19 +48,24 @@ export default {
         columns: [
           {
             data: "part_number",
-            allowEmpty: false
+            validator: function(value, callback) {
+              if(!value || value.trim() == "")
+                callback(false)
+              else
+                callback(true)
+            }
           },
           {
             data: "safe_stock",
-            allowEmpty: false
+            validator: /[0-9]+$/
           },
           {
             data: "on_hand",
-            allowEmpty: false
+            validator: /[0-9]+$/
           },
           {
             data: "past_due",
-            allowEmpty: false
+            validator: /[0-9]+$/
           }          
         ],
         rowHeights: 40,
@@ -127,6 +121,9 @@ export default {
   },
   methods: {
     ...mapActions(["fetchInvFile", "fetchInvItems", "updateInvItem", "updateInvItemsPartNumber"]),
+    check() {
+      console.log(this.settings.data)
+    },
     addReceipt() {
       this.settings.colHeaders.push(`Receipt  ${this.countReceipts + 1}`);
       this.settings.columns.push({

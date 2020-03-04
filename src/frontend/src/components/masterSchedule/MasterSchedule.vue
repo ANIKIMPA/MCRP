@@ -68,7 +68,12 @@ export default {
       if (mutation.type === "setPeriods") {
         this.settings.columns.push({
           data: "part_number",
-          allowEmpty: false
+          validator: function(value, callback) {
+            if(!value || value.trim() == "")
+              callback(false)
+            else
+              callback(true)
+          }
         });
         for (let i = 0; i < this.mastFile.planning_horizon_length * 1; i++) {
           this.settings.colHeaders.push("InvItem " + (i + 1));

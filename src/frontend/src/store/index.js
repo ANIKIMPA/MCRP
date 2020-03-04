@@ -6,6 +6,8 @@ import mast_files from "./modules/mast_files";
 import periods from "./modules/periods";
 import invFiles from "./modules/inv_files";
 import invItems from "./modules/inv_items";
+import itemMasterFiles from "./modules/item_master_files";
+import itemsMasters from "./modules/items_masters";
 import error from "./modules/error";
 
 Vue.use(Vuex);
@@ -19,6 +21,8 @@ export default new Vuex.Store({
     periods,
     invFiles,
     invItems,
+    itemMasterFiles,
+    itemsMasters,
     error
   }
 });

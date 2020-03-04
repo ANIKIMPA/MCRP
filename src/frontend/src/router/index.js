@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import BillOfMaterial from '@/components/billOfMaterial/DataGrid'
 import MasterSchedule from '@/components/masterSchedule/MasterSchedule.vue'
 import InventoryStatus from '@/components/inventoryStatus/DataGrid.vue'
+import ItemMaster from '@/components/itemMaster/DataGrid.vue'
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
     path: '/inventory-status/:file',
     name: 'inventory_status',
     component: InventoryStatus
+  },
+  {
+    path: '/item-master/:file',
+    name: 'item_master',
+    component: ItemMaster
   },
   {
     path: '/about',

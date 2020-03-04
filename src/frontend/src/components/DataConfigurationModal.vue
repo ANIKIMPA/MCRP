@@ -7,7 +7,7 @@
 						<b-form-radio v-model="fileTypeSelected" name="file-type" value="bomModelParameters">Bill of Material</b-form-radio>
 						<b-form-radio v-model="fileTypeSelected" name="file-type" value="mastModelParameters">Master Schedule</b-form-radio>
 						<b-form-radio v-model="fileTypeSelected" name="file-type" value="invModelParameters">Inventory Status</b-form-radio>
-						<b-form-radio v-model="fileTypeSelected" name="file-type" value>Item Master</b-form-radio>
+						<b-form-radio v-model="fileTypeSelected" name="file-type" value="itemMasterModelParameters">Item Master</b-form-radio>
 						<b-form-radio v-model="fileTypeSelected" name="file-type" value>Resource Capacity</b-form-radio>
 					</b-form-group>
 				</b-col>
@@ -57,6 +57,7 @@ export default {
 		bomModelParameters: () => import("./billOfMaterial/ModelParameters"),
 		mastModelParameters: () => import("./masterSchedule/ModelParameters"),
 		invModelParameters: () => import("./inventoryStatus/ModelParameters"),
+		itemMasterModelParameters: () => import("./itemMaster/ModelParameters"),
 	},
 	data() {
 		return {
