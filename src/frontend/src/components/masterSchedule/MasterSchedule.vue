@@ -3,7 +3,7 @@
     <label class="title">Master Schedule: {{ mastFile.title }}</label>
     <hot-table :settings="settings"></hot-table>
 
-    <b-toast id="my-toast" variant="success" solid>
+    <b-toast id="saved-toast" variant="success" solid>
       <template v-slot:toast-title>
         <div class="d-flex flex-grow-1 align-items-baseline">
           <strong class="mr-auto">Storm 5.0</strong>
@@ -83,7 +83,7 @@ export default {
       }
 
       if(mutation.type === "updatedInvItem") {
-        this.$bvToast.show("my-toast");
+        this.$bvToast.show("saved-toast");
       }
     });
   },

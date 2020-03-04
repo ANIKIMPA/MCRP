@@ -4,7 +4,7 @@
 
     <hot-table :settings="settings"></hot-table>
 
-    <b-toast id="my-toast" variant="success" solid>
+    <b-toast id="saved-toast" variant="success" solid>
       <template v-slot:toast-title>
         <div class="d-flex flex-grow-1 align-items-baseline">
           <strong class="mr-auto">Storm 5.0</strong>
@@ -88,7 +88,7 @@ export default {
         qty: 1,
         file: this.$route.params.file
       });
-      this.$bvToast.show("my-toast");
+      this.$bvToast.show("saved-toast");
     }
   },
   computed: {
@@ -116,7 +116,7 @@ export default {
         });
         this.settings.data = this.getAllBomItems;
       } else if(mutation.type === "updateBomItem") {
-        this.$bvToast.show("my-toast");
+        this.$bvToast.show("saved-toast");
         this.settings.columns[3] = ({
           data: "parent",
           type: 'dropdown',

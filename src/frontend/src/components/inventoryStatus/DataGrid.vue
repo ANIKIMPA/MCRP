@@ -3,15 +3,6 @@
     <label class="title">Inventory Status: {{ invFile.title }}</label>
     <hot-table :settings="settings"></hot-table>
 
-    <b-toast id="my-toast" variant="success" solid>
-      <template v-slot:toast-title>
-        <div class="d-flex flex-grow-1 align-items-baseline">
-          <strong class="mr-auto">Storm 5.0</strong>
-        </div>
-      </template>
-      Saved successfully!
-    </b-toast>
-
     <b-button  class="position-absolute btnAddReceipt" variant="info" @click="addReceipt">Add Receipt</b-button>
   </div>
 </template>
@@ -39,8 +30,22 @@ export default {
         colWidths: 50,
         afterChange: changes => {
           if (changes) {
-            changes.forEach(([row], prop, oldValue, newValue) => {
-              if(!isNaN(newValue)) {
+            changes.forEach(([row, prop, oldValue, newValue]) => {
+              oldValue;
+              if(!newValue || newValue.trim() == "") {
+                this.$bvToast.toast("Cell cannot be empty.", {
+                  title: "Storm 5.0",
+                  solid: true,
+                  variant: 'danger'
+                })
+              } else if(isNaN(newValue) && prop !== "part_number") {
+                this.$bvToast.toast("A valid integer is required.", {
+                  title: "Storm 5.0",
+                  solid: true,
+                  variant: 'danger'
+                })
+              }
+              else {
                 // Obteniendo todos los keys que empiecen con receipt      
                 let keys = Object.keys(this.settings.data[row]).filter(key => key.startsWith('receipt') && key != "receipts")
                 // Guardando todos los receipts en la propiedad receipts
@@ -107,7 +112,11 @@ export default {
       }
 
       if(mutation.type === "updatedInvItem") {
-        this.$bvToast.show("my-toast");
+        this.$bvToast.toast("Saved successfully!", {
+          title: "Storm 5.0",
+          solid: true,
+          variant: 'success'
+        })
       }
     });
   },
