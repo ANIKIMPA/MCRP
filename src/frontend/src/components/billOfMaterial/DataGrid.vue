@@ -36,8 +36,12 @@ export default {
         colWidths: 300,
         afterChange: changes => {
           if (changes) {
-            changes.forEach(([row]) => {
-              this.updateBomItem(this.settings.data[row]);
+            changes.forEach(([row, prop, oldValue, newValue]) => {
+              prop
+              oldValue
+              if(newValue && newValue.trim() != "") {
+                this.updateBomItem(this.settings.data[row]);
+              }
             });
           }
         },

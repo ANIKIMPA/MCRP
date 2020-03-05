@@ -30,6 +30,7 @@ const actions = {
       })
       .catch(error => {
         console.log(error);
+        console.log(error.response);
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   },

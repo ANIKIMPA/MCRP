@@ -25,7 +25,6 @@ export default {
         data: [],
         colHeaders: [
 					"Part Number",
-					"Class",
 					"Lot Size",
 					"Multiple",
 					"Lead Time",
@@ -55,36 +54,52 @@ export default {
             }
           },
           {
-            data: "clase",
-            allowEmpty: false
+            data: "lot_size",
+            type: 'dropdown',
+            source: ['LFL', 'FP', 'FQ', 'EOQ']
           },
           {
             data: "multiple",
-            allowEmpty: false
+            type: 'numeric',
+            validator: this.isPositive,
           },
           {
             data: "lead_time",
-            allowEmpty: false
+            type: 'numeric',
+            validator: this.isPositive,
           },
           {
             data: "yield_percent",
-            allowEmpty: false
+            type: 'numeric',
+            validator: this.isValidPercent
           },
           {
             data: "unit_value",
-            allowEmpty: false
+            type: 'numeric',
+            validator: this.isPositive,
           },
           {
             data: "order_cost",
-            allowEmpty: false
+            validator: this.isPositive,
+            type: 'numeric',
+            numericFormat: {
+              pattern: '$0,0.00',
+              culture: 'en-US'
+            }
           },
           {
             data: "carrying_cost",
-            allowEmpty: false
+            validator: this.isPositive,
+            type: 'numeric',
+            numericFormat: {
+              pattern: '$0,0.00',
+              culture: 'en-US'
+            }
           },      
           {
             data: "demand",
-            allowEmpty: false
+            type: 'numeric',
+            validator: this.isPositive,
           },
         ],
         rowHeights: 40,
@@ -105,7 +120,7 @@ export default {
   },
   
   created() {
-    this.fetchitemMasterFile(this.$route.params.file);
+    this.fetchItemMasterFile(this.$route.params.file);
 
     this.$store.subscribe(mutation => {
       if (mutation.type === "setItemsMasters") {        
@@ -127,7 +142,23 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchitemMasterFile", "fetchItemsMasters", "updateItemMaster", "updateItemsMastersPartNumber"]),
+    ...mapActions(["fetchItemMasterFile", "fetchItemsMasters", "updateItemMaster"]),
+    isPositive(value, callback) {
+      if(typeof(value) === "number") {
+        callback(value >= 0)
+      }
+      else {
+        callback(false)
+      }
+    },
+    isValidPercent(value, callback) {
+      if(typeof(value) === "number") {
+        callback(value >= 0 && value <= 100)
+      }
+      else {
+        callback(false)
+      }
+    }
   }
 };
 </script>

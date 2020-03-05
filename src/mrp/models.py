@@ -26,7 +26,7 @@ class BomItem(models.Model):
     part_number = models.CharField(max_length=12, blank=True, null=True)
     tipo = models.CharField(max_length=20, blank=True, null=True)
     parent = models.CharField(max_length=12, blank=True, null=True)
-    qty = models.PositiveIntegerField(blank=True, default=1)
+    qty = models.PositiveIntegerField(blank=True, default=1, validators=[MinValueValidator(0)])
     file = models.ForeignKey(BomFile, related_name='bom_items', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
@@ -59,8 +59,8 @@ class MastFile(models.Model):
 
 class Period(models.Model):
     part_number = models.CharField(max_length=12, blank=True, null=True)
-    data = models.PositiveIntegerField(blank=True, null=True)
-    order = models.PositiveIntegerField(blank=True, null=True)
+    data = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(0)])
+    order = models.PositiveIntegerField(blank=True, null=True, validators=[MinValueValidator(0)])
     file = models.ForeignKey(MastFile, related_name='periods', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
@@ -96,9 +96,9 @@ class InvFile(models.Model):
 
 class InvItem(models.Model):
     part_number = models.CharField(max_length=12, blank=True, null=True)
-    safe_stock = models.PositiveIntegerField(default=0)
-    on_hand = models.PositiveIntegerField(default=0)
-    past_due = models.PositiveIntegerField(default=0)
+    safe_stock = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    on_hand = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    past_due = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     receipts = models.CharField(max_length=250, blank=True, null=True)
     file = models.ForeignKey(InvFile, related_name='inv_items', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -129,17 +129,20 @@ class ItemMasterFile(models.Model):
 
 
 class ItemMaster(models.Model):
+    LOT_SIZE_CHOICES = [
+        ('LFL', 'LFL'), ('FP', 'FP'), ('FQ', 'FQ'), ('EOQ', 'EOQ')
+    ]
     part_number = models.CharField(max_length=12, blank=True, null=True)
-    clase = models.CharField(max_length=50, blank=True, null=True)
-    lot_size = models.CharField(max_length=5, blank=True, null=True)
-    multiple = models.PositiveIntegerField(default=0)
-    lead_time = models.PositiveIntegerField(default=0)
-    yield_percent = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100)])
-    unit_value = models.PositiveIntegerField(default=0)
-    order_cost = models.DecimalField(default=0, max_digits=10, decimal_places=2, validators=[MaxValueValidator(100), MinValueValidator(0)])
-    carrying_cost = models.DecimalField(default=0, max_digits=10, decimal_places=2, validators=[MaxValueValidator(100), MinValueValidator(0)])
-    demand = models.PositiveIntegerField(default=0)
-    file = models.ForeignKey(ItemMasterFile, related_name='inv_items', on_delete=models.CASCADE)
+    clase = models.CharField(max_length=50, blank=True, null=True, default=None)
+    lot_size = models.CharField(max_length=5, choices=LOT_SIZE_CHOICES, default="LFL")
+    multiple = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    lead_time = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    yield_percent = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100), MinValueValidator(0)])
+    unit_value = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    order_cost = models.DecimalField(default=0, max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    carrying_cost = models.DecimalField(default=0, max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    demand = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    file = models.ForeignKey(ItemMasterFile, related_name='items_masters', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 

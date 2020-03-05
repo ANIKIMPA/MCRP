@@ -50,7 +50,7 @@ export default {
 		})
 
 		this.$store.subscribe(mutation => {
-			if (mutation.type === "newitemMasterFile") {
+			if (mutation.type === "newItemMasterFile") {
 				// Add items to the file
 				if(this.createFromBomFile) {
 					for (let i = 0; i < this.form.number_of_items; i++) {

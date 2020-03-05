@@ -44,4 +44,26 @@ export default {
 .modal-dialog {
 	margin-top: 60px !important;
 }
+
+div.ht_master div.wtHolder {
+    height: 500px !important;
+}
+
+.handsontableEditor.autocompleteEditor.handsontable.listbox {
+	height: 100% !important;
+}
+
+.handsontable.listbox td.htDimmed {
+  background-color: #eceff1;
+  padding: 8px;
+  box-shadow: 10px;
+}
+.handsontable.listbox td.htDimmed:hover {
+  /* background-color: #5292F7; */
+  background-color: #bbdefb;
+}
+
+.handsontable.listbox tr td.current, .handsontable.listbox tr:hover td {
+    background: #babdbe
+}
 </style>
