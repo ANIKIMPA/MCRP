@@ -137,7 +137,7 @@ class ItemMaster(models.Model):
     lot_size = models.CharField(max_length=5, choices=LOT_SIZE_CHOICES, default="LFL")
     multiple = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     lead_time = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
-    yield_percent = models.PositiveIntegerField(default=0, validators=[MaxValueValidator(100), MinValueValidator(0)])
+    yield_percent = models.DecimalField(default=0, max_digits=4, decimal_places=2, validators=[MaxValueValidator(1), MinValueValidator(0)])
     unit_value = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     order_cost = models.DecimalField(default=0, max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     carrying_cost = models.DecimalField(default=0, max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])

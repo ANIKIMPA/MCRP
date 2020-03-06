@@ -70,8 +70,12 @@ export default {
           },
           {
             data: "yield_percent",
+            validator: this.isValidPercent,
             type: 'numeric',
-            validator: this.isValidPercent
+            numericFormat: {
+              pattern: '0%',
+              culture: 'en-US'
+            }
           },
           {
             data: "unit_value",
@@ -127,13 +131,8 @@ export default {
         this.settings.data = this.getAllItemsMasters;
       }
 
-      if(mutation.type === "updatedItemMaster") {
-        this.$bvToast.toast("Saved successfully!", {
-          title: "Storm 5.0",
-          solid: true,
-          variant: 'success'
-        })
-      }
+      if(mutation.type === "updatedItemMaster")
+        this.$bvToast.show("saved-toast");
     });
   },
   watch: {
@@ -153,7 +152,7 @@ export default {
     },
     isValidPercent(value, callback) {
       if(typeof(value) === "number") {
-        callback(value >= 0 && value <= 100)
+        callback(value >= 0 && value <= 1)
       }
       else {
         callback(false)

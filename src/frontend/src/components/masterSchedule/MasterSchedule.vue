@@ -2,15 +2,6 @@
   <div>
     <label class="title">Master Schedule: {{ mastFile.title }}</label>
     <hot-table :settings="settings"></hot-table>
-
-    <b-toast id="saved-toast" variant="success" solid>
-      <template v-slot:toast-title>
-        <div class="d-flex flex-grow-1 align-items-baseline">
-          <strong class="mr-auto">Storm 5.0</strong>
-        </div>
-      </template>
-      Saved successfully!
-    </b-toast>
   </div>
 </template>
 

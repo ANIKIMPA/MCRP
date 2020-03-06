@@ -1,19 +1,7 @@
 <template>
   <div id="example1">
     <label class="title">Bill of Material: {{ bomFile.title }}</label>
-
     <hot-table :settings="settings"></hot-table>
-
-    <b-toast id="saved-toast" variant="success" solid>
-      <template v-slot:toast-title>
-        <div class="d-flex flex-grow-1 align-items-baseline">
-          <strong class="mr-auto">Storm 5.0</strong>
-        </div>
-      </template>
-      Saved successfully!
-    </b-toast>
-    
-    <b-button  class="position-absolute btnAddItem" variant="info" @click="addRow">Add new item</b-button>
   </div>
 </template>
 
@@ -61,21 +49,26 @@ export default {
           },
           {
             data: "qty",
-            type: "numeric",
-            allowEmpty: false
+            validator: /[0-9]+$/
           }
         ],
-        afterOnCellMouseOver: (event, cellCoords, td) => {
-          console.log(event)
-          console.log(cellCoords)
-          console.log(td)
+        beforeRemoveRow: (_, amount, physicalRows) => {
+          console.log(amount)
+
+          physicalRows.forEach(index => {
+            this.deleteBomItem(this.settings.data[index]);
+          })
         },
         rowHeights: 40,
         rowHeaders: true,
         licenseKey: "non-commercial-and-evaluation",
         className: "htMiddle htCenter",
         contextMenu: {
-          items: {
+            items: {
+              add_row: {
+              name: "Add row bottom",
+              callback: this.addRow
+            },
             remove_row: {},
             "---------": {},
             undo: {},
@@ -88,7 +81,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["updateBomItem", "addBomItem", "fetchBomFile", "fetchBomItems"]),
+    ...mapActions(["updateBomItem", "addBomItem", "fetchBomFile", "fetchBomItems", "deleteBomItem"]),
     addRow() {
       this.addBomItem({
         part_number: null,
@@ -132,6 +125,8 @@ export default {
           allowEmpty: true,
           source: this.allPartNumbers
         });
+      } else if (mutation.type === "deletedBomItem") {
+        this.$bvToast.show("saved-toast");
       }
     });
   }
@@ -153,11 +148,6 @@ export default {
 
 .handsontable.listbox tr td.current, .handsontable.listbox tr:hover td {
     background: #babdbe
-}
-
-.btnAddItem {
-  top: 62px;
-  left: 30%;
 }
 
 .title {

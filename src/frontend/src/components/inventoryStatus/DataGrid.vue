@@ -46,8 +46,12 @@ export default {
             });
           }
         },
-        beforeRemoveRow: index => {
-          this.deleteInvItem(this.settings.data[index]);
+        beforeRemoveRow: (_, amount, physicalRows) => {
+          console.log(amount)
+
+          physicalRows.forEach(index => {
+            this.deleteInvItem(this.settings.data[index]);
+          })
         },
         columns: [
           {
@@ -70,6 +74,7 @@ export default {
             validator: /[0-9]+$/
           }
         ],
+        undo: true,
         rowHeights: 40,
         rowHeaders: true,
         licenseKey: "non-commercial-and-evaluation",
@@ -113,11 +118,19 @@ export default {
       this.settings.contextMenu = {
         items: {
           add_column: {
-            name: "Add Column",
+            name: "Add receipt column",
             callback: this.addColumn
           },
           remove_column: {
-            name: "Remove Column",
+            name: function() {
+              let colFrom = this.getSelectedRangeLast().from.col
+              let colTo = this.getSelectedRangeLast().to.col
+              if(colFrom === colTo) {
+                return "Remove receipt column"
+              } else {
+                return "Remove receipts columns"
+              }
+            },
             callback: this.removeColumn,
             disabled: function() {
               // Disable option when first, second, third and fourth row were clicked
@@ -131,7 +144,7 @@ export default {
           },
           "---------": {},
           add_row: {
-            name: "Add Row",
+            name: "Add row bottom",
             callback: this.addRow
           },
           remove_row: {},
@@ -142,11 +155,9 @@ export default {
       };
 
       if (mutation.type === "updatedInvItem") {
-        this.$bvToast.toast("Saved successfully!", {
-          title: "Storm 5.0",
-          solid: true,
-          variant: "success"
-        });
+        this.$bvToast.show("saved-toast");
+      } else if(mutation.typ === "deletedInvItem") {
+        this.$bvToast.show("saved-toast");
       }
     });
   },
@@ -182,16 +193,18 @@ export default {
       key
       console.log(selection)
       let colStart = selection[0].start.col - 4;
-      // let colEnd = selection[0].end.col - 4;
+      let colEnd = selection[0].end.col - 4;
+      let colsQty = colEnd - colStart + 1
 
       this.settings.data.forEach(elem => {
         let rec = elem.receipts.split(",")
-        rec.splice(colStart, 1)
+        rec.splice(colStart, colsQty)
         elem.receipts = rec.join(",")
         this.updateInvItem(elem)
       })
 
-      // this.settings.colHeaders.
+      this.settings.colHeaders.splice(-colsQty, colsQty);
+      this.settings.columns.splice(-colsQty, colsQty);
     },
     addRow() {
       const item = {

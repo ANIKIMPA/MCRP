@@ -3,6 +3,7 @@
 		<Navbar />
 		<router-view :key="$route.fullPath" />
 
+    <!-- Error Toast -->
     <b-toast id="error-toast" variant="danger" solid>
       <template v-slot:toast-title>
         <div class="d-flex flex-grow-1 align-items-baseline">
@@ -10,6 +11,16 @@
         </div>
       </template>
       {{ getError }}
+    </b-toast>
+
+    <!-- Saved Toast -->
+    <b-toast id="saved-toast" variant="success" solid>
+      <template v-slot:toast-title>
+        <div class="d-flex flex-grow-1 align-items-baseline">
+          <strong class="mr-auto">Storm 5.0</strong>
+        </div>
+      </template>
+      Saved successfully!
     </b-toast>
 	</div>
 </template>

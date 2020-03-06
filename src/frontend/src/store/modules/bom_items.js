@@ -1,4 +1,5 @@
 import axios from "axios";
+import functions from "./functions"
 
 const state = {
   bomItems: []
@@ -45,6 +46,18 @@ const actions = {
         console.log(error);
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
+  },
+
+  async deleteBomItem({ commit }, item) {
+    await axios
+      .delete(`http://localhost:8000/api/v1.0/mrp/bom-items/${item.id}/`, item)
+      .then(() => {
+        commit("deletedBomItem", item);
+      })
+      .catch(error => {
+        console.log(error);
+        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+      });
   }
 };
 
@@ -62,7 +75,9 @@ const mutations = {
     if (index !== -1) {
       state.bomItems.splice(index, 1, updItem);
     }
-  }
+  },
+
+  deletedBomItem: (state, item) => functions.remove(state.bomItems, item)
 };
 
 export default {
