@@ -16,7 +16,7 @@
 				</div>
 			</div>
 			<div class="form-group row">
-				<!-- Número de periodos -->
+				<!-- Número de master schedule items -->
 				<label class="col-form-label col-9" for="planning_horizon_length">Planning Horizon Length in Time Buckets:</label>
 				<div class="col-3">
 					<input type="number" class="form-control" v-model="form.planning_horizon_length" min="1" value="1" id="planning_horizon_length" />
@@ -66,29 +66,17 @@ export default {
 
 		this.$store.subscribe(mutation => {
 			if (mutation.type === "newMastFile") {
+				let periods = "0"
+				for (let num = 1; num < this.form.planning_horizon_length; num++) {
+					periods += ",0"
+				}
 				// Add items to the file
-				if(this.createFromBomFile) {
-					for (let i = 0; i < this.getMasterItems.length; i++) {
-						for (let num = 1; num <= this.form.planning_horizon_length; num++) {
-							this.addPeriod({
-								part_number: this.getMasterItems[i].part_number,
-								period: null,
-								order: num,
-								file: this.mastFile.id
-							});
-						}
-					}
-				} else {
-					for (let i = 0; i < this.form.numberItems; i++) {
-						for (let num = 1; num <= this.form.planning_horizon_length; num++) {
-							this.addPeriod({
-								part_number: null,
-								period: null,
-								order: num,
-								file: this.mastFile.id
-							});
-						}
-					}
+				for (let i = 0; i < this.form.numberItems; i++) {
+					this.addMastItem({
+						part_number: this.createFromBomFile ? this.getMasterItems[i].part_number : "-",
+						periods: periods,
+						file: this.mastFile.id
+					});
 				}
 
 				// Redirect to home page
@@ -102,7 +90,7 @@ export default {
 		});
 	},
 	methods: {
-		...mapActions(["addPeriod", "createNewMastFile"]),
+		...mapActions(["addMastItem", "createNewMastFile"]),
 		onSubmit(e) {
 			e.preventDefault();
 

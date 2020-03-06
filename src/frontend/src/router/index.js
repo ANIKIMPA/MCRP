@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import BillOfMaterial from '@/components/billOfMaterial/DataGrid'
-import MasterSchedule from '@/components/masterSchedule/MasterSchedule.vue'
+import MasterSchedule from '@/components/masterSchedule/DataGrid.vue'
 import InventoryStatus from '@/components/inventoryStatus/DataGrid.vue'
 import ItemMaster from '@/components/itemMaster/DataGrid.vue'
 

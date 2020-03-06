@@ -26,7 +26,7 @@ const actions = {
         commit("setMastFiles", response.data);
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   },
@@ -38,7 +38,7 @@ const actions = {
         commit("setMastFile", response.data);
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   },
@@ -50,7 +50,7 @@ const actions = {
         commit("newMastFile", response.data);
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   }

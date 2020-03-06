@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (
-    BomFile, BomItem, MastFile, Period, InvFile, InvItem, ItemMasterFile, ItemMaster
+    BomFile, BomItem, MastFile, MastItem, InvFile, InvItem, ItemMasterFile, ItemMaster
 )
 
 
@@ -20,19 +20,19 @@ class ItemSerializer(serializers.ModelSerializer):
 
 
 class MastFileSerializer(serializers.ModelSerializer):
-    periods = serializers.PrimaryKeyRelatedField(many=True, queryset=Period.objects.all(), required=False)
+    mast_items = serializers.PrimaryKeyRelatedField(many=True, queryset=MastItem.objects.all(), required=False)
     owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = MastFile
-        fields = ('id', 'owner', 'title', 'periods', 'created_date',
+        fields = ('id', 'owner', 'title', 'mast_items', 'created_date',
                   'number_of_items', 'planning_horizon_length', 'number_time_buckets')
 
 
-class PeriodSerializer(serializers.ModelSerializer):
+class MastItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Period
-        fields = ('id', 'part_number', 'data', 'order', 'file')
+        model = MastItem
+        fields = ('id', 'part_number', 'periods', 'file')
 
 class InvFileSerializer(serializers.ModelSerializer):
     inv_items = serializers.PrimaryKeyRelatedField(many=True, queryset=InvItem.objects.all(), required=False)

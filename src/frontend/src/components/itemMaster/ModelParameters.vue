@@ -70,7 +70,7 @@ export default {
 				} else {
 					for (let i = 0; i < this.form.number_of_items; i++) {
                         this.addItemMaster({
-                            part_number: null,
+                            part_number: "-",
                             lot_size: "LFL",
                             multiple: 0,
                             lead_time: 0,

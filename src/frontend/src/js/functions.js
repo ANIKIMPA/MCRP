@@ -5,7 +5,7 @@ const functions = {
             arr.splice(index, 1)
         
         return arr
-    }
+    },
 }
 
 export default functions

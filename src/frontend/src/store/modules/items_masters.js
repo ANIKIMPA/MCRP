@@ -17,7 +17,7 @@ const actions = {
         commit("setItemsMasters", response.data);
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   },
@@ -29,8 +29,7 @@ const actions = {
         commit("newItemMaster", response.data);
       })
       .catch(error => {
-        console.log(error);
-        console.log(error.response);
+        console.log(error)
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   },
@@ -42,7 +41,7 @@ const actions = {
         commit("updatedItemMaster", response.data);
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   }

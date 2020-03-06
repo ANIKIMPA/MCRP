@@ -16,7 +16,7 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import moment from "moment";
 export default {
-	name: "fileListModal",
+	name: "SelectBomFile",
 	props: {
 		createFromBomFile: Boolean
 	},

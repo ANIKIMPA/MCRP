@@ -51,8 +51,8 @@
 <script>
 import ModuleListModal from "./ModuleListModal";
 import DataConfigurationModal from "./DataConfigurationModal";
-import BomFilesList from "./billOfMaterial/BomFilesList"
-import MastFilesList from "./masterSchedule/MastFilesList"
+import BomFilesList from "./billOfMaterial/FilesList"
+import MastFilesList from "./masterSchedule/FilesList"
 import InvFilesList from "./inventoryStatus/FilesList"
 import ItemMasterFilesList from "./itemMaster/FilesList"
 import { mapGetters } from "vuex";

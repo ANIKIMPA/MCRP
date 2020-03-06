@@ -1,11 +1,11 @@
 from .models import (
-    BomFile, BomItem, MastFile, Period, InvFile, InvItem, ItemMasterFile, ItemMaster
+    BomFile, BomItem, MastFile, MastItem, InvFile, InvItem, ItemMasterFile, ItemMaster
 )
 from .serializers import (
     BomFileSerializer,
     ItemSerializer,
     MastFileSerializer,
-    PeriodSerializer,
+    MastItemSerializer,
     InvFileSerializer,
     InvItemSerializer,
     ItemMasterFileSerializer,
@@ -54,15 +54,15 @@ class MastFileViewSet(viewsets.ModelViewSet):
     #     serializer.save(owner=self.request.user)
 
 
-class PeriodViewSet(viewsets.ModelViewSet):
-    queryset = Period.objects.all()
-    serializer_class = PeriodSerializer
+class MastItemViewSet(viewsets.ModelViewSet):
+    queryset = MastItem.objects.all()
+    serializer_class = MastItemSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     @action(detail=True, methods=['get'])
-    def get_periods(self, request, file_id):
-        queryset = Period.objects.filter(file=file_id)
-        serializer = PeriodSerializer(queryset, many=True)
+    def get_mast_items(self, request, file_id):
+        queryset = MastItem.objects.filter(file=file_id)
+        serializer = MastItemSerializer(queryset, many=True)
         return Response(serializer.data)
 
 class InvFileViewSet(viewsets.ModelViewSet):

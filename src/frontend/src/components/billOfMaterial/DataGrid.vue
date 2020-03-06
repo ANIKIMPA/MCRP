@@ -8,12 +8,12 @@
 <script>
 import { HotTable } from "@handsontable/vue";
 import { mapActions, mapGetters } from "vuex";
+import validator from '@/js/validator';
 
 export default {
   name: "BillOfMaterial",
   components: {
     HotTable
-    // HotColumn
   },
   data() {
     return {
@@ -24,32 +24,24 @@ export default {
         colWidths: 300,
         afterChange: changes => {
           if (changes) {
-            changes.forEach(([row, prop, oldValue, newValue]) => {
-              prop
-              oldValue
-              if(newValue && newValue.trim() != "") {
-                this.updateBomItem(this.settings.data[row]);
-              }
+            changes.forEach(([row]) => {
+              this.updateBomItem(this.settings.data[row]);
             });
           }
         },
         columns: [
           {
             data: "part_number",
-            validator: function(value, callback) {
-              if(!value || value.trim() == "")
-                callback(false)
-              else
-                callback(true)
-            }
+            validator: validator.isNotEmpty
           },
           {
             data: "tipo",
-            allowEmpty: false
+            validator: validator.isNotEmpty
           },
           {
             data: "qty",
-            validator: /[0-9]+$/
+            type: "numeric",
+            validator: validator.isPositive
           }
         ],
         beforeRemoveRow: (_, amount, physicalRows) => {
@@ -84,7 +76,7 @@ export default {
     ...mapActions(["updateBomItem", "addBomItem", "fetchBomFile", "fetchBomItems", "deleteBomItem"]),
     addRow() {
       this.addBomItem({
-        part_number: null,
+        part_number: "-",
         tipo: "MAT",
         parent: null,
         qty: 1,

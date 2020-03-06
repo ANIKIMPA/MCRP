@@ -3,7 +3,7 @@ import Vue from "vue";
 import bomItems from "./modules/bom_items";
 import bom_files from "./modules/bom_files";
 import mast_files from "./modules/mast_files";
-import periods from "./modules/periods";
+import mastItems from "./modules/mast_items";
 import invFiles from "./modules/inv_files";
 import invItems from "./modules/inv_items";
 import itemMasterFiles from "./modules/item_master_files";
@@ -18,7 +18,7 @@ export default new Vuex.Store({
     bomItems,
     mast_files,
     bom_files,
-    periods,
+    mastItems,
     invFiles,
     invItems,
     itemMasterFiles,

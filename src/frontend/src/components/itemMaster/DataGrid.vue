@@ -7,20 +7,18 @@
 
 <script>
 import store from '@/store'
+import validator from '@/js/validator'
 import { HotTable } from "@handsontable/vue";
-import { mapGetters, mapActions, mapState } from "vuex";
-// import Handsontable from 'handsontable';
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "ItemMaster",
   store,
   components: {
     HotTable
-    // HotColumn
   },
   data() {
     return {
-      hotRef: null,
       settings: {
         data: [],
         colHeaders: [
@@ -46,12 +44,7 @@ export default {
         columns: [
           {
             data: "part_number",
-            validator: function(value, callback) {
-              if(!value || value.trim() == "")
-                callback(false)
-              else
-                callback(true)
-            }
+            validator: validator.isNotEmpty
           },
           {
             data: "lot_size",
@@ -61,16 +54,16 @@ export default {
           {
             data: "multiple",
             type: 'numeric',
-            validator: this.isPositive,
+            validator: validator.isPositive,
           },
           {
             data: "lead_time",
             type: 'numeric',
-            validator: this.isPositive,
+            validator: validator.isPositive,
           },
           {
             data: "yield_percent",
-            validator: this.isValidPercent,
+            validator: validator.isValidPercent,
             type: 'numeric',
             numericFormat: {
               pattern: '0%',
@@ -80,11 +73,11 @@ export default {
           {
             data: "unit_value",
             type: 'numeric',
-            validator: this.isPositive,
+            validator: validator.isPositive,
           },
           {
             data: "order_cost",
-            validator: this.isPositive,
+            validator: validator.isPositive,
             type: 'numeric',
             numericFormat: {
               pattern: '$0,0.00',
@@ -93,7 +86,7 @@ export default {
           },
           {
             data: "carrying_cost",
-            validator: this.isPositive,
+            validator: validator.isPositive,
             type: 'numeric',
             numericFormat: {
               pattern: '$0,0.00',
@@ -103,28 +96,25 @@ export default {
           {
             data: "demand",
             type: 'numeric',
-            validator: this.isPositive,
+            validator: validator.isPositive,
           },
         ],
         rowHeights: 40,
         rowHeaders: true,
         licenseKey: "non-commercial-and-evaluation",
         className: "htMiddle htCenter",
-        contextMenu: true,
         manualColumnResize: true,
         manualRowResize: true
       }
     };
   },
   computed: {
-    ...mapGetters(["getAllItemsMasters", "getAllItemsMasters", "itemMasterFile"]),
-    ...mapState({
-      item_master_files: state => state.itemMasterFile
-    })
+    ...mapGetters(["getAllItemsMasters", "getAllItemsMasters", "itemMasterFile"])
   },
   
   created() {
     this.fetchItemMasterFile(this.$route.params.file);
+    this.fetchItemsMasters(this.$route.params.file);
 
     this.$store.subscribe(mutation => {
       if (mutation.type === "setItemsMasters") {        
@@ -135,29 +125,8 @@ export default {
         this.$bvToast.show("saved-toast");
     });
   },
-  watch: {
-    itemMasterFile() {
-      this.fetchItemsMasters(this.$route.params.file);
-    }
-  },
   methods: {
-    ...mapActions(["fetchItemMasterFile", "fetchItemsMasters", "updateItemMaster"]),
-    isPositive(value, callback) {
-      if(typeof(value) === "number") {
-        callback(value >= 0)
-      }
-      else {
-        callback(false)
-      }
-    },
-    isValidPercent(value, callback) {
-      if(typeof(value) === "number") {
-        callback(value >= 0 && value <= 1)
-      }
-      else {
-        callback(false)
-      }
-    }
+    ...mapActions(["fetchItemMasterFile", "fetchItemsMasters", "updateItemMaster"]),    
   }
 };
 </script>

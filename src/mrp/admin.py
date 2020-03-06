@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (
-    BomItem, BomFile, MastFile, Period,
+    BomItem, BomFile, MastFile, MastItem,
     InvFile,
     InvItem,
     ItemMasterFile,
@@ -16,7 +16,7 @@ class BomItemAdmin(admin.ModelAdmin):
 
 class MastFileAdmin(admin.ModelAdmin):
     pass
-class PeriodAdmin(admin.ModelAdmin):
+class MastItemAdmin(admin.ModelAdmin):
     pass
 
 class InvFileAdmin(admin.ModelAdmin):
@@ -33,7 +33,7 @@ class ItemMasterAdmin(admin.ModelAdmin):
 admin.site.register(BomFile, BomFileAdmin)
 admin.site.register(BomItem, BomItemAdmin)
 admin.site.register(MastFile, MastFileAdmin)
-admin.site.register(Period, PeriodAdmin)
+admin.site.register(MastItem, MastItemAdmin)
 admin.site.register(InvFile, InvFileAdmin)
 admin.site.register(InvItem, InvItemAdmin)
 admin.site.register(ItemMasterFile, ItemMasterFileAdmin)

@@ -34,7 +34,7 @@ export default {
 				// Add items to the file
 				for (let i = 1; i <= this.items_number; i++) {
 					this.addBomItem({
-						part_number: null,
+						part_number: "-",
 						tipo: "MAT",
 						parent: null,
 						qty: 1,

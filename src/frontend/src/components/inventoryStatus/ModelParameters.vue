@@ -88,7 +88,7 @@ export default {
 				} else {
 					for (let i = 0; i < this.form.number_of_items; i++) {
                         this.addInvItem({
-                            part_number: null,
+                            part_number: "-",
                             safe_stock: 0,
                             on_hand: 0,
                             past_due: 0,

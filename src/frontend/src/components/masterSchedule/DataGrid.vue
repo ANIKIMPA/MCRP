@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label class="title">Inventory Status: {{ invFile.title }}</label>
+    <label class="title">Master Schedule: {{ mastFile.title }}</label>
     <hot-table :settings="settings"></hot-table>
   </div>
 </template>
@@ -13,7 +13,7 @@ import Handsontable from "handsontable";
 import validator from '@/js/validator';
 
 export default {
-  name: "InventoryStatus",
+  name: "MasterSchedule",
   store,
   components: {
     HotTable
@@ -22,20 +22,20 @@ export default {
     return {
       settings: {
         data: [],
-        colHeaders: ["Part Number", "Safe Stock", "On Hand", "Past Due"],
+        colHeaders: ["Part Number"],
         stretchH: "all",
         colWidths: 50,
         afterChange: changes => {
           if (changes) {
             changes.forEach(([row]) => {
-              // Obteniendo todos los keys que empiecen con receipt
+              // Obteniendo todos los keys que empiecen con period
               let keys = Object.keys(this.settings.data[row]).filter(
-                key => key.startsWith("receipt") && key != "receipts"
+                key => key.startsWith("period") && key != "periods"
               );
-              // Guardando todos los receipts en la propiedad receipts
-              this.settings.data[row].receipts = keys.map(key => this.settings.data[row][key]).join(",");
+              // Guardando todos los periods en la propiedad periods
+              this.settings.data[row].periods = keys.map(key => this.settings.data[row][key]).join(",");
 
-              this.updateInvItem(this.settings.data[row])
+              this.updateMastItem(this.settings.data[row])
             });
           }
         },
@@ -43,28 +43,13 @@ export default {
           console.log(amount)
 
           physicalRows.forEach(index => {
-            this.deleteInvItem(this.settings.data[index]);
+            this.deleteMastItem(this.settings.data[index]);
           })
         },
         columns: [
           {
             data: "part_number",
             validator: validator.isNotEmpty
-          },
-          {
-            data: "safe_stock",
-            type: 'numeric',
-            validator: validator.isPositive
-          },
-          {
-            data: "on_hand",
-            type: 'numeric',
-            validator: validator.isPositive
-          },
-          {
-            data: "past_due",
-            type: 'numeric',
-            validator: validator.isPositive
           }
         ],
         rowHeights: 40,
@@ -77,55 +62,43 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getAllInvItems", "getAllInvItems", "invFile"]),
-    countReceipts() {
-      return this.settings.data[0].receipts.split(",").length;
+    ...mapGetters(["getAllMastItems", "getAllMastItems", "mastFile"]),
+    countPeriods() {
+      return this.settings.data[0].periods.split(",").length;
     }
   },
 
   created() {
-    this.fetchInvFile(this.$route.params.file);
-    this.fetchInvItems(this.$route.params.file);
+    this.fetchMastFile(this.$route.params.file);
+    this.fetchMastItems(this.$route.params.file);
 
     this.$store.subscribe(mutation => {
-      if (mutation.type === "setInvItems") {
-        for (let i = 1; i <= Object.keys(this.getAllInvItems[0]).length - 7; i++) {
-          this.settings.colHeaders.push("Receipt " + i);
+      if (mutation.type === "setMastItems") {
+        for (let i = 1; i <= Object.keys(this.getAllMastItems[0]).length - 4; i++) {
+          this.settings.colHeaders.push("Period " + i);
           this.settings.columns.push({
-            data: "receipt" + i,
+            data: "period" + i,
             type: 'numeric',
             validator: validator.isPositive
           });
         }
 
-        this.settings.data = this.getAllInvItems;
+        this.settings.data = this.getAllMastItems;
       }
 
       this.settings.contextMenu = {
         items: {
           add_column: {
-            name: "Add receipt column",
+            name: "Add period column",
             callback: this.addColumn
           },
-          remove_column: {
-            name: function() {
-              let colFrom = this.getSelectedRangeLast().from.col
-              let colTo = this.getSelectedRangeLast().to.col
-              if(colFrom === colTo) {
-                return "Remove receipt column"
-              } else {
-                return "Remove receipts columns"
-              }
-            },
+          remove_col: {
             callback: this.removeColumn,
             disabled: function() {
-              // Disable option when first, second, third and fourth row were clicked
+              // Disable option when first col was clicked
               return (
-                this.getSelectedLast()[1] === 0 ||
-                this.getSelectedLast()[1] === 1 ||
-                this.getSelectedLast()[1] === 2 ||
-                this.getSelectedLast()[1] === 3
-              ); // `this` === hot3
+                this.getSelectedLast()[1] === 0
+              );
             }
           },
           "---------": {},
@@ -140,32 +113,32 @@ export default {
         }
       };
 
-      if (mutation.type === "updatedInvItem") {
+      if (mutation.type === "updatedMastItem") {
         this.$bvToast.show("saved-toast");
-      } else if(mutation.typ === "deletedInvItem") {
+      } else if(mutation.typ === "deletedMastItem") {
         this.$bvToast.show("saved-toast");
       }
     });
   },
   methods: {
     ...mapActions([
-      "fetchInvFile",
-      "fetchInvItems",
-      "updateInvItem",
-      "deleteInvItem",
-      "addInvItem"
+      "fetchMastFile",
+      "fetchMastItems",
+      "updateMastItem",
+      "deleteMastItem",
+      "addMastItem"
     ]),
     addColumn() {
-      this.settings.colHeaders.push(`Receipt  ${this.countReceipts + 1}`);
+      this.settings.colHeaders.push(`Period  ${this.countPeriods + 1}`);
       this.settings.columns.push({
-        data: `receipt${this.countReceipts + 1}`,
+        data: `period${this.countPeriods + 1}`,
         type: 'numeric',
         validator: validator.isPositive
       });
 
       this.settings.data.forEach(item => {
-        item.receipts += ",0";
-        this.updateInvItem(item);
+        item.periods += ",0";
+        this.updateMastItem(item);
       });
     },
     removeColumn(key, selection) {
@@ -175,10 +148,10 @@ export default {
       let colsQty = colEnd - colStart + 1
 
       this.settings.data.forEach(elem => {
-        let rec = elem.receipts.split(",")
+        let rec = elem.periods.split(",")
         rec.splice(colStart, colsQty)
-        elem.receipts = rec.join(",")
-        this.updateInvItem(elem)
+        elem.periods = rec.join(",")
+        this.updateMastItem(elem)
       })
 
       this.settings.colHeaders.splice(-colsQty, colsQty);
@@ -190,11 +163,11 @@ export default {
         safe_stock: 0,
         on_hand: 0,
         past_due: 0,
-        receipts: "0",
-        file: this.invFile.id
+        periods: "0",
+        file: this.mastFile.id
       }
 
-      this.addInvItem(item);
+      this.addMastItem(item);
     }
   }
 };

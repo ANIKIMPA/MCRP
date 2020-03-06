@@ -20,7 +20,7 @@
 									<b-form-checkbox v-model="createFromBomFile" :value="true" :unchecked-value="false">Create from BOM file:</b-form-checkbox>
 								</b-col>
 								<b-col cols="4">
-									<FileListModal @bomFile="getFileSelected" :createFromBomFile="createFromBomFile" />
+									<SelectBomFile @bomFile="getFileSelected" :createFromBomFile="createFromBomFile" />
 								</b-col>
 							</b-row>
 						</b-form-group>
@@ -49,11 +49,11 @@
 </template>
 
 <script>
-import FileListModal from "./masterSchedule/FileListModal";
+import SelectBomFile from "./SelectBomFile";
 import { mapGetters } from "vuex";
 export default {
 	components: {
-		FileListModal,
+		SelectBomFile,
 		bomModelParameters: () => import("./billOfMaterial/ModelParameters"),
 		mastModelParameters: () => import("./masterSchedule/ModelParameters"),
 		invModelParameters: () => import("./inventoryStatus/ModelParameters"),

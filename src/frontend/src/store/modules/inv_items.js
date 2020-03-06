@@ -1,5 +1,5 @@
 import axios from "axios";
-import functions from "./functions"
+import functions from "@/js/functions";
 
 const state = {
   invItems: []
@@ -18,7 +18,7 @@ const actions = {
         commit("setInvItems", response.data);
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   },
@@ -30,7 +30,7 @@ const actions = {
         commit("newInvItem", response.data);
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   },
@@ -42,7 +42,7 @@ const actions = {
         commit("updatedInvItem", response.data);
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   },
@@ -54,7 +54,7 @@ const actions = {
         commit("deletedInvItem", item);
       })
       .catch(error => {
-        console.log(error);
+        console.log(error)
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   }
