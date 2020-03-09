@@ -24,8 +24,7 @@ const actions = {
   },
   // Agregar item
   addMastItem({ commit }, item) {
-    axios
-      .post("http://localhost:8000/api/v1.0/mrp/mast-items/", item)
+    axios.post("http://localhost:8000/api/v1.0/mrp/mast-items/", item)
       .then(response => {
         commit("newMastItem", response.data);
       })
@@ -62,26 +61,14 @@ const actions = {
 
 const mutations = {
   // Set all mastItems to state
-  updateMastItems: (state, mastItems) => (state.mastItems = mastItems),
-  setMastItems: (state, mastItems) => {
-    let items = []
-
-    mastItems.forEach(item => {
-      items.push(convertPeriods(item))
-    });
-
-    state.mastItems = items
-  },
+  setMastItems: (state, items) => state.mastItems = items.map(item => convertPeriods(item)),
 
   //Add item to state
-  newMastItem: (state, item) => {
-    const newItem = convertPeriods(item)
-    
-    state.mastItems.push(newItem)
-  },
+  newMastItem: (state, item) => state.mastItems.push(convertPeriods(item)),
+  
   // Update item in state
   updatedMastItem: (state, mastItem) => {
-    const updItem = convertPeriods(mastItem)
+    const updItem = convertPeriods(mastItem);
 
     const index = state.mastItems.findIndex(item => item.id === updItem.id);
     if (index !== -1) {
@@ -100,9 +87,9 @@ export default {
 };
 
 function convertPeriods(item) {
-  let Periods = item.periods.split(",");
-  for(let i=0; i<Periods.length; i++) {
-    item[`period${i + 1}`] = Periods[i]
+  let periods = item.periods.split(",");
+  for(let i=0; i<periods.length; i++) {
+    item[`period${i + 1}`] = periods[i]
   }
 
   return item

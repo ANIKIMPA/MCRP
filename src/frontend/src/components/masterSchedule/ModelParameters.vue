@@ -1,5 +1,5 @@
 <template>
-	<b-modal size="lg" id="modal-parameters" title="MRP (MAST): Model Parameters" @ok="onSubmit">
+	<b-modal size="lg" id="modal-parameters" title="MRP (MAST): Model Parameters" @ok.prevent="onSubmit">
 		<form>
 			<div class="form-group row">
 				<label class="col-form-label col-2" for="title">Title:</label>
@@ -75,6 +75,7 @@ export default {
 					this.addMastItem({
 						part_number: this.createFromBomFile ? this.getMasterItems[i].part_number : "-",
 						periods: periods,
+						order: i,
 						file: this.mastFile.id
 					});
 				}
@@ -91,9 +92,7 @@ export default {
 	},
 	methods: {
 		...mapActions(["addMastItem", "createNewMastFile"]),
-		onSubmit(e) {
-			e.preventDefault();
-
+		onSubmit() {
 			if(this.form.title && this.form.title.trim() != "") {
 				this.createNewMastFile({
 					title: this.form.title,

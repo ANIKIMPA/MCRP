@@ -1,4 +1,5 @@
 import axios from "axios";
+import functions from "@/js/functions";
 
 // Computed
 const state = {
@@ -53,6 +54,18 @@ const actions = {
         console.log(error)
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
+  },
+
+  async deleteMastFile({ commit }, file) {
+    await axios
+      .put(`http://localhost:8000/api/v1.0/mrp/mast-files/${file.id}/`, file)
+      .then(() => {
+        commit("deletedMastFile", file);
+      })
+      .catch(error => {
+        console.log(error)
+        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+      });
   }
 };
 
@@ -61,7 +74,8 @@ const mutations = {
   // Set all files to state
   setMastFiles: (state, files) => (state.allMastFiles = files),
   setMastFile: (state, file) => (state.mastFile = file),
-  newMastFile: (state, file) => (state.mastFile = file)
+  newMastFile: (state, file) => (state.mastFile = file),
+  deletedMastFile: (state, file) =>  functions.remove(state.allMastFiles, file)
 };
 
 export default {

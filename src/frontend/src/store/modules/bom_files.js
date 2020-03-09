@@ -1,4 +1,5 @@
 import axios from "axios";
+import functions from "@/js/functions";
 
 // Computed
 const state = {
@@ -53,6 +54,18 @@ const actions = {
         console.log(error)
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
+  },
+
+  async deleteBomFile({ commit }, file) {
+    await axios
+      .put(`http://localhost:8000/api/v1.0/mrp/bom-files/${file.id}/`, file)
+      .then(() => {
+        commit("deletedBomFile", file);
+      })
+      .catch(error => {
+        console.log(error)
+        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+      });
   }
 };
 
@@ -61,7 +74,8 @@ const mutations = {
   // Set all files to state
   setBomFiles: (state, files) => (state.allBomFiles = files),
   setBomFile: (state, file) => (state.bomFile = file),
-  newBomFile: (state, file) => (state.bomFile = file)
+  newBomFile: (state, file) => (state.bomFile = file),
+  deletedBomFile: (state, file) =>  functions.remove(state.allBomFiles, file)
 };
 
 export default {

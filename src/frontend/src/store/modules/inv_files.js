@@ -1,4 +1,5 @@
 import axios from "axios";
+import functions from "@/js/functions";
 
 // Computed
 const state = {
@@ -53,6 +54,18 @@ const actions = {
         console.log(error)
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
+  },
+
+  async deleteInvFile({ commit }, file) {
+    await axios
+      .put(`http://localhost:8000/api/v1.0/mrp/inv-files/${file.id}/`, file)
+      .then(() => {
+        commit("deletedInvFile", file);
+      })
+      .catch(error => {
+        console.log(error)
+        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+      });
   }
 };
 
@@ -61,7 +74,8 @@ const mutations = {
   // Set all files to state
   setInvFiles: (state, files) => (state.allInvFiles = files),
   setInvFile: (state, file) => (state.invFile = file),
-  newInvFile: (state, file) => (state.invFile = file)
+  newInvFile: (state, file) => (state.invFile = file),
+  deletedInvFile: (state, file) =>  functions.remove(state.allInvFiles, file)
 };
 
 export default {

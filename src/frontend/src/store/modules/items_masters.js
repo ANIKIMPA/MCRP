@@ -1,4 +1,5 @@
 import axios from "axios";
+import functions from "@/js/functions";
 
 const state = {
   itemsMasters: []
@@ -44,12 +45,23 @@ const actions = {
         console.log(error)
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
+  },
+
+  async deleteItemMaster({ commit }, item) {
+    await axios
+      .delete(`http://localhost:8000/api/v1.0/mrp/items-masters/${item.id}/`, item)
+      .then(() => {
+        commit("deletedItemMaster", item);
+      })
+      .catch(error => {
+        console.log(error)
+        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+      });
   }
 };
 
 const mutations = {
   // Set all itemsMasters to state
-  updateItemsMasters: (state, itemsMasters) => (state.itemsMasters = itemsMasters),
   setItemsMasters: (state, itemsMasters) => state.itemsMasters = itemsMasters,
 
   //Add item to state
@@ -60,7 +72,9 @@ const mutations = {
     if (index !== -1) {
       state.itemsMasters.splice(index, 1, updItem);
     }
-  }
+  },
+
+  deletedItemMaster: (state, item) => functions.remove(state.itemsMasters, item)
 };
 
 export default {

@@ -62,23 +62,11 @@ const actions = {
 
 const mutations = {
   // Set all invItems to state
-  updateInvItems: (state, invItems) => (state.invItems = invItems),
-  setInvItems: (state, invItems) => {
-    let items = []
-
-    invItems.forEach(item => {
-      items.push(convertReceipts(item))
-    });
-
-    state.invItems = items
-  },
+  setInvItems: (state, invItems) => state.invItems = invItems.map(item => convertReceipts(item)),
 
   //Add item to state
-  newInvItem: (state, item) => {
-    const newItem = convertReceipts(item)
-    
-    state.invItems.push(newItem)
-  },
+  newInvItem: (state, item) => state.invItems.push(convertReceipts(item)),
+
   // Update item in state
   updatedInvItem: (state, invItem) => {
     const updItem = convertReceipts(invItem)

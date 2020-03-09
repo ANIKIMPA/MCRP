@@ -56,8 +56,8 @@ export default {
 	margin-top: 60px !important;
 }
 
-div.ht_master div.wtHolder {
-    height: 500px !important;
+.handsontableEditor.autocompleteEditor.listbox.handsontable div.ht_master.handsontable div.wtHolder {
+  height: 300px !important;
 }
 
 .handsontableEditor.autocompleteEditor.handsontable.listbox {

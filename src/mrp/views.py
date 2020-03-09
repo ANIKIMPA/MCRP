@@ -23,14 +23,14 @@ class BomFileViewSet(viewsets.ModelViewSet):
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions.
     """
-    queryset = BomFile.objects.all()
+    queryset = BomFile.objects.filter(removed = 0)
     serializer_class = BomFileSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
     #                       IsOwnerOrReadOnly]
 
     @action(detail=True, methods=['get'])
     def get_bom_items(self, request, file_id):
-        queryset = BomItem.objects.all().filter(file=file_id)
+        queryset = BomItem.objects.all().filter(file=file_id).exclude(file__removed = 1)
         serializer = ItemSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -45,7 +45,7 @@ class ItemViewSet(viewsets.ModelViewSet):
 
 
 class MastFileViewSet(viewsets.ModelViewSet):
-    queryset = MastFile.objects.all()
+    queryset = MastFile.objects.filter(removed = 0)
     serializer_class = MastFileSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
     #                       IsOwnerOrReadOnly]
@@ -61,12 +61,12 @@ class MastItemViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def get_mast_items(self, request, file_id):
-        queryset = MastItem.objects.filter(file=file_id)
+        queryset = MastItem.objects.filter(file=file_id).exclude(file__removed = 1)
         serializer = MastItemSerializer(queryset, many=True)
         return Response(serializer.data)
 
 class InvFileViewSet(viewsets.ModelViewSet):
-    queryset = InvFile.objects.all()
+    queryset = InvFile.objects.filter(removed = 0)
     serializer_class = InvFileSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
     #                       IsOwnerOrReadOnly]
@@ -82,13 +82,13 @@ class InvItemViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def get_inv_items(self, request, file_id):
-        queryset = InvItem.objects.filter(file=file_id)
+        queryset = InvItem.objects.filter(file=file_id).exclude(file__removed = 1)
         serializer = InvItemSerializer(queryset, many=True)
         return Response(serializer.data)
 
 
 class ItemMasterFileViewSet(viewsets.ModelViewSet):
-    queryset = ItemMasterFile.objects.all()
+    queryset = ItemMasterFile.objects.filter(removed = 0)
     serializer_class = ItemMasterFileSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
     #                       IsOwnerOrReadOnly]
@@ -104,6 +104,6 @@ class ItemMasterViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['get'])
     def get_items_masters(self, request, file_id):
-        queryset = ItemMaster.objects.filter(file=file_id)
+        queryset = ItemMaster.objects.filter(file=file_id).exclude(file__removed = 1)
         serializer = ItemMasterSerializer(queryset, many=True)
         return Response(serializer.data)

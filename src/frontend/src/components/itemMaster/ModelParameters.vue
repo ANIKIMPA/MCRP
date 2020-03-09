@@ -1,5 +1,5 @@
 <template>
-	<b-modal size="lg" id="modal-parameters" title="MRP (ITEM): Model Parameters" @ok="onSubmit">
+	<b-modal size="lg" id="modal-parameters" title="MRP (ITEM): Model Parameters" @ok.prevent="onSubmit">
 		<form>
 			<div class="form-group row">
 				<label class="col-form-label col-2" for="title">Title:</label>
@@ -55,7 +55,7 @@ export default {
 				if(this.createFromBomFile) {
 					for (let i = 0; i < this.form.number_of_items; i++) {
                         this.addItemMaster({
-                            part_number: this.getAllBomItems[i].part_number,
+                            part_number: this.createFromBomFile ? this.getAllBomItems[i].part_number : "-",
                             lot_size: "LFL",
                             multiple: 0,
                             lead_time: 0,
@@ -63,22 +63,8 @@ export default {
                             unit_value: 0,
                             order_cost: 0,
                             carrying_cost: 0,
-                            demand: 0,
-                            file: this.itemMasterFile.id
-                        });
-					}
-				} else {
-					for (let i = 0; i < this.form.number_of_items; i++) {
-                        this.addItemMaster({
-                            part_number: "-",
-                            lot_size: "LFL",
-                            multiple: 0,
-                            lead_time: 0,
-                            yield_percent: 0,
-                            unit_value: 0,
-                            order_cost: 0,
-                            carrying_cost: 0,
-                            demand: 0,
+							demand: 0,
+							order: i,
                             file: this.itemMasterFile.id
                         });
 					}
@@ -96,9 +82,7 @@ export default {
 	},
 	methods: {
 		...mapActions(["addItemMaster", "createNewItemMasterFile"]),
-		onSubmit(e) {
-			e.preventDefault();
-
+		onSubmit() {
 			if(this.form.title && this.form.title.trim() != "") {
 				this.createNewItemMasterFile({
 					title: this.form.title,

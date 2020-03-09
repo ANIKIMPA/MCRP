@@ -32,7 +32,7 @@ export default {
 		this.$store.subscribe(mutation => {
 			if (mutation.type === "newBomFile") {
 				// Add items to the file
-				for (let i = 1; i <= this.items_number; i++) {
+				for (let i = 0; i < this.items_number; i++) {
 					this.addBomItem({
 						part_number: "-",
 						tipo: "MAT",

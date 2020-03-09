@@ -1,5 +1,5 @@
 <template>
-	<b-modal size="lg" id="modal-parameters" title="MRP (INV): Model Parameters" @ok="onSubmit">
+	<b-modal size="lg" id="modal-parameters" title="MRP (INV): Model Parameters" @ok.prevent="onSubmit">
 		<form>
 			<div class="form-group row">
 				<label class="col-form-label col-2" for="title">Title:</label>
@@ -77,22 +77,12 @@ export default {
 				if(this.createFromBomFile) {
 					for (let i = 0; i < this.form.number_of_items; i++) {
                         this.addInvItem({
-                            part_number: this.getAllBomItems[i].part_number,
+                            part_number: this.createFromBomFile ? this.getAllBomItems[i].part_number : "-",
                             safe_stock: 0,
                             on_hand: 0,
-                            past_due: 0,
-                            receipts: "0",
-                            file: this.invFile.id
-                        });
-					}
-				} else {
-					for (let i = 0; i < this.form.number_of_items; i++) {
-                        this.addInvItem({
-                            part_number: "-",
-                            safe_stock: 0,
-                            on_hand: 0,
-                            past_due: 0,
-                            receipts: "0",
+							past_due: 0,
+							receipts: "0",
+							order: i,
                             file: this.invFile.id
                         });
 					}
@@ -110,9 +100,7 @@ export default {
 	},
 	methods: {
 		...mapActions(["addInvItem", "createNewInvFile"]),
-		onSubmit(e) {
-			e.preventDefault();
-
+		onSubmit() {
 			if(this.form.title && this.form.title.trim() != "") {
 				this.createNewInvFile({
 					title: this.form.title,

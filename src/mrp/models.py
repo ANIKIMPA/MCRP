@@ -12,6 +12,7 @@ class BomFile(models.Model):
     owner = models.ForeignKey(LoginLevel, related_name='bom_files', on_delete=models.CASCADE, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
+    removed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-created_date', 'title']
@@ -32,7 +33,7 @@ class BomItem(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['id']
+        ordering = ['file', 'id']
         verbose_name = 'BomItem'
         verbose_name_plural = 'BomItems'
 
@@ -47,6 +48,7 @@ class MastFile(models.Model):
     owner = models.ForeignKey(LoginLevel, related_name='mast_files', on_delete=models.CASCADE, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
+    removed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-created_date', 'title']
@@ -60,12 +62,13 @@ class MastFile(models.Model):
 class MastItem(models.Model):
     part_number = models.CharField(max_length=12)
     periods = models.CharField(max_length=250, blank=True, null=True)
+    order = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     file = models.ForeignKey(MastFile, related_name='mast_items', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['file', 'part_number']
+        ordering = ['file', 'order']
         verbose_name = 'MastItem'
         verbose_name_plural = 'MastItems'
 
@@ -82,6 +85,7 @@ class InvFile(models.Model):
     owner = models.ForeignKey(LoginLevel, related_name='inv_files', on_delete=models.CASCADE, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
+    removed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-created_date', 'title']
@@ -98,12 +102,13 @@ class InvItem(models.Model):
     on_hand = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     past_due = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     receipts = models.CharField(max_length=250, blank=True, null=True)
+    order = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     file = models.ForeignKey(InvFile, related_name='inv_items', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['file', 'id']
+        ordering = ['file', 'order']
         verbose_name = 'InvItem'
         verbose_name_plural = 'InvItems'
 
@@ -116,6 +121,7 @@ class ItemMasterFile(models.Model):
     owner = models.ForeignKey(LoginLevel, related_name='item_master_files', on_delete=models.CASCADE, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
+    removed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-created_date', 'title']
@@ -135,17 +141,18 @@ class ItemMaster(models.Model):
     lot_size = models.CharField(max_length=5, choices=LOT_SIZE_CHOICES, default="LFL")
     multiple = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     lead_time = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
-    yield_percent = models.DecimalField(default=0, max_digits=4, decimal_places=2, validators=[MaxValueValidator(1), MinValueValidator(0)])
+    yield_percent = models.DecimalField(default=0, max_digits=4, decimal_places=3, validators=[MaxValueValidator(1), MinValueValidator(0)])
     unit_value = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     order_cost = models.DecimalField(default=0, max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     carrying_cost = models.DecimalField(default=0, max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     demand = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     file = models.ForeignKey(ItemMasterFile, related_name='items_masters', on_delete=models.CASCADE)
+    order = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['file', 'id']
+        ordering = ['file', 'order']
         verbose_name = 'ItemMaster'
         verbose_name_plural = 'ItemMasters'
 
