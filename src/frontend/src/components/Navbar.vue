@@ -29,8 +29,9 @@
 							</ul>
 						</li>
 						<li @click="goHome">Close</li>
-						<li>Close All</li>
-						<li>New Window</li>
+						<li @click="newTab">New Tab</li>
+						<li @click="closeTab">Close Tab</li>
+						<li @click="newWindow">New Window</li>
 					</ul>
 				</li>
 				<li class="parent"><a href="#">Edit <i class="fas fa-caret-down"></i></a>
@@ -77,6 +78,15 @@ export default {
 		},
 		saveFile(fileType) {
 			this.fileTypeSelected = fileType
+		},
+		newTab() {
+			window.open("http://localhost:8080/",'_blank');
+		},
+		closeTab() {
+			window.close();
+		},
+		newWindow() {
+			window.open("http://localhost:8080/", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=90,left=500,width=1200,height=800");
 		}
 	},
 	computed: {

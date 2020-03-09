@@ -47,13 +47,15 @@ export default {
 			this.fetchAllItemMasterFiles();
 		},
     deleteFile(file) {
-      this.$router.push("/");
+      if (this.itemMasterFile.id === file.id) {
+        this.$router.push("/");
+      }
       file.removed = true
 			this.deleteItemMasterFile(file);
 		}
 	},
 	computed: {
-		...mapGetters(["allItemMasterFiles"])
+		...mapGetters(["allItemMasterFiles", "itemMasterFile"])
 	}
 };
 </script>

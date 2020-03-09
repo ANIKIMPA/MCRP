@@ -31,7 +31,7 @@
 
 						<b-form-group label-cols-sm="6" :class="{ disabled: !createFromBomFile }" label="Copy Items:" label-align-sm="left" class="mb-0">
 							<b-col cols="12">
-								<b-form-radio-group :disabled="!createFromBomFile" :options="['Lowest Level', 'Selected']" />
+								<b-form-radio-group disabled :options="['Lowest Level', 'Selected']" />
 							</b-col>
 						</b-form-group>
 					</div>

@@ -115,7 +115,7 @@ export default {
 					{
 						data: "qty",
 						type: "numeric",
-						validator: validator.isPositive
+						validator: (value, callback) => callback(validator.isPositive(value))
 					}
 				);
 				this.settings.data = this.getAllBomItems;

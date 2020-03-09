@@ -44,7 +44,7 @@ export default {
 				columns: [
 					{
 						data: "part_number",
-						validator: validator.isNotEmpty
+						validator: (value, callback) => callback(validator.isNotEmpty(value)),
 					},
 					{
 						data: "lot_size",
@@ -54,12 +54,12 @@ export default {
 					{
 						data: "multiple",
 						type: "numeric",
-						validator: validator.isPositive
+						validator: (value, callback) => callback(validator.isPositive(value)),
 					},
 					{
 						data: "lead_time",
 						type: "numeric",
-						validator: validator.isPositive
+						validator: (value, callback) => callback(validator.isPositive(value)),
 					},
 					{
 						data: "yield_percent",
@@ -73,11 +73,11 @@ export default {
 					{
 						data: "unit_value",
 						type: "numeric",
-						validator: validator.isPositive
+						validator: (value, callback) => callback(validator.isPositive(value)),
 					},
 					{
 						data: "order_cost",
-						validator: validator.isPositive,
+						validator: (value, callback) => callback(validator.isPositive(value)),
 						type: "numeric",
 						numericFormat: {
 							pattern: "$0,0.00",
@@ -86,7 +86,7 @@ export default {
 					},
 					{
 						data: "carrying_cost",
-						validator: validator.isPositive,
+						validator: (value, callback) => callback(validator.isPositive(value)),
 						type: "numeric",
 						numericFormat: {
 							pattern: "$0,0.00",
@@ -96,7 +96,7 @@ export default {
 					{
 						data: "demand",
 						type: "numeric",
-						validator: validator.isPositive
+						validator: (value, callback) => callback(validator.isPositive(value)),
 					}
 				],
 				beforeRemoveRow: (_, amount, physicalRows) => {

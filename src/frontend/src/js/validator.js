@@ -1,9 +1,9 @@
 const validator = {
-  isPositive(value, callback) {
-    if (typeof value === "number") {
-      callback(value >= 0);
+  isPositive(value) {
+    if (typeof value === "number" && value >= 0) {
+      return true;
     } else {
-      callback(false);
+      return false;
     }
   },
 
@@ -16,8 +16,16 @@ const validator = {
   },
 
   isNotEmpty(value) {
-    if (!value || value.trim() == "") return false;
+    if (typeof(value) !== "number" && (typeof(value) == "object" || value.trim() == "")) return false;
     else return true;
+  },
+
+  isNumeric(value) {
+    if (typeof value === "number") {
+      return true;
+    } else {
+      return false;
+    }
   },
 
   allRowsSelected() {
