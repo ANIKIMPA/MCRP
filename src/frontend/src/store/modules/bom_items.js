@@ -24,11 +24,15 @@ const actions = {
       });
   },
   // Agregar item
-  addBomItem({ commit }, item) {
+  addBomItems({ commit }, data) {
     axios
-      .post("http://localhost:8000/api/v1.0/mrp/bom-items/", item)
+      .post("http://localhost:8000/api/v1.0/mrp/bom-items/", data)
       .then(response => {
-        commit("newBomItem", response.data);
+        console.log(response.data)
+        if(response.data.length > 1)
+          commit("newBomItems", response.data);
+        else
+          commit("newBomItem", response.data);
       })
       .catch(error => {
         console.log(error)
@@ -66,7 +70,8 @@ const mutations = {
   setBomItems: (state, bomItems) => (state.bomItems = bomItems),
 
   //Add item to state
-  newBomItem: (state, item) => state.bomItems.push(item),
+  newBomItems: (state, bomItems) => (state.bomItems = bomItems),
+  newBomItem: (state, item) => state.bomItems.push(item[0]),
 
   // Update item in state
   updatedBomItem: (state, updItem) => {

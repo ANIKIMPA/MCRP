@@ -72,17 +72,14 @@ export default {
 	methods: {
 		...mapActions([
 			"updateBomItem",
-			"addBomItem",
+			"addBomItems",
 			"fetchBomFile",
 			"fetchBomItems",
 			"deleteBomItem"
 		]),
 		addRow() {
-			this.addBomItem({
-				part_number: "-",
-				tipo: "MAT",
-				parent: null,
-				qty: 1,
+			this.addBomItems({
+				items_number: 1,
 				file: this.$route.params.file
 			});
 			this.$bvToast.show("saved-toast");

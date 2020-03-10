@@ -1,6 +1,6 @@
 from rest_framework import permissions
 from .models import BomItem, File
-from .serializers import FileSerializer, ItemSerializer
+from .serializers import FileSerializer, BomItemSerializer
 from rest_framework import viewsets
 from .permissions import IsOwnerOrReadOnly
 from rest_framework.decorators import api_view
@@ -43,11 +43,11 @@ class FileViewSet(viewsets.ModelViewSet):
 
 #     def get(self, request):
 #         items = BomItem.objects.all()
-#         serializer = ItemSerializer(items, many=True)
+#         serializer = BomItemSerializer(items, many=True)
 #         return Response(serializer.data)
 
 #     def post(self, request):
-#         serializer = ItemSerializer(data=request.data)
+#         serializer = BomItemSerializer(data=request.data)
 #         if serializer.is_valid():
 #             serializer.save()
 #             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -71,12 +71,12 @@ class FileViewSet(viewsets.ModelViewSet):
 
 #     def get(self, request, pk):
 #         file = self.get_object(pk)
-#         serializer = ItemSerializer(file)
+#         serializer = BomItemSerializer(file)
 #         return Response(serializer.data)
 
 #     def put(self, request, pk):
 #         file = self.get_object(pk)
-#         serializer = ItemSerializer(file, data=request.data)
+#         serializer = BomItemSerializer(file, data=request.data)
 #         if serializer.is_valid():
 #             serializer.save()
 #             return Response(serializer.data)

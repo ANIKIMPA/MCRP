@@ -1,9 +1,9 @@
 # from rest_framework import routers
-# from .viewsets import FileViewSet, ItemViewSet
+# from .viewsets import FileViewSet, BomItemViewSet
 
 # router = routers.SimpleRouter()
 # router.register("files", FileViewSet)
-# router.register("files", ItemViewSet)
+# router.register("files", BomItemViewSet)
 
 # urlpatterns = router.urls
 
@@ -27,7 +27,7 @@ file_items_masters = views.ItemMasterViewSet.as_view({
 
 router = DefaultRouter()
 router.register(r'bom-files', views.BomFileViewSet)
-router.register(r'bom-items', views.ItemViewSet)
+router.register(r'bom-items', views.BomItemViewSet)
 router.register(r'mast-files', views.MastFileViewSet)
 router.register(r'mast-items', views.MastItemViewSet)
 

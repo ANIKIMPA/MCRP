@@ -13,7 +13,7 @@ class BomFileSerializer(serializers.ModelSerializer):
         fields = ('id', 'owner', 'title', 'number_of_items', 'bom_items', 'created_date', 'removed')
 
 
-class ItemSerializer(serializers.ModelSerializer):
+class BomItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = BomItem
         fields = ('id', 'part_number', 'tipo', 'parent', 'qty', 'file')
