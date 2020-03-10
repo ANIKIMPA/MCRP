@@ -7,7 +7,7 @@ const state = {
 
 const getters = {
   getAllBomItems: state => state.bomItems,
-  getMasterItems: state => state.bomItems.filter(item => item.parent == null)
+  getParentItems: state => state.bomItems.filter(item => item.parent == null)
 };
 
 const actions = {
@@ -28,11 +28,10 @@ const actions = {
     axios
       .post("http://localhost:8000/api/v1.0/mrp/bom-items/", data)
       .then(response => {
-        console.log(response.data)
         if(response.data.length > 1)
           commit("newBomItems", response.data);
         else
-          commit("newBomItem", response.data);
+          commit("newBomItem", response.data[0]);
       })
       .catch(error => {
         console.log(error)
@@ -71,7 +70,7 @@ const mutations = {
 
   //Add item to state
   newBomItems: (state, bomItems) => (state.bomItems = bomItems),
-  newBomItem: (state, item) => state.bomItems.push(item[0]),
+  newBomItem: (state, item) => state.bomItems.push(item),
 
   // Update item in state
   updatedBomItem: (state, updItem) => {

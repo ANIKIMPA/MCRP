@@ -1,9 +1,5 @@
 <template>
-  <div>
-    <font-awesome-icon :icon="['fas', 'accessible-icon']" />
-    <font-awesome-icon :icon="['fab', 'accessible-icon']" />
-    
-    
+  <div>    
   </div>
 </template>
 

@@ -67,14 +67,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getAllMastItems", "getAllMastItems", "mastFile"]),
+    ...mapGetters(["getAllMastItems", "mastFile"]),
     countPeriods() {
       return this.settings.data[0].periods.split(",").length;
     }
   },
-
   created() {
     this.fetchMastFile(this.$route.params.file);
+    this.fetchMastItems(this.$route.params.file);
 
     this.settings.contextMenu = {
       items: {
@@ -112,15 +112,9 @@ export default {
       }
     };
 
-    this.fetchMastItems(this.$route.params.file);
-
     this.$store.subscribe(mutation => {
       if (mutation.type === "setMastItems") {
-        for (
-          let i = 1;
-          i <= Object.keys(this.getAllMastItems[0]).length - 5;
-          i++
-        ) {
+        for (let i = 1; i <= Object.keys(this.getAllMastItems[0]).length - 5; i++) {
           this.settings.colHeaders.push("Period " + i);
           this.settings.columns.push({
             data: "period" + i,
@@ -147,8 +141,7 @@ export default {
       "fetchMastItems",
       "updateMastItem",
       "deleteMastItem",
-      "addMastItem",
-      "isPositive"
+      "addMastItems"
     ]),
     ...mapMutations(["throwError"]),
     isValidPeriod(changes) {
@@ -157,15 +150,15 @@ export default {
           this.throwError("This field may not be null.");
           return false;
         } else if (!validator.isNumeric(changes.newValue)) {
-					this.throwError("A valid number is required.");
+          this.throwError("A valid number is required.");
           return false;
         } else if (!validator.isPositive(changes.newValue)) {
-					this.throwError("Ensure this value is greater than or equal 0.");
+          this.throwError("Ensure this value is greater than or equal 0.");
           return false;
         }
-			}
-			
-			return true
+      }
+
+      return true;
     },
     addColumn() {
       this.settings.colHeaders.push(`Period  ${this.countPeriods + 1}`);
@@ -202,11 +195,13 @@ export default {
         if (header.startsWith("Period")) periods.push("0");
       });
 
-      this.addMastItem({
-        part_number: "-",
+      this.addMastItems({
+        items_number: 1,
+        part_numbers: "-",
+        createFromBomFile: false,
         periods: periods.join(","),
         order: this.getAllMastItems.length,
-        file: this.mastFile.id
+        file: this.mastFile.id,
       });
     }
   }

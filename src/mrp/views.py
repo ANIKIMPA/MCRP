@@ -73,6 +73,22 @@ class MastItemViewSet(viewsets.ModelViewSet):
     serializer_class = MastItemSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+    def create(self, request):
+        items = []
+        for i in range(0, int(request.data["items_number"])):
+            items.append(MastItem(
+                part_number = request.data["part_numbers"][i] if request.data["createFromBomFile"] else "-",
+                periods = request.data["periods"],
+                order = request.data["order"] if "order" in request.data else i,
+                file = MastFile.objects.get(pk=request.data["file"])
+            ))
+        
+        mastItems = MastItem.objects.bulk_create(items)
+        print(mastItems)
+        serializer = MastItemSerializer(mastItems, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
     @action(detail=True, methods=['get'])
     def get_mast_items(self, request, file_id):
         queryset = MastItem.objects.filter(

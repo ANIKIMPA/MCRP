@@ -23,10 +23,14 @@ const actions = {
       });
   },
   // Agregar item
-  addMastItem({ commit }, item) {
-    axios.post("http://localhost:8000/api/v1.0/mrp/mast-items/", item)
+  addMastItems({ commit }, data) {
+    axios.post("http://localhost:8000/api/v1.0/mrp/mast-items/", data)
       .then(response => {
-        commit("newMastItem", response.data);
+        console.log(response.data)
+        if(response.data.length > 1)
+          commit("newMastItems", response.data);
+        else
+          commit("newMastItem", response.data[0]);
       })
       .catch(error => {
         console.log(error)
@@ -64,6 +68,7 @@ const mutations = {
   setMastItems: (state, items) => state.mastItems = items.map(item => convertPeriods(item)),
 
   //Add item to state
+  newMastItems: (state, items) => state.mastItems = items.map(item => convertPeriods(item)),
   newMastItem: (state, item) => state.mastItems.push(convertPeriods(item)),
   
   // Update item in state
