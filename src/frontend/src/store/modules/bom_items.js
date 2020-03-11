@@ -29,7 +29,7 @@ const actions = {
       .post("http://localhost:8000/api/v1.0/mrp/bom-items/", data)
       .then(response => {
         if(response.data.length > 1)
-          commit("newBomItems", response.data);
+          commit("setBomItems", response.data);
         else
           commit("newBomItem", response.data[0]);
       })
@@ -69,7 +69,6 @@ const mutations = {
   setBomItems: (state, bomItems) => (state.bomItems = bomItems),
 
   //Add item to state
-  newBomItems: (state, bomItems) => (state.bomItems = bomItems),
   newBomItem: (state, item) => state.bomItems.push(item),
 
   // Update item in state

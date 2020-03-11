@@ -97,7 +97,7 @@ export default {
         }
     });
 
-    this.$store.subscribe(mutation => {
+    const unsubscribe = this.$store.subscribe(mutation => {
       if (mutation.type === "newMastFile") {
         let periods = "0";
         for (let num = 1; num < this.form.planning_horizon_length; num++) {
@@ -114,13 +114,15 @@ export default {
       }
 
       // Redirect to datagrid page when data saved.
-      if (mutation.type === "newMastItems") {
+      if (mutation.type === "setMastItems") {
         this.$router.push({
           name: "master_schedule",
           params: {
             file: this.mastFile.id
           }
         });
+
+        unsubscribe()
       }
     });
   },

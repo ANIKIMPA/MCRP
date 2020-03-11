@@ -1,3 +1,4 @@
+from datetime import datetime
 from .models import (
     BomFile, BomItem, MastFile, MastItem, InvFile, InvItem, ItemMasterFile, ItemMaster
 )
@@ -44,16 +45,19 @@ class BomItemViewSet(viewsets.ModelViewSet):
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def create(self, request):
+        now = datetime.now()
         items = []
         for i in range(0, int(request.data["items_number"])):
             items.append(BomItem(
-                part_number = "-",
-                tipo = "MAT",
-                qty = 1,
-                file = BomFile.objects.get(pk=request.data["file"])
+                part_number="-",
+                tipo="MAT",
+                qty=1,
+                file=BomFile.objects.get(pk=request.data["file"]),
+                created_date=now
             ))
 
         bomItems = BomItem.objects.bulk_create(items)
+        bomItems = BomItem.objects.filter(created_date=now)
         serializer = BomItemSerializer(bomItems, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -74,20 +78,21 @@ class MastItemViewSet(viewsets.ModelViewSet):
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def create(self, request):
+        now = datetime.now()
         items = []
         for i in range(0, int(request.data["items_number"])):
             items.append(MastItem(
-                part_number = request.data["part_numbers"][i] if request.data["createFromBomFile"] else "-",
-                periods = request.data["periods"],
-                order = request.data["order"] if "order" in request.data else i,
-                file = MastFile.objects.get(pk=request.data["file"])
+                part_number=request.data["part_numbers"][i] if request.data["createFromBomFile"] else "-",
+                periods=request.data["periods"],
+                order=request.data["order"] if "order" in request.data else i,
+                file=MastFile.objects.get(pk=request.data["file"]),
+                created_date=now
             ))
-        
+
         mastItems = MastItem.objects.bulk_create(items)
-        print(mastItems)
+        mastItems = MastItem.objects.filter(created_date=now)
         serializer = MastItemSerializer(mastItems, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
 
     @action(detail=True, methods=['get'])
     def get_mast_items(self, request, file_id):
@@ -111,6 +116,26 @@ class InvItemViewSet(viewsets.ModelViewSet):
     queryset = InvItem.objects.all()
     serializer_class = InvItemSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def create(self, request):
+        now = datetime.now()
+        items = []
+        for i in range(0, int(request.data["items_number"])):
+            items.append(InvItem(
+				part_number = request.data["part_numbers"][i] if request.data["createFromBomFile"] else "-",
+				safe_stock = 0,
+				on_hand = 0,
+				past_due = 0,
+				receipts = "0",
+				order=request.data["order"] if "order" in request.data else i,
+                file=InvFile.objects.get(pk=request.data["file"]),
+                created_date=now
+            ))
+
+        invItems = InvItem.objects.bulk_create(items)
+        invItems = InvItem.objects.filter(created_date=now)
+        serializer = InvItemSerializer(invItems, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['get'])
     def get_inv_items(self, request, file_id):

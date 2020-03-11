@@ -1,5 +1,5 @@
 from django.db import models
-from django.utils.timezone import now
+from datetime import datetime
 from users.models import LoginLevel
 from django.core.validators import MaxValueValidator, MinValueValidator
 
@@ -30,7 +30,7 @@ class BomItem(models.Model):
     qty = models.PositiveIntegerField(default=1, validators=[MinValueValidator(0)])
     file = models.ForeignKey(BomFile, related_name='bom_items', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(default=datetime.now)
 
     class Meta:
         ordering = ['file', 'id']
@@ -65,7 +65,7 @@ class MastItem(models.Model):
     order = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     file = models.ForeignKey(MastFile, related_name='mast_items', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(default=datetime.now)
 
     class Meta:
         ordering = ['file', 'order']
@@ -105,7 +105,7 @@ class InvItem(models.Model):
     order = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     file = models.ForeignKey(InvFile, related_name='inv_items', on_delete=models.CASCADE)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(default=datetime.now)
 
     class Meta:
         ordering = ['file', 'order']
@@ -149,7 +149,7 @@ class ItemMaster(models.Model):
     file = models.ForeignKey(ItemMasterFile, related_name='items_masters', on_delete=models.CASCADE)
     order = models.DecimalField(default=0, max_digits=10, decimal_places=2)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(default=datetime.now)
 
     class Meta:
         ordering = ['file', 'order']

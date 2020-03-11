@@ -26,9 +26,8 @@ const actions = {
   addMastItems({ commit }, data) {
     axios.post("http://localhost:8000/api/v1.0/mrp/mast-items/", data)
       .then(response => {
-        console.log(response.data)
         if(response.data.length > 1)
-          commit("newMastItems", response.data);
+          commit("setMastItems", response.data);
         else
           commit("newMastItem", response.data[0]);
       })
@@ -68,7 +67,6 @@ const mutations = {
   setMastItems: (state, items) => state.mastItems = items.map(item => convertPeriods(item)),
 
   //Add item to state
-  newMastItems: (state, items) => state.mastItems = items.map(item => convertPeriods(item)),
   newMastItem: (state, item) => state.mastItems.push(convertPeriods(item)),
   
   // Update item in state

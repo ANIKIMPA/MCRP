@@ -23,11 +23,14 @@ const actions = {
       });
   },
   // Agregar item
-  addItemMaster({ commit }, item) {
+  addItemsMasters({ commit }, data) {
     axios
-      .post("http://localhost:8000/api/v1.0/mrp/items-masters/", item)
+      .post("http://localhost:8000/api/v1.0/mrp/bom-items/", data)
       .then(response => {
-        commit("newItemMaster", response.data);
+        if(response.data.length > 1)
+          commit("setItemsMasters", response.data);
+        else
+          commit("newItemMaster", response.data[0]);
       })
       .catch(error => {
         console.log(error)

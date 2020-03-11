@@ -22,12 +22,15 @@ const actions = {
         commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
       });
   },
-  // Agregar item
-  addInvItem({ commit }, item) {
-    axios
-      .post("http://localhost:8000/api/v1.0/mrp/inv-items/", item)
+
+  async addInvItems({ commit }, data) {
+    await axios
+      .post("http://localhost:8000/api/v1.0/mrp/bom-items/", data)
       .then(response => {
-        commit("newInvItem", response.data);
+        if(response.data.length > 1)
+          commit("setInvItems", response.data);
+        else
+          commit("newInvItem", response.data[0]);
       })
       .catch(error => {
         console.log(error)

@@ -44,7 +44,7 @@ export default {
           }
         },
         beforeRemoveRow: (_, amount, physicalRows) => {
-          console.log(amount);
+          amount;
 
           physicalRows.forEach(index => {
             this.deleteMastItem(this.settings.data[index]);

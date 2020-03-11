@@ -36,7 +36,7 @@ export default {
     ...mapGetters(["bomFile"])
   },
   created() {
-    this.$store.subscribe(mutation => {
+    const unsubscribe = this.$store.subscribe(mutation => {
       if (mutation.type === "newBomFile") {
         // Add items to the file
         this.addBomItems({
@@ -46,13 +46,15 @@ export default {
       }
 
       // Redirect to datagrid page when data saved.
-      if (mutation.type === "newBomItems") {
+      if (mutation.type === "setBomItems") {
         this.$router.push({
           name: "bill_of_material",
           params: {
             file: this.bomFile.id
           }
         });
+
+        unsubscribe();
       }
     });
   },

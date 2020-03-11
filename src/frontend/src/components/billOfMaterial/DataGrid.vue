@@ -40,8 +40,7 @@ export default {
 					}
 				],
 				beforeRemoveRow: (_, amount, physicalRows) => {
-					console.log(amount);
-
+					amount;
 					physicalRows.forEach(index => {
 						this.deleteBomItem(this.settings.data[index]);
 					});

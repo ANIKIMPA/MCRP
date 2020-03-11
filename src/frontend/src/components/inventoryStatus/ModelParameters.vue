@@ -71,23 +71,18 @@ export default {
 				}
 		})
 
-		this.$store.subscribe(mutation => {
+		const unsubscribe = this.$store.subscribe(mutation => {
 			if (mutation.type === "newInvFile") {
 				// Add items to the file
-				if(this.createFromBomFile) {
-					for (let i = 0; i < this.form.number_of_items; i++) {
-                        this.addInvItem({
-                            part_number: this.createFromBomFile ? this.getAllBomItems[i].part_number : "-",
-                            safe_stock: 0,
-                            on_hand: 0,
-							past_due: 0,
-							receipts: "0",
-							order: i,
-                            file: this.invFile.id
-                        });
-					}
-				}
+				this.addInvItems({
+					items_number: this.form.numberItems,
+					part_numbers: this.getAllBomItems.map(item => item.part_number),
+					createFromBomFile: this.createFromBomFile,
+					file: this.invFile.id
+				});
+			}
 
+			if (mutation.type === "setInvItems") {
 				// Redirect to home page
 				this.$router.push({
 					name: "inventory_status",
@@ -95,8 +90,11 @@ export default {
 						file: this.invFile.id
 					}
 				});
+
+				unsubscribe();
 			}
 		});
+
 	},
 	methods: {
 		...mapActions(["addInvItem", "createNewInvFile"]),

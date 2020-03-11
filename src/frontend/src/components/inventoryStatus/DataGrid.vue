@@ -44,7 +44,7 @@ export default {
           }
         },
         beforeRemoveRow: (_, amount, physicalRows) => {
-          console.log(amount);
+          amount;
 
           physicalRows.forEach(index => {
             this.deleteInvItem(this.settings.data[index]);
