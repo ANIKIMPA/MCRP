@@ -106,15 +106,14 @@ export default {
         // Add items to the file
         this.addMastItems({
           items_number: this.form.numberItems,
-          part_numbers: this.getParentItems.map(item => item.part_number),
-          createFromBomFile: this.createFromBomFile,
+          part_numbers: this.getParentItems.map(item => this.createFromBomFile ? item.part_number : "-"),
           periods: periods,
           file: this.mastFile.id
         });
       }
 
       // Redirect to datagrid page when data saved.
-      if (mutation.type === "setMastItems") {
+      if (mutation.type === "setMastItems" || mutation.type === "newMastItem") {
         this.$router.push({
           name: "master_schedule",
           params: {

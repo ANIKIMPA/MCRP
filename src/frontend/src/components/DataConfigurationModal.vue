@@ -20,7 +20,7 @@
 									<b-form-checkbox v-model="createFromBomFile" :value="true" :unchecked-value="false">Create from BOM file:</b-form-checkbox>
 								</b-col>
 								<b-col cols="4">
-									<SelectBomFile @bomFile="getFileSelected" :createFromBomFile="createFromBomFile" />
+									<SelectBomFile @bomFileSelected="getFileSelected" :createFromBomFile="createFromBomFile" />
 								</b-col>
 							</b-row>
 						</b-form-group>
@@ -62,7 +62,7 @@ export default {
 	data() {
 		return {
 			createFromBomFile: false,
-			fileTypeSelected: "bomModelParameters",
+			fileTypeSelected: "",
 			fileTitle: ""
 		};
 	},

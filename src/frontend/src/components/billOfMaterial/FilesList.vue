@@ -55,7 +55,6 @@ export default {
           file: file.id
         }
       });
-      this.setBomFile(file);
       this.$bvModal.hide("bom-file-list");
     },
     openModal() {

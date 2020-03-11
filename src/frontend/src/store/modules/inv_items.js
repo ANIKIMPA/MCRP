@@ -25,7 +25,7 @@ const actions = {
 
   async addInvItems({ commit }, data) {
     await axios
-      .post("http://localhost:8000/api/v1.0/mrp/bom-items/", data)
+      .post("http://localhost:8000/api/v1.0/mrp/inv-items/", data)
       .then(response => {
         if(response.data.length > 1)
           commit("setInvItems", response.data);

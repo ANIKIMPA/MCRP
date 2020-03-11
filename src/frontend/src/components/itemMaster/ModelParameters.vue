@@ -30,6 +30,7 @@ export default {
 		return {
 			form: {
 				title: "",
+				number_of_items: 1,
 				number_of_periods: 1
 			}
 		};
@@ -52,23 +53,11 @@ export default {
 		const unsubscribe = this.$store.subscribe(mutation => {
 			if (mutation.type === "newItemMasterFile") {
 				// Add items to the file
-				if (this.createFromBomFile) {
-					for (let i = 0; i < this.form.number_of_items; i++) {
-						this.addItemsMasters({
-							part_number: this.createFromBomFile ? this.getAllBomItems[i].part_number : "-",
-							lot_size: "LFL",
-							multiple: 0,
-							lead_time: 0,
-							yield_percent: 0,
-							unit_value: 0,
-							order_cost: 0,
-							carrying_cost: 0,
-							demand: 0,
-							order: i,
-							file: this.itemMasterFile.id
-						});
-					}
-				}
+				this.addItemsMasters({
+					items_number: this.form.number_of_items,
+					part_numbers: this.getAllBomItems.map(item => this.createFromBomFile ? item.part_number : "-"),
+					file: this.itemMasterFile.id
+				});
 			}
 
 			if (this.mutation === "setItemsMasters") {
@@ -85,7 +74,7 @@ export default {
 		});
 	},
 	methods: {
-		...mapActions(["addItemMaster", "createNewItemMasterFile"]),
+		...mapActions(["addItemsMasters", "createNewItemMasterFile"]),
 		onSubmit() {
 			if (this.form.title && this.form.title.trim() != "") {
 				this.createNewItemMasterFile({

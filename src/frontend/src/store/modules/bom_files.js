@@ -72,7 +72,14 @@ const actions = {
 // Methods
 const mutations = {
   // Set all files to state
-  setBomFiles: (state, files) => (state.allBomFiles = files),
+  setBomFiles: (state, files) => {
+    try {
+      state.allBomFiles = files
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
   setBomFile: (state, file) => (state.bomFile = file),
   newBomFile: (state, file) => (state.bomFile = file),
   deletedBomFile: (state, file) =>  functions.remove(state.allBomFiles, file)

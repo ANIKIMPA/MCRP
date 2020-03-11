@@ -25,7 +25,7 @@ const actions = {
   // Agregar item
   addItemsMasters({ commit }, data) {
     axios
-      .post("http://localhost:8000/api/v1.0/mrp/bom-items/", data)
+      .post("http://localhost:8000/api/v1.0/mrp/items-masters/", data)
       .then(response => {
         if(response.data.length > 1)
           commit("setItemsMasters", response.data);

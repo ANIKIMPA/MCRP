@@ -72,8 +72,12 @@ export default {
 					},
 					{
 						data: "unit_value",
-						type: "numeric",
 						validator: (value, callback) => callback(validator.isPositive(value)),
+						type: "numeric",
+						numericFormat: {
+							pattern: "$0,0.00",
+							culture: "en-US"
+						}
 					},
 					{
 						data: "order_cost",
@@ -154,22 +158,15 @@ export default {
 			"fetchItemMasterFile",
 			"fetchItemsMasters",
 			"updateItemMaster",
-			"addItemMaster",
+			"addItemsMasters",
 			"deleteItemMaster"
 		]),
 		addRow() {
-			this.addItemMaster({
-				part_number: "-",
-				lot_size: "LFL",
-				multiple: 0,
-				lead_time: 0,
-				yield_percent: 0,
-				unit_value: 0,
-				order_cost: 0,
-				carrying_cost: 0,
-				demand: 0,
+			this.addItemsMasters({
+				items_number: 1,
+				part_numbers: "-",
 				order: this.getAllItemsMasters.length,
-				file: this.itemMasterFile.id
+				file: this.itemMasterFile.i
 			});
 			this.$bvToast.show("saved-toast");
 		}

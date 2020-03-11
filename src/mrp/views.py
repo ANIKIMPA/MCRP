@@ -29,12 +29,6 @@ class BomFileViewSet(viewsets.ModelViewSet):
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
     #                       IsOwnerOrReadOnly]
 
-    @action(detail=True, methods=['get'])
-    def get_bom_items(self, request, file_id):
-        queryset = BomItem.objects.all().filter(file=file_id).exclude(file__removed=1)
-        serializer = BomItemSerializer(queryset, many=True)
-        return Response(serializer.data)
-
     # def perform_create(self, serializer):
     #     serializer.save(owner=self.request.user)
 
@@ -60,6 +54,12 @@ class BomItemViewSet(viewsets.ModelViewSet):
         bomItems = BomItem.objects.filter(created_date=now)
         serializer = BomItemSerializer(bomItems, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    @action(detail=True, methods=['get'])
+    def get_bom_items(self, request, file_id):
+        queryset = BomItem.objects.all().filter(file=file_id).exclude(file__removed=1)
+        serializer = BomItemSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class MastFileViewSet(viewsets.ModelViewSet):
@@ -82,7 +82,7 @@ class MastItemViewSet(viewsets.ModelViewSet):
         items = []
         for i in range(0, int(request.data["items_number"])):
             items.append(MastItem(
-                part_number=request.data["part_numbers"][i] if request.data["createFromBomFile"] else "-",
+                part_number=request.data["part_numbers"][i],
                 periods=request.data["periods"],
                 order=request.data["order"] if "order" in request.data else i,
                 file=MastFile.objects.get(pk=request.data["file"]),
@@ -122,11 +122,11 @@ class InvItemViewSet(viewsets.ModelViewSet):
         items = []
         for i in range(0, int(request.data["items_number"])):
             items.append(InvItem(
-				part_number = request.data["part_numbers"][i] if request.data["createFromBomFile"] else "-",
+				part_number = request.data["part_numbers"][i],
 				safe_stock = 0,
 				on_hand = 0,
 				past_due = 0,
-				receipts = "0",
+				receipts = request.data["receipts"],
 				order=request.data["order"] if "order" in request.data else i,
                 file=InvFile.objects.get(pk=request.data["file"]),
                 created_date=now
@@ -159,6 +159,30 @@ class ItemMasterViewSet(viewsets.ModelViewSet):
     queryset = ItemMaster.objects.all()
     serializer_class = ItemMasterSerializer
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def create(self, request):
+        now = datetime.now()
+        items = []
+        for i in range(0, int(request.data["items_number"])):
+            items.append(ItemMaster(
+                part_number = request.data["part_numbers"][i],
+                lot_size = "LFL",
+                multiple = 0,
+                lead_time = 0,
+                yield_percent = 0,
+                unit_value = 0,
+                order_cost = 0,
+                carrying_cost = 0,
+                demand = 0,
+                order = request.data["order"] if "order" in request.data else i,
+                file = ItemMasterFile.objects.get(pk=request.data["file"]),
+                created_date = now
+            ))
+
+        itemsMasters = ItemMaster.objects.bulk_create(items)
+        itemsMasters = ItemMaster.objects.filter(created_date=now)
+        serializer = ItemMasterSerializer(itemsMasters, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['get'])
     def get_items_masters(self, request, file_id):

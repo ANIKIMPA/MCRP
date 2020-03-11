@@ -34,13 +34,13 @@ export default {
   computed: {
     ...mapGetters(["getError"])
   },
-	mounted() {
-		this.$store.subscribe(mutation => {
-			if (mutation.type === "throwError") {
-				this.$bvToast.show("error-toast");
-			}
-		});
-	}
+	// mounted() {
+	// 	this.$store.subscribe((mutation) => {
+	// 		if (mutation.type === "throwError") {
+	// 			this.$bvToast.show("error-toast");
+	// 		}
+	// 	});
+	// }
 };
 </script>
 

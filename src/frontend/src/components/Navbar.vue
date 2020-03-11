@@ -4,18 +4,6 @@
 			<b-navbar-brand href="#" @click="goHome">STORM 5.0</b-navbar-brand>
 		</b-navbar>
 		<nav class="bg-white border" style="height:50px;">
-			<!-- <b-dropdown id="dropdown-left" text="File" variant="white" class="m-2">
-				<b-dropdown-item v-b-modal.modal-1 href="#">New </b-dropdown-item>
-				<b-dropdown-item href="#">Open...</b-dropdown-item>
-				<b-dropdown-item href="#" @click="goHome">Close</b-dropdown-item>
-				<b-dropdown-item href="#">Close All</b-dropdown-item>
-				<b-dropdown-item href="#">New Window</b-dropdown-item>
-			</b-dropdown>
-
-			<b-dropdown id="dropdown-right" right text="Edit" variant="white" class="m-2">
-				<b-dropdown-item href="#">Copy</b-dropdown-item>
-				<b-dropdown-item href="#">Paste</b-dropdown-item>
-			</b-dropdown> -->
 			<ul id="menu" class="mt-2">
 				<li class="parent"><a href="#">File <i class="fas fa-caret-down"></i></a>
 					<ul class="child">
@@ -40,6 +28,9 @@
 						<li>Paste</li>
 					</ul>
 				</li>
+				<li class="parent">
+					<ReportSetup/>
+				</li>
 			</ul>
 		</nav>
 
@@ -56,6 +47,7 @@ import BomFilesList from "./billOfMaterial/FilesList"
 import MastFilesList from "./masterSchedule/FilesList"
 import InvFilesList from "./inventoryStatus/FilesList"
 import ItemMasterFilesList from "./itemMaster/FilesList"
+import ReportSetup from "./report/Setup"
 import { mapGetters } from "vuex";
 export default {
 	components: {
@@ -65,6 +57,7 @@ export default {
 		MastFilesList,
 		InvFilesList,
 		ItemMasterFilesList,
+		ReportSetup
 	},
 	data() {
 		return {
@@ -87,6 +80,9 @@ export default {
 		},
 		newWindow() {
 			window.open("http://localhost:8080/", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=90,left=500,width=1200,height=800");
+		},
+		runReport() {
+
 		}
 	},
 	computed: {

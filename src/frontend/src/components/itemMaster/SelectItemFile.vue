@@ -1,10 +1,10 @@
 <template>
 	<div>
-		<b-button :disabled="!createFromBomFile" variant="outline-secondary" @click="openModal">Browse...</b-button>
-		<b-modal id="file-store" v-model="modalOpenned" title="Browse File" hide-footer>
-			<p class="mb-2">Select BOM File:</p>
+		<b-button variant="outline-secondary" @click="openModal">Browse...</b-button>
+		<b-modal id="item-file-store" v-model="modalOpenned" title="Browse File" hide-footer>
+			<p class="mb-2">Select ITEM File:</p>
 			<b-list-group class="overflow-auto mh-300">
-				<b-list-group-item button v-for="file in allBomFiles" @click="ReturnSelected(file)" :key="file.id" class="d-flex justify-content-between">
+				<b-list-group-item button v-for="file in allItemMasterFiles" @click="ReturnSelected(file)" :key="file.id" class="d-flex justify-content-between">
 					<span><i class="far fa-file-alt"></i> {{ file.title }}</span> <small style="font-style: italic;">{{ file.created_date | formatDate }}</small>
 				</b-list-group-item>
 			</b-list-group>
@@ -16,10 +16,7 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import moment from "moment";
 export default {
-	name: "SelectBomFile",
-	props: {
-		createFromBomFile: Boolean
-	},
+	name: "SelectItemFile",
 	data() {
 		return {
 			modalOpenned: false
@@ -31,21 +28,20 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions(["fetchAllBomFiles", "fetchBomItems"]),
-		...mapMutations(["setBomFile"]),
+		...mapActions(["fetchAllItemMasterFiles", "fetchItemsMasters"]),
+		...mapMutations(["setItemMasterFile"]),
 		ReturnSelected(file) {
-			this.setBomFile(file);
-			this.fetchBomItems(file.id);
-			this.$bvModal.hide("file-store");
-			this.$emit("bomFileSelected");
+			this.setItemMasterFile(file);
+			this.fetchItemsMasters(file.id);
+			this.$bvModal.hide("item-file-store");
 		},
 		openModal() {
 			this.modalOpenned = true
-			this.fetchAllBomFiles();
+			this.fetchAllItemMasterFiles();
 		}
 	},
 	computed: {
-		...mapGetters(["allBomFiles"])
+		...mapGetters(["allItemMasterFiles"])
 	}
 };
 </script>

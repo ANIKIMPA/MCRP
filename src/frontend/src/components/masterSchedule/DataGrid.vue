@@ -62,7 +62,42 @@ export default {
         licenseKey: "non-commercial-and-evaluation",
         className: "htMiddle htCenter",
         manualColumnResize: true,
-        manualRowResize: true
+        manualRowResize: true,
+        contextMenu: {
+          items: {
+            add_row: {
+              name: "Add item row",
+              callback: this.addRow
+            },
+            remove_row: {
+              disabled: validator.allRowsSelected
+            },
+            "---------": {},
+            add_column: {
+              name: "Add period column",
+              callback: this.addColumn
+            },
+            remove_col: {
+              callback: this.removeColumn,
+              disabled: function() {
+                // Disable option when first col was selected or when attempt to remove all periods
+                const selected = this.getSelectedLast();
+                let periodsQty = this.countVisibleCols() - 1;
+                let selectedQty = selected[3] - selected[1];
+                selectedQty =
+                  selectedQty > 0 ? selectedQty + 1 : selectedQty * -1 + 1;
+                return (
+                  selected[1] === 0 ||
+                  selected[3] === 0 ||
+                  selectedQty >= periodsQty
+                );
+              }
+            },
+            separator: Handsontable.plugins.ContextMenu.SEPARATOR,
+            copy: {},
+            cut: {}
+          }
+        }
       }
     };
   },
@@ -72,49 +107,22 @@ export default {
       return this.settings.data[0].periods.split(",").length;
     }
   },
+  watch: {
+    getAllMastItems() {
+      this.$bvToast.show("saved-toast");
+    }
+  },
   created() {
     this.fetchMastFile(this.$route.params.file);
     this.fetchMastItems(this.$route.params.file);
 
-    this.settings.contextMenu = {
-      items: {
-        add_row: {
-          name: "Add item row",
-          callback: this.addRow
-        },
-        remove_row: {
-          disabled: validator.allRowsSelected
-        },
-        "---------": {},
-        add_column: {
-          name: "Add period column",
-          callback: this.addColumn
-        },
-        remove_col: {
-          callback: this.removeColumn,
-          disabled: function() {
-            // Disable option when first col was selected or when attempt to remove all periods
-            const selected = this.getSelectedLast();
-            let periodsQty = this.countVisibleCols() - 1;
-            let selectedQty = selected[3] - selected[1];
-            selectedQty =
-              selectedQty > 0 ? selectedQty + 1 : selectedQty * -1 + 1;
-            return (
-              selected[1] === 0 ||
-              selected[3] === 0 ||
-              selectedQty >= periodsQty
-            );
-          }
-        },
-        separator: Handsontable.plugins.ContextMenu.SEPARATOR,
-        copy: {},
-        cut: {}
-      }
-    };
-
-    this.$store.subscribe(mutation => {
+    const unsubscribe = this.$store.subscribe(mutation => {
       if (mutation.type === "setMastItems") {
-        for (let i = 1; i <= Object.keys(this.getAllMastItems[0]).length - 5; i++) {
+        for (
+          let i = 1;
+          i <= Object.keys(this.getAllMastItems[0]).length - 5;
+          i++
+        ) {
           this.settings.colHeaders.push("Period " + i);
           this.settings.columns.push({
             data: "period" + i,
@@ -125,13 +133,7 @@ export default {
         }
 
         this.settings.data = this.getAllMastItems;
-      }
-
-      if (
-        mutation.type === "updatedMastItem" ||
-        mutation.type === "deletedMastItem"
-      ) {
-        this.$bvToast.show("saved-toast");
+        unsubscribe();
       }
     });
   },
@@ -201,7 +203,7 @@ export default {
         createFromBomFile: false,
         periods: periods.join(","),
         order: this.getAllMastItems.length,
-        file: this.mastFile.id,
+        file: this.mastFile.id
       });
     }
   }

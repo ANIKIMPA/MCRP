@@ -11,7 +11,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
 
-file_bom_items = views.BomFileViewSet.as_view({
+file_bom_items = views.BomItemViewSet.as_view({
     'get': 'get_bom_items'
 })
 

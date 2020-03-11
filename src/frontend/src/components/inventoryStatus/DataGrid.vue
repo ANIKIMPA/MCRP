@@ -170,7 +170,7 @@ export default {
       "fetchInvItems",
       "updateInvItem",
       "deleteInvItem",
-      "addInvItem"
+      "addInvItems"
 		]),
 		...mapMutations(["throwError"]),
     isValidReceipt(changes) {
@@ -219,11 +219,9 @@ export default {
       this.settings.columns.splice(-colsQty, colsQty);
     },
     addRow() {
-      this.addInvItem({
-        part_number: "-",
-        safe_stock: 0,
-        on_hand: 0,
-        past_due: 0,
+      this.addInvItems({
+        items_number: 1,
+        part_numbers: "-",
         receipts: "0",
         order: this.getAllInvItems.length,
         file: this.invFile.id

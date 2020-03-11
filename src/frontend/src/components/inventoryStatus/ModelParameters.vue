@@ -16,22 +16,9 @@
 				</div>
 			</div>
 			<div class="form-group row">
-				<!-- Número de periodos -->
-				<label class="col-form-label col-9" for="lead_time">Maximal Lead Time in Time Buckets:</label>
-				<div class="col-3">
-					<input type="number" class="form-control" v-model="form.lead_time" min="1" value="1" id="lead_time" readonly/>
-				</div>
-			</div>
-			<div class="form-group row">
 				<label class="col-form-label col-9" for="number_of_periods">Maximal # of Periods for Firm Planned Orders:</label>
 				<div class="col-3">
 					<input type="number" class="form-control" v-model="form.number_of_periods" min="1" value="1" id="number_of_periods" readonly />
-				</div>
-			</div>
-			<div class="form-group row">
-				<label class="col-form-label col-9" for="annual_carrying">Annual Carrying Charge Rate, Per Cent:</label>
-				<div class="col-3">
-					<input type="number" class="form-control" v-model="form.annual_carrying" min="1" id="annual_carrying" readonly />
 				</div>
 			</div>
 		</form>
@@ -49,10 +36,8 @@ export default {
 		return {
 			form: {
 				title: "Inventory Status",
-				lead_time: 0,
 				number_of_periods: 1,
                 number_of_items : 1,
-                annual_carrying: 0,
 			}
 		};
 	},
@@ -75,9 +60,9 @@ export default {
 			if (mutation.type === "newInvFile") {
 				// Add items to the file
 				this.addInvItems({
-					items_number: this.form.numberItems,
-					part_numbers: this.getAllBomItems.map(item => item.part_number),
-					createFromBomFile: this.createFromBomFile,
+					items_number: this.form.number_of_items,
+					part_numbers: this.getAllBomItems.map(item => this.createFromBomFile ? item.part_number : "-"),
+					receipts: "0",
 					file: this.invFile.id
 				});
 			}
@@ -97,15 +82,13 @@ export default {
 
 	},
 	methods: {
-		...mapActions(["addInvItem", "createNewInvFile"]),
+		...mapActions(["addInvItems", "createNewInvFile"]),
 		onSubmit() {
 			if(this.form.title && this.form.title.trim() != "") {
 				this.createNewInvFile({
 					title: this.form.title,
 					number_of_items: this.form.number_of_items,
-					lead_time: this.form.lead_time,
                     number_of_periods: this.form.number_of_periods,
-                    annual_carrying: this.form.annual_carrying
 				});
 
 				this.$nextTick(() => {

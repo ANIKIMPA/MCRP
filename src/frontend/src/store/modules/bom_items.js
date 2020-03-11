@@ -28,8 +28,9 @@ const actions = {
     axios
       .post("http://localhost:8000/api/v1.0/mrp/bom-items/", data)
       .then(response => {
-        if(response.data.length > 1)
+        if(response.data.length > 1) {
           commit("setBomItems", response.data);
+        }
         else
           commit("newBomItem", response.data[0]);
       })
@@ -66,7 +67,13 @@ const actions = {
 
 const mutations = {
   // Set all bomItems to state
-  setBomItems: (state, bomItems) => (state.bomItems = bomItems),
+  setBomItems: (state, bomItems) => {
+    try {
+      state.bomItems = bomItems
+    } catch (error) {
+      console.log(error)
+    }
+  },
 
   //Add item to state
   newBomItem: (state, item) => state.bomItems.push(item),
