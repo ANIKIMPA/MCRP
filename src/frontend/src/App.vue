@@ -14,7 +14,7 @@
     </b-toast>
 
     <!-- Saved Toast -->
-    <b-toast id="saved-toast" variant="success" solid>
+    <b-toast ref="toast" id="saved-toast" variant="success" solid>
       <template v-slot:toast-title>
         <div class="d-flex flex-grow-1 align-items-baseline">
           <strong class="mr-auto">Storm 5.0</strong>
@@ -32,15 +32,17 @@ import { mapGetters } from "vuex"
 export default {
   components: { Navbar },
   computed: {
-    ...mapGetters(["getError"])
+    ...mapGetters(["getError", "getInfo"])
   },
-	// mounted() {
-	// 	this.$store.subscribe((mutation) => {
-	// 		if (mutation.type === "throwError") {
-	// 			this.$bvToast.show("error-toast");
-	// 		}
-	// 	});
-	// }
+  watch: {
+    getError() {
+      this.$bvToast.show("error-toast");
+    },
+    getInfo() {
+      console.log(this.$refs.toast.$slots.default[0].text = this.getInfo)
+      this.$bvToast.show("saved-toast");
+    }
+  }
 };
 </script>
 
@@ -50,6 +52,10 @@ export default {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-align: center;
+}
+
+.w-10 {
+    width: 10%;
 }
 
 .modal-dialog {

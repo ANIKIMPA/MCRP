@@ -137,20 +137,14 @@ export default {
 			"itemMasterFile"
 		])
 	},
-
+	watch: {
+		getAllItemsMasters() {
+			this.$bvToast.show("saved-toast");
+			this.settings.data = this.getAllItemsMasters;
+		}
+	},
 	created() {
 		this.fetchItemMasterFile(this.$route.params.file);
-
-		this.$store.subscribe(mutation => {
-			if (mutation.type === "setItemsMasters") {
-				this.settings.data = this.getAllItemsMasters;
-			}
-
-			if (mutation.type === "updatedItemMaster" || mutation.type === "deletedItemMaster")
-				this.$bvToast.show("saved-toast");
-		});
-	},
-	mounted() {
 		this.fetchItemsMasters(this.$route.params.file);
 	},
 	methods: {
@@ -168,7 +162,6 @@ export default {
 				order: this.getAllItemsMasters.length,
 				file: this.itemMasterFile.i
 			});
-			this.$bvToast.show("saved-toast");
 		}
 	}
 };

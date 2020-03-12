@@ -23,14 +23,12 @@
 					</ul>
 				</li>
 				<li class="parent"><a href="#">Edit <i class="fas fa-caret-down"></i></a>
-					<ul class="child">			
+					<ul class="child">		
 						<li>Copy</li>
 						<li>Paste</li>
 					</ul>
 				</li>
-				<li class="parent">
-					<ReportSetup/>
-				</li>
+				<ReportSetup/>
 			</ul>
 		</nav>
 

@@ -75,6 +75,48 @@ export default {
               callback(validator.isPositive(value))
           }
         ],
+        contextMenu: {
+          items: {
+            add_column: {
+              name: "Add receipt column",
+              callback: this.addColumn
+            },
+            remove_col: {
+              callback: this.removeColumn,
+              disabled: function() {
+                // Disable option when first, second, third and fourth col were clicked
+                // Disabled when attempt to remove all receipts cols.
+                const selected = this.getSelectedLast();
+                let periodsQty = this.countVisibleCols() - 4;
+                let selectedQty = selected[3] - selected[1];
+                selectedQty =
+                  selectedQty > 0 ? selectedQty + 1 : selectedQty * -1 + 1;
+                return (
+                  this.getSelectedLast()[1] === 0 ||
+                  this.getSelectedLast()[3] === 0 ||
+                  this.getSelectedLast()[1] === 1 ||
+                  this.getSelectedLast()[3] === 1 ||
+                  this.getSelectedLast()[1] === 2 ||
+                  this.getSelectedLast()[3] === 2 ||
+                  this.getSelectedLast()[1] === 3 ||
+                  this.getSelectedLast()[3] === 3 ||
+                  selectedQty >= periodsQty
+                );
+              }
+            },
+            "---------": {},
+            add_row: {
+              name: "Add item row",
+              callback: this.addRow
+            },
+            remove_row: {
+              disabled: validator.allRowsSelected
+            },
+            separator: Handsontable.plugins.ContextMenu.SEPARATOR,
+            copy: {},
+            cut: {}
+          }
+        },
         rowHeights: 40,
         rowHeaders: true,
         licenseKey: "non-commercial-and-evaluation",
@@ -89,62 +131,19 @@ export default {
     countReceipts() {
       return this.settings.data[0].receipts.split(",").length;
     }
-  },
-
+	},
+	watch: {
+		getAllInvItems() {
+			this.$bvToast.show("saved-toast");
+		}
+	},
   created() {
     this.fetchInvFile(this.$route.params.file);
     this.fetchInvItems(this.$route.params.file);
 
-    this.settings.contextMenu = {
-      items: {
-        add_column: {
-          name: "Add receipt column",
-          callback: this.addColumn
-        },
-        remove_col: {
-          callback: this.removeColumn,
-          disabled: function() {
-            // Disable option when first, second, third and fourth col were clicked
-            // Disabled when attempt to remove all receipts cols.
-            const selected = this.getSelectedLast();
-            let periodsQty = this.countVisibleCols() - 4;
-            let selectedQty = selected[3] - selected[1];
-            selectedQty =
-              selectedQty > 0 ? selectedQty + 1 : selectedQty * -1 + 1;
-            return (
-              this.getSelectedLast()[1] === 0 ||
-              this.getSelectedLast()[3] === 0 ||
-              this.getSelectedLast()[1] === 1 ||
-              this.getSelectedLast()[3] === 1 ||
-              this.getSelectedLast()[1] === 2 ||
-              this.getSelectedLast()[3] === 2 ||
-              this.getSelectedLast()[1] === 3 ||
-              this.getSelectedLast()[3] === 3 ||
-              selectedQty >= periodsQty
-            );
-          }
-        },
-        "---------": {},
-        add_row: {
-          name: "Add item row",
-          callback: this.addRow
-        },
-        remove_row: {
-          disabled: validator.allRowsSelected
-        },
-        separator: Handsontable.plugins.ContextMenu.SEPARATOR,
-        copy: {},
-        cut: {}
-      }
-    };
-
-    this.$store.subscribe(mutation => {
+    const unsubscribe = this.$store.subscribe(mutation => {
       if (mutation.type === "setInvItems") {
-        for (
-          let i = 1;
-          i <= Object.keys(this.getAllInvItems[0]).length - 8;
-          i++
-        ) {
+        for (let i = 1; i <= Object.keys(this.getAllInvItems[0]).length - 8; i++) {
           this.settings.colHeaders.push("Receipt " + i);
           this.settings.columns.push({
             data: "receipt" + i,
@@ -154,13 +153,8 @@ export default {
           });
         }
 
-        this.settings.data = this.getAllInvItems;
-      }
-
-      if (mutation.type === "updatedInvItem") {
-        this.$bvToast.show("saved-toast");
-      } else if (mutation.typ === "deletedInvItem") {
-        this.$bvToast.show("saved-toast");
+				this.settings.data = this.getAllInvItems;
+				unsubscribe();
       }
     });
   },
@@ -171,8 +165,8 @@ export default {
       "updateInvItem",
       "deleteInvItem",
       "addInvItems"
-		]),
-		...mapMutations(["throwError"]),
+    ]),
+    ...mapMutations(["throwError"]),
     isValidReceipt(changes) {
       if (changes.prop.startsWith("receipt")) {
         if (!validator.isNotEmpty(changes.newValue)) {

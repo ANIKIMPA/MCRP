@@ -1,5 +1,5 @@
 <template>
-  <div id="example1">
+  <div>
     <label class="title">Bill of Material: {{ bomFile.title }}</label>
     <hot-table :settings="settings"></hot-table>
   </div>
@@ -97,7 +97,6 @@ export default {
         items_number: 1,
         file: this.$route.params.file
       });
-      this.$bvToast.show("saved-toast");
     }
   },
   watch: {
