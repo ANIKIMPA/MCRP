@@ -24,7 +24,10 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: Home
+    component: Home,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/bill-of-material/:file',
@@ -58,6 +61,7 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
+  base: process.env.BASE_URL,
   routes
 })
 

@@ -83,43 +83,49 @@ TEMPLATES = [
 WSGI_APPLICATION = 'storm_5.wsgi.application'
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #     'rest_framework.authentication.SessionAuthentication'
-    # ),
-    'DEFAULT_PERMISSION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ),
+    ]
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 'PAGE_SIZE': 10
 }
+
+# JWT_AUTH = {
+#     'JWT_ALLOW_REFRESH': True,
+#     'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=1),
+#     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
+# }
 
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'USER': 'root',
-        'PASSWORD': '2015065',
-        'NAME': 'uprb_storm',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            # Tell MySQLdb to connect with 'utf8mb4' character set
-            'charset': 'utf8mb4',
-        },
-        # Tell Django to build the test database with the 'utf8mb4' character set
-        'TEST': {
-            'CHARSET': 'utf8mb4',
-            'COLLATION': 'utf8mb4_unicode_ci',
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'USER': 'root',
+    #     'PASSWORD': '2015065',
+    #     'NAME': 'uprb_storm',
+    #     'HOST': 'localhost',
+    #     'PORT': '3306',
+    #     'OPTIONS': {
+    #         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+    #         # Tell MySQLdb to connect with 'utf8mb4' character set
+    #         'charset': 'utf8mb4',
+    #     },
+    #     # Tell Django to build the test database with the 'utf8mb4' character set
+    #     'TEST': {
+    #         'CHARSET': 'utf8mb4',
+    #         'COLLATION': 'utf8mb4_unicode_ci',
+    #     }
+    # }
 }
 
 
@@ -162,7 +168,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Added
-AUTH_USER_MODEL = 'users.LoginLevel'
+AUTH_USER_MODEL = 'users.Usuario'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

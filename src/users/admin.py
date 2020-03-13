@@ -1,14 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .forms import LoginLevelCreationForm, LoginLevelChangeForm
-from .models import LoginLevel
+from .forms import RegistrationForm, UsuarioChangeForm
+from .models import Usuario
 
 
-class LoginLevelAdmin(UserAdmin):
-    add_form = LoginLevelCreationForm
-    form = LoginLevelChangeForm
-    model = LoginLevel
+class UsuarioAdmin(UserAdmin):
+    add_form = RegistrationForm
+    form = UsuarioChangeForm
+    model = Usuario
     list_display = ('email', 'is_staff', 'is_active',)
     list_filter = ('email', 'is_staff', 'is_active',)
     fieldsets = (
@@ -25,4 +25,4 @@ class LoginLevelAdmin(UserAdmin):
     ordering = ('email',)
 
 
-admin.site.register(LoginLevel, LoginLevelAdmin)
+admin.site.register(Usuario, UsuarioAdmin)

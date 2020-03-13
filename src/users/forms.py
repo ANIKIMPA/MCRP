@@ -1,17 +1,17 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-from .models import LoginLevel
+from .models import Usuario
 
 
-class LoginLevelCreationForm(UserCreationForm):
+class RegistrationForm(UserCreationForm):
 
     class Meta(UserCreationForm):
-        model = LoginLevel
-        fields = ('email',)
+        model = Usuario
+        fields = ('email', 'password1', 'password2')
 
 
-class LoginLevelChangeForm(UserChangeForm):
+class UsuarioChangeForm(UserChangeForm):
 
     class Meta:
-        model = LoginLevel
+        model = Usuario
         fields = ('email',)

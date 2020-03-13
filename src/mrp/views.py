@@ -13,10 +13,9 @@ from .serializers import (
     ItemMasterSerializer,
 )
 from rest_framework.response import Response
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, status
 from .permissions import IsOwnerOrReadOnly
 from rest_framework.decorators import action
-from rest_framework import status
 
 
 class BomFileViewSet(viewsets.ModelViewSet):
@@ -26,6 +25,7 @@ class BomFileViewSet(viewsets.ModelViewSet):
     """
     queryset = BomFile.objects.filter(removed=0)
     serializer_class = BomFileSerializer
+    # authentication_class = (JSONWebTokenAuthentication,)
     # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
     #                       IsOwnerOrReadOnly]
 
