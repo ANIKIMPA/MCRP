@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Login from '../views/Login.vue'
+import Register from '../views/Register.vue'
 import Home from '../views/Home.vue'
 import BillOfMaterial from '@/components/billOfMaterial/DataGrid'
 import MasterSchedule from '@/components/masterSchedule/DataGrid.vue'
@@ -9,6 +11,16 @@ import ItemMaster from '@/components/itemMaster/DataGrid.vue'
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/register',
+    name: 'register',
+    component: Register
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
   {
     path: '/',
     name: 'home',
