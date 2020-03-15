@@ -1,6 +1,6 @@
 <template>
 	<div id="app">
-		<Navbar />
+		<Navbar v-if="$route.name != 'login' && $route.name != 'register'"/>
 		<router-view :key="$route.fullPath" />
 
     <!-- Error Toast -->
@@ -47,6 +47,7 @@ export default {
 </script>
 
 <style>
+@import "./assets/styles/account.css";
 #app {
 	font-family: "Avenir", Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;

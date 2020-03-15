@@ -32,22 +32,34 @@ const routes = [
   {
     path: '/bill-of-material/:file',
     name: 'bill_of_material',
-    component: BillOfMaterial
+    component: BillOfMaterial,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/master-schedule/:file',
     name: 'master_schedule',
-    component: MasterSchedule
+    component: MasterSchedule,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/inventory-status/:file',
     name: 'inventory_status',
-    component: InventoryStatus
+    component: InventoryStatus,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/item-master/:file',
     name: 'item_master',
-    component: ItemMaster
+    component: ItemMaster,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/about',

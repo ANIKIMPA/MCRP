@@ -102,8 +102,8 @@ export default {
 .child li a{color: #000000;}
 ul{list-style: none;margin: 0;padding: 0px; min-width:10em;}
 ul ul ul{left: 100%;top: 0;margin-left:1px;}
-li:hover {background-color: #95B4CA;}
+ul#menu li:hover {background-color: #95B4CA;}
 .parent li:hover {background-color: #F0F0F0;}
-li{ cursor: pointer; z-index: 300; }
+ul#menu li{ cursor: pointer; z-index: 300; }
 .expand{font-size:12px;float:right;margin-right:5px;}
 </style>
