@@ -1,4 +1,4 @@
-import axios from "axios";
+import { AxiosBase } from "@/api/axios-base";
 import functions from "@/js/functions";
 
 // Computed
@@ -21,50 +21,54 @@ const getters = {
 const actions = {
   // Obtener lista de files
   async fetchAllMastFiles({ commit }) {
-    await axios
+    await AxiosBase
       .get("http://localhost:8000/api/v1.0/mrp/mast-files/")
       .then(response => {
         commit("setMastFiles", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   },
 
   async fetchMastFile({ commit }, file_id) {
-    await axios
+    await AxiosBase
       .get(`http://localhost:8000/api/v1.0/mrp/mast-files/${file_id}/`)
       .then(response => {
         commit("setMastFile", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   },
 
   createNewMastFile({ commit }, file) {
-    axios
+    AxiosBase
       .post("http://localhost:8000/api/v1.0/mrp/mast-files/", file)
       .then(response => {
         commit("newMastFile", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   },
 
   async deleteMastFile({ commit }, file) {
-    await axios
+    await AxiosBase
       .put(`http://localhost:8000/api/v1.0/mrp/mast-files/${file.id}/`, file)
       .then(() => {
         commit("deletedMastFile", file);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   }
 };

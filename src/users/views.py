@@ -1,5 +1,3 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
 from .forms import RegistrationForm
 from .models import Usuario
 from .serializers import UsuarioSerializer
@@ -18,10 +16,6 @@ class UsuarioViewSet(viewsets.ModelViewSet):
         form = RegistrationForm(request.data)
         if form.is_valid():
             serializer = UsuarioSerializer(request.data)
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password1']
-            auth = authenticate(email=email, password=password)
-            login(request, auth)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)

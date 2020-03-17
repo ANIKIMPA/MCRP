@@ -1,4 +1,4 @@
-import axios from "axios";
+import { AxiosBase } from "@/api/axios-base";
 import functions from "@/js/functions";
 
 // Computed
@@ -21,50 +21,58 @@ const getters = {
 const actions = {
   // Obtener lista de bom files
   async fetchAllBomFiles({ commit }) {
-    await axios
-      .get("http://localhost:8000/api/v1.0/mrp/bom-files/")
+    await AxiosBase.get("/api/v1.0/mrp/bom-files/")
       .then(response => {
         commit("setBomFiles", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        commit(
+          "throwError",
+          error.response.data[Object.keys(error.response.data)[0]][0],
+          { root: true }
+        );
       });
   },
 
   async fetchBomFile({ commit }, file_id) {
-    await axios
-      .get(`http://localhost:8000/api/v1.0/mrp/bom-files/${file_id}/`)
+    await AxiosBase.get(`/api/v1.0/mrp/bom-files/${file_id}/`)
       .then(response => {
         commit("setBomFile", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        commit(
+          "throwError",
+          error.response.data[Object.keys(error.response.data)[0]][0],
+          { root: true }
+        );
       });
   },
 
   createNewBomFile({ commit }, file) {
-    axios
-      .post("http://localhost:8000/api/v1.0/mrp/bom-files/", file)
+    AxiosBase.post("/api/v1.0/mrp/bom-files/", file)
       .then(response => {
         commit("newBomFile", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        commit(
+          "throwError",
+          error.response.data[Object.keys(error.response.data)[0]][0],
+          { root: true }
+        );
       });
   },
 
   async deleteBomFile({ commit }, file) {
-    await axios
-      .put(`http://localhost:8000/api/v1.0/mrp/bom-files/${file.id}/`, file)
+    await AxiosBase.put(`/api/v1.0/mrp/bom-files/${file.id}/`, file)
       .then(() => {
         commit("deletedBomFile", file);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        commit(
+          "throwError",
+          error.response.data[Object.keys(error.response.data)[0]][0],
+          { root: true }
+        );
       });
   }
 };
@@ -72,17 +80,11 @@ const actions = {
 // Methods
 const mutations = {
   // Set all files to state
-  setBomFiles: (state, files) => {
-    try {
-      state.allBomFiles = files
-    } catch (error) {
-      console.log(error)
-    }
-  },
+  setBomFiles: (state, files) => state.allBomFiles = files,
 
   setBomFile: (state, file) => (state.bomFile = file),
   newBomFile: (state, file) => (state.bomFile = file),
-  deletedBomFile: (state, file) =>  functions.remove(state.allBomFiles, file)
+  deletedBomFile: (state, file) => functions.remove(state.allBomFiles, file)
 };
 
 export default {

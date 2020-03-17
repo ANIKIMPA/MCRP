@@ -1,4 +1,4 @@
-import axios from "axios";
+import { AxiosBase } from "@/api/axios-base";
 import functions from "@/js/functions";
 
 // Computed
@@ -21,50 +21,54 @@ const getters = {
 const actions = {
   // Obtener lista de inv files
   async fetchAllInvFiles({ commit }) {
-    await axios
+    await AxiosBase
       .get("http://localhost:8000/api/v1.0/mrp/inv-files/")
       .then(response => {
         commit("setInvFiles", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   },
 
   async fetchInvFile({ commit }, file_id) {
-    await axios
+    await AxiosBase
       .get(`http://localhost:8000/api/v1.0/mrp/inv-files/${file_id}/`)
       .then(response => {
         commit("setInvFile", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   },
 
   createNewInvFile({ commit }, file) {
-    axios
+    AxiosBase
       .post("http://localhost:8000/api/v1.0/mrp/inv-files/", file)
       .then(response => {
         commit("newInvFile", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   },
 
   async deleteInvFile({ commit }, file) {
-    await axios
+    await AxiosBase
       .put(`http://localhost:8000/api/v1.0/mrp/inv-files/${file.id}/`, file)
       .then(() => {
         commit("deletedInvFile", file);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   }
 };

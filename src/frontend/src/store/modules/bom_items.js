@@ -1,4 +1,4 @@
-import axios from "axios";
+import { AxiosBase } from "@/api/axios-base";
 import functions from "@/js/functions";
 
 const state = {
@@ -13,67 +13,63 @@ const getters = {
 const actions = {
   // Obtener lista de bomItems
   async fetchBomItems({ commit }, file_id) {
-    await axios
-      .get(`http://localhost:8000/api/v1.0/mrp/bom-files/${file_id}/bom-items`)
+    await AxiosBase.get(`/api/v1.0/mrp/bom-files/${file_id}/bom-items`)
       .then(response => {
         commit("setBomItems", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        commit(
+          "throwError",
+          error.response.data[Object.keys(error.response.data)[0]][0],
+          { root: true }
+        );
       });
   },
   // Agregar item
   addBomItems({ commit }, data) {
-    axios
-      .post("http://localhost:8000/api/v1.0/mrp/bom-items/", data)
+    AxiosBase.post("/api/v1.0/mrp/bom-items/", data)
       .then(response => {
-        if(response.data.length > 1) {
+        if (response.data.length > 1) {
           commit("setBomItems", response.data);
-        }
-        else
-          commit("newBomItem", response.data[0]);
+        } else commit("newBomItem", response.data[0]);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        commit(
+          "throwError",
+          error.response.data[Object.keys(error.response.data)[0]][0],
+          { root: true }
+        );
       });
   },
 
   async updateBomItem({ commit }, item) {
-    await axios
-      .put(`http://localhost:8000/api/v1.0/mrp/bom-items/${item.id}/`, item)
+    await AxiosBase.put(`/api/v1.0/mrp/bom-items/${item.id}/`, item)
       .then(response => {
         commit("updatedBomItem", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   },
 
   async deleteBomItem({ commit }, item) {
-    await axios
-      .delete(`http://localhost:8000/api/v1.0/mrp/bom-items/${item.id}/`, item)
+    await AxiosBase.delete(`/api/v1.0/mrp/bom-items/${item.id}/`)
       .then(() => {
         commit("deletedBomItem", item);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   }
 };
 
 const mutations = {
   // Set all bomItems to state
-  setBomItems: (state, bomItems) => {
-    try {
-      state.bomItems = bomItems
-    } catch (error) {
-      console.log(error)
-    }
-  },
+  setBomItems: (state, bomItems) => (state.bomItems = bomItems),
 
   //Add item to state
   newBomItem: (state, item) => state.bomItems.push(item),

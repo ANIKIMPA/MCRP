@@ -1,4 +1,4 @@
-import axios from "axios";
+import { AxiosBase } from "@/api/axios-base";
 import functions from "@/js/functions";
 
 const state = {
@@ -12,19 +12,20 @@ const getters = {
 const actions = {
   // Obtener lista de mastItems
   async fetchMastItems({ commit }, file_id) {
-    await axios
+    await AxiosBase
       .get(`http://localhost:8000/api/v1.0/mrp/mast-files/${file_id}/mast-items`)
       .then(response => {
         commit("setMastItems", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   },
   // Agregar item
   addMastItems({ commit }, data) {
-    axios.post("http://localhost:8000/api/v1.0/mrp/mast-items/", data)
+    AxiosBase.post("http://localhost:8000/api/v1.0/mrp/mast-items/", data)
       .then(response => {
         if(response.data.length > 1)
           commit("setMastItems", response.data);
@@ -32,32 +33,35 @@ const actions = {
           commit("newMastItem", response.data[0]);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   },
 
   async updateMastItem({ commit }, item) {
-    await axios
+    await AxiosBase
       .put(`http://localhost:8000/api/v1.0/mrp/mast-items/${item.id}/`, item)
       .then(response => {
         commit("updatedMastItem", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   },
 
   async deleteMastItem({ commit }, item) {
-    await axios
+    await AxiosBase
       .delete(`http://localhost:8000/api/v1.0/mrp/mast-items/${item.id}/`, item)
       .then(() => {
         commit("deletedMastItem", item);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   }
 };

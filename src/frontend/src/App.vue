@@ -36,7 +36,12 @@ export default {
   },
   watch: {
     getError() {
-      this.$bvToast.show("error-toast");
+      this.$bvToast.toast(this.getError, {
+        title: 'OOPS! Something went wrong',
+        variant: "danger",
+        solid: true,
+        autoHideDelay: 5000,
+      })
     },
     getInfo() {
       console.log(this.$refs.toast.$slots.default[0].text = this.getInfo)

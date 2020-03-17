@@ -1,20 +1,21 @@
-import { axiosBase } from "@/api/axios-base";
+// import { axiosBase } from "@/api/axios-base";
+import axios from "axios";
 
 const state = {
-  APIData: ""
+  accessToken: localStorage.getItem("access_token") || null,
+  refreshToken: localStorage.getItem("refresh_token") || null,
+  APIData: "",
 };
 
 const getters = {
-  loggedIn: (state) =>  state.accessToken != null,
-  accessToken: () => localStorage.getItem("access_token") || null,
-  refreshToken: () => localStorage.getItem("refresh_token") || null
+  loggedIn: (state) =>  state.accessToken != null
 };
 
 const actions = {
   refreshToken(context) {
     return new Promise((resolve, reject) => {
-      axiosBase
-        .post("/api/token/refresh/", {
+      axios
+        .post("http://localhost:8000/api/token/refresh/", {
           refresh: context.state.refreshToken
         }) // send the stored refresh token to the backend API
         .then(response => {
@@ -40,6 +41,7 @@ const mutations = {
   },
   updateAccess(state, access) {
     state.accessToken = access;
+    localStorage.setItem("access_token", access);
   },
   destroyToken(state) {
     state.accessToken = null;

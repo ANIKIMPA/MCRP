@@ -1,4 +1,4 @@
-import axios from "axios";
+import { AxiosBase } from "@/api/axios-base";
 import functions from "@/js/functions";
 
 const state = {
@@ -12,19 +12,20 @@ const getters = {
 const actions = {
   // Obtener lista de invItems
   async fetchInvItems({ commit }, file_id) {
-    await axios
+    await AxiosBase
       .get(`http://localhost:8000/api/v1.0/mrp/inv-files/${file_id}/inv-items`)
       .then(response => {
         commit("setInvItems", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   },
 
   async addInvItems({ commit }, data) {
-    await axios
+    await AxiosBase
       .post("http://localhost:8000/api/v1.0/mrp/inv-items/", data)
       .then(response => {
         if(response.data.length > 1)
@@ -33,32 +34,35 @@ const actions = {
           commit("newInvItem", response.data[0]);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   },
 
   async updateInvItem({ commit }, item) {
-    await axios
+    await AxiosBase
       .put(`http://localhost:8000/api/v1.0/mrp/inv-items/${item.id}/`, item)
       .then(response => {
         commit("updatedInvItem", response.data);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   },
 
   async deleteInvItem({ commit }, item) {
-    await axios
+    await AxiosBase
       .delete(`http://localhost:8000/api/v1.0/mrp/inv-items/${item.id}/`, item)
       .then(() => {
         commit("deletedInvItem", item);
       })
       .catch(error => {
-        console.log(error)
-        commit("throwError", error.response.data[Object.keys(error.response.data)[0]][0], { root: true });
+        for (let value of Object.values(error.response.data)) {
+          commit("throwError", value, { root: true });
+        }
       });
   }
 };

@@ -1,4 +1,3 @@
-import { axiosBase } from "@/api/axios-base";
 import axios from "axios"
 
 const state = {
@@ -27,8 +26,8 @@ const actions = {
   logoutUser(context) {
     if (context.getters.loggedIn) {
       return new Promise((resolve) => {
-        axiosBase
-          .post("/logout/")
+        axios
+          .post("http://localhost:8000/api/token/logout/")
           .then(response => {
 						context.commit("setUser", response.data);
             localStorage.removeItem("access_token");
@@ -51,7 +50,6 @@ const actions = {
         .post("http://localhost:8000/api/token/", credentials)
         //if successful update local storage:
         .then(response => {
-          console.log(response.data)
           commit("updateLocalStorage", response.data, { root: true }); // store the access and refresh token in localstorage
           resolve();
         })

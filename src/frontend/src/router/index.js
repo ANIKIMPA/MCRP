@@ -14,20 +14,23 @@ const routes = [
   {
     path: '/register',
     name: 'register',
-    component: Register
+    component: Register,
+    meta: {
+      requiresLogged: true
+    }
   },
   {
     path: '/login',
     name: 'login',
-    component: Login
+    component: Login,
+    meta: {
+      requiresLogged: true
+    }
   },
   {
     path: '/',
     name: 'home',
-    component: Home,
-    meta: {
-      requiresAuth: true
-    }
+    component: Home
   },
   {
     path: '/bill-of-material/:file',

@@ -17,6 +17,13 @@ from rest_framework import permissions, viewsets, status
 from .permissions import IsOwnerOrReadOnly
 from rest_framework.decorators import action
 
+# authentication_class = (JSONWebTokenAuthentication,)
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+    #                       IsOwnerOrReadOnly]
+
+    # def perform_create(self, serializer):
+    #     serializer.save(owner=self.request.user)
+
 
 class BomFileViewSet(viewsets.ModelViewSet):
     """
@@ -25,18 +32,18 @@ class BomFileViewSet(viewsets.ModelViewSet):
     """
     queryset = BomFile.objects.filter(removed=0)
     serializer_class = BomFileSerializer
-    # authentication_class = (JSONWebTokenAuthentication,)
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-    #                       IsOwnerOrReadOnly]
 
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
+    def create(self, request):
+        serializer = BomFileSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class BomItemViewSet(viewsets.ModelViewSet):
     queryset = BomItem.objects.all()
     serializer_class = BomItemSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def create(self, request):
         now = datetime.now()
@@ -57,6 +64,7 @@ class BomItemViewSet(viewsets.ModelViewSet):
     
     @action(detail=True, methods=['get'])
     def get_bom_items(self, request, file_id):
+        print(request.user)
         queryset = BomItem.objects.all().filter(file=file_id).exclude(file__removed=1)
         serializer = BomItemSerializer(queryset, many=True)
         return Response(serializer.data)
@@ -65,17 +73,11 @@ class BomItemViewSet(viewsets.ModelViewSet):
 class MastFileViewSet(viewsets.ModelViewSet):
     queryset = MastFile.objects.filter(removed=0)
     serializer_class = MastFileSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-    #                       IsOwnerOrReadOnly]
-
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
 
 
 class MastItemViewSet(viewsets.ModelViewSet):
     queryset = MastItem.objects.all()
     serializer_class = MastItemSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def create(self, request):
         now = datetime.now()
@@ -105,17 +107,11 @@ class MastItemViewSet(viewsets.ModelViewSet):
 class InvFileViewSet(viewsets.ModelViewSet):
     queryset = InvFile.objects.filter(removed=0)
     serializer_class = InvFileSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-    #                       IsOwnerOrReadOnly]
-
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
 
 
 class InvItemViewSet(viewsets.ModelViewSet):
     queryset = InvItem.objects.all()
     serializer_class = InvItemSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def create(self, request):
         now = datetime.now()
@@ -148,17 +144,11 @@ class InvItemViewSet(viewsets.ModelViewSet):
 class ItemMasterFileViewSet(viewsets.ModelViewSet):
     queryset = ItemMasterFile.objects.filter(removed=0)
     serializer_class = ItemMasterFileSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-    #                       IsOwnerOrReadOnly]
-
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
 
 
 class ItemMasterViewSet(viewsets.ModelViewSet):
     queryset = ItemMaster.objects.all()
     serializer_class = ItemMasterSerializer
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def create(self, request):
         now = datetime.now()
