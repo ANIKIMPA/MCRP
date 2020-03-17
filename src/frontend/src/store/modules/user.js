@@ -47,7 +47,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       // send the username and password to the backend API:
       axios
-        .post("http://localhost:8000/api/token/", credentials)
+        .post("http://localhost:8000/api/v1.0/login/", credentials)
         //if successful update local storage:
         .then(response => {
           commit("updateLocalStorage", response.data, { root: true }); // store the access and refresh token in localstorage
