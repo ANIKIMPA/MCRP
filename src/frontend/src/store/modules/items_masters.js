@@ -13,7 +13,7 @@ const actions = {
   // Obtener lista de itemsMasters
   async fetchItemsMasters({ commit }, file_id) {
     await AxiosBase
-      .get(`http://localhost:8000/api/v1.0/mrp/item-master-files/${file_id}/items-masters`)
+      .get(`mrp/item-master-files/${file_id}/items-masters`)
       .then(response => {
         commit("setItemsMasters", response.data);
       })
@@ -26,7 +26,7 @@ const actions = {
   // Agregar item
   addItemsMasters({ commit }, data) {
     AxiosBase
-      .post("http://localhost:8000/api/v1.0/mrp/items-masters/", data)
+      .post("mrp/items-masters/", data)
       .then(response => {
         if(response.data.length > 1)
           commit("setItemsMasters", response.data);
@@ -42,7 +42,7 @@ const actions = {
 
   async updateItemMaster({ commit }, item) {
     await AxiosBase
-      .put(`http://localhost:8000/api/v1.0/mrp/items-masters/${item.id}/`, item)
+      .put(`mrp/items-masters/${item.id}/`, item)
       .then(response => {
         commit("updatedItemMaster", response.data);
       })
@@ -55,7 +55,7 @@ const actions = {
 
   async deleteItemMaster({ commit }, item) {
     await AxiosBase
-      .delete(`http://localhost:8000/api/v1.0/mrp/items-masters/${item.id}/`, item)
+      .delete(`mrp/items-masters/${item.id}/`, item)
       .then(() => {
         commit("deletedItemMaster", item);
       })

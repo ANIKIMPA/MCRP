@@ -11,12 +11,18 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all.js'
+import IdleVue from 'idle-vue'
 
 Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 
-window.Events = new Vue();
+const eventsHub = new Vue()
+Vue.use(IdleVue, {
+  eventEmitter: eventsHub,
+  idleTime: 900000 // 15 minutes
+}) // sets up the idle time,i.e. time left to logout the user on no activity
+Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
   // if any of the routes in ./router.js has a meta named 'requiresAuth: true'

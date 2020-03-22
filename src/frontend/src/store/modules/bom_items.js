@@ -13,56 +13,32 @@ const getters = {
 const actions = {
   // Obtener lista de bomItems
   async fetchBomItems({ commit }, file_id) {
-    await AxiosBase.get(`/api/v1.0/mrp/bom-files/${file_id}/bom-items`)
+    await AxiosBase.get(`mrp/bom-files/${file_id}/bom-items`)
       .then(response => {
         commit("setBomItems", response.data);
-      })
-      .catch(error => {
-        commit(
-          "throwError",
-          error.response.data[Object.keys(error.response.data)[0]][0],
-          { root: true }
-        );
       });
   },
   // Agregar item
   addBomItems({ commit }, data) {
-    AxiosBase.post("/api/v1.0/mrp/bom-items/", data)
+    AxiosBase.post("mrp/bom-items/", data)
       .then(response => {
         if (response.data.length > 1) {
           commit("setBomItems", response.data);
         } else commit("newBomItem", response.data[0]);
-      })
-      .catch(error => {
-        commit(
-          "throwError",
-          error.response.data[Object.keys(error.response.data)[0]][0],
-          { root: true }
-        );
       });
   },
 
   async updateBomItem({ commit }, item) {
-    await AxiosBase.put(`/api/v1.0/mrp/bom-items/${item.id}/`, item)
+    await AxiosBase.put(`mrp/bom-items/${item.id}/`, item)
       .then(response => {
         commit("updatedBomItem", response.data);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
       });
   },
 
   async deleteBomItem({ commit }, item) {
-    await AxiosBase.delete(`/api/v1.0/mrp/bom-items/${item.id}/`)
+    await AxiosBase.delete(`mrp/bom-items/${item.id}/`)
       .then(() => {
         commit("deletedBomItem", item);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
       });
   }
 };

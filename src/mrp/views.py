@@ -13,16 +13,9 @@ from .serializers import (
     ItemMasterSerializer,
 )
 from rest_framework.response import Response
-from rest_framework import permissions, viewsets, status
-from .permissions import IsOwnerOrReadOnly
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
-
-# authentication_class = (JSONWebTokenAuthentication,)
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-    #                       IsOwnerOrReadOnly]
-
-    # def perform_create(self, serializer):
-    #     serializer.save(owner=self.request.user)
+from .functions import current_user_files, create_file, current_user_items, items_in_file
 
 
 class BomFileViewSet(viewsets.ModelViewSet):
@@ -30,20 +23,26 @@ class BomFileViewSet(viewsets.ModelViewSet):
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions.
     """
-    queryset = BomFile.objects.filter(removed=0)
+    queryset = BomFile.objects.all()
     serializer_class = BomFileSerializer
 
+    def get_queryset(self):
+        return current_user_files(self.request.user, BomFile)
+
     def create(self, request):
-        serializer = BomFileSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return create_file(request, BomFileSerializer)
 
 
 class BomItemViewSet(viewsets.ModelViewSet):
     queryset = BomItem.objects.all()
     serializer_class = BomItemSerializer
+
+    def get_queryset(self):
+        return current_user_items(self.request.user, BomFile, BomItem)
+
+    @action(detail=True, methods=['get'])
+    def get_bom_items(self, request, file_id):
+        return items_in_file(BomItem, file_id, request.user, BomItemSerializer)
 
     def create(self, request):
         now = datetime.now()
@@ -61,23 +60,29 @@ class BomItemViewSet(viewsets.ModelViewSet):
         bomItems = BomItem.objects.filter(created_date=now)
         serializer = BomItemSerializer(bomItems, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
-    @action(detail=True, methods=['get'])
-    def get_bom_items(self, request, file_id):
-        print(request.user)
-        queryset = BomItem.objects.all().filter(file=file_id).exclude(file__removed=1)
-        serializer = BomItemSerializer(queryset, many=True)
-        return Response(serializer.data)
 
 
 class MastFileViewSet(viewsets.ModelViewSet):
     queryset = MastFile.objects.filter(removed=0)
     serializer_class = MastFileSerializer
 
+    def get_queryset(self):
+        return current_user_files(self.request.user, MastFile)
+
+    def create(self, request):
+        return create_file(request, MastFile)
+
 
 class MastItemViewSet(viewsets.ModelViewSet):
     queryset = MastItem.objects.all()
     serializer_class = MastItemSerializer
+
+    def get_queryset(self):
+        return current_user_items(self.request.user, MastFile, MastItem)
+
+    @action(detail=True, methods=['get'])
+    def get_mast_items(self, request, file_id):
+        return items_in_file(MastItem, file_id, request.user, MastItemSerializer)
 
     def create(self, request):
         now = datetime.now()
@@ -96,34 +101,40 @@ class MastItemViewSet(viewsets.ModelViewSet):
         serializer = MastItemSerializer(mastItems, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(detail=True, methods=['get'])
-    def get_mast_items(self, request, file_id):
-        queryset = MastItem.objects.filter(
-            file=file_id).exclude(file__removed=1)
-        serializer = MastItemSerializer(queryset, many=True)
-        return Response(serializer.data)
-
 
 class InvFileViewSet(viewsets.ModelViewSet):
     queryset = InvFile.objects.filter(removed=0)
     serializer_class = InvFileSerializer
+
+    def get_queryset(self):
+        return current_user_files(self.request.user, InvFile)
+
+    def create(self, request):
+        return create_file(request, InvFileSerializer)
 
 
 class InvItemViewSet(viewsets.ModelViewSet):
     queryset = InvItem.objects.all()
     serializer_class = InvItemSerializer
 
+    def get_queryset(self):
+        return current_user_items(self.request.user, InvFile, InvItem)
+
+    @action(detail=True, methods=['get'])
+    def get_inv_items(self, request, file_id):
+        return items_in_file(InvItem, file_id, request.user, InvItemSerializer)
+
     def create(self, request):
         now = datetime.now()
         items = []
         for i in range(0, int(request.data["items_number"])):
             items.append(InvItem(
-				part_number = request.data["part_numbers"][i],
-				safe_stock = 0,
-				on_hand = 0,
-				past_due = 0,
-				receipts = request.data["receipts"],
-				order=request.data["order"] if "order" in request.data else i,
+                part_number=request.data["part_numbers"][i],
+                safe_stock=0,
+                on_hand=0,
+                past_due=0,
+                receipts=request.data["receipts"],
+                order=request.data["order"] if "order" in request.data else i,
                 file=InvFile.objects.get(pk=request.data["file"]),
                 created_date=now
             ))
@@ -133,50 +144,49 @@ class InvItemViewSet(viewsets.ModelViewSet):
         serializer = InvItemSerializer(invItems, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(detail=True, methods=['get'])
-    def get_inv_items(self, request, file_id):
-        queryset = InvItem.objects.filter(
-            file=file_id).exclude(file__removed=1)
-        serializer = InvItemSerializer(queryset, many=True)
-        return Response(serializer.data)
-
 
 class ItemMasterFileViewSet(viewsets.ModelViewSet):
     queryset = ItemMasterFile.objects.filter(removed=0)
     serializer_class = ItemMasterFileSerializer
+
+    def get_queryset(self):
+        return current_user_files(self.request.user, ItemMasterFile)
+
+    def create(self, request):
+        return create_file(request, ItemMasterFileSerializer)
 
 
 class ItemMasterViewSet(viewsets.ModelViewSet):
     queryset = ItemMaster.objects.all()
     serializer_class = ItemMasterSerializer
 
+    def get_queryset(self):
+        return current_user_items(self.request.user, ItemMasterFile, ItemMaster)
+
+    @action(detail=True, methods=['get'])
+    def get_items_masters(self, request, file_id):
+        return items_in_file(ItemMaster, file_id, request.user, ItemMasterSerializer)
+
     def create(self, request):
         now = datetime.now()
         items = []
         for i in range(0, int(request.data["items_number"])):
             items.append(ItemMaster(
-                part_number = request.data["part_numbers"][i],
-                lot_size = "LFL",
-                multiple = 0,
-                lead_time = 0,
-                yield_percent = 0,
-                unit_value = 0,
-                order_cost = 0,
-                carrying_cost = 0,
-                demand = 0,
-                order = request.data["order"] if "order" in request.data else i,
-                file = ItemMasterFile.objects.get(pk=request.data["file"]),
-                created_date = now
+                part_number=request.data["part_numbers"][i],
+                lot_size="LFL",
+                multiple=0,
+                lead_time=0,
+                yield_percent=0,
+                unit_value=0,
+                order_cost=0,
+                carrying_cost=0,
+                demand=0,
+                order=request.data["order"] if "order" in request.data else i,
+                file=ItemMasterFile.objects.get(pk=request.data["file"]),
+                created_date=now
             ))
 
         itemsMasters = ItemMaster.objects.bulk_create(items)
         itemsMasters = ItemMaster.objects.filter(created_date=now)
         serializer = ItemMasterSerializer(itemsMasters, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    @action(detail=True, methods=['get'])
-    def get_items_masters(self, request, file_id):
-        queryset = ItemMaster.objects.filter(
-            file=file_id).exclude(file__removed=1)
-        serializer = ItemMasterSerializer(queryset, many=True)
-        return Response(serializer.data)

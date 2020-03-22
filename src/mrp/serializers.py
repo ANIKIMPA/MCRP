@@ -6,7 +6,7 @@ from .models import (
 
 class BomFileSerializer(serializers.ModelSerializer):
     bom_items = serializers.PrimaryKeyRelatedField(many=True, queryset=BomItem.objects.all(), required=False)
-    owner = serializers.ReadOnlyField(source='owner.username')
+    owner = serializers.ReadOnlyField(source='owner.email')
 
     class Meta:
         model = BomFile
@@ -21,7 +21,7 @@ class BomItemSerializer(serializers.ModelSerializer):
 
 class MastFileSerializer(serializers.ModelSerializer):
     mast_items = serializers.PrimaryKeyRelatedField(many=True, queryset=MastItem.objects.all(), required=False)
-    owner = serializers.ReadOnlyField(source='owner.username')
+    owner = serializers.ReadOnlyField(source='owner.email')
 
     class Meta:
         model = MastFile
@@ -36,7 +36,7 @@ class MastItemSerializer(serializers.ModelSerializer):
 
 class InvFileSerializer(serializers.ModelSerializer):
     inv_items = serializers.PrimaryKeyRelatedField(many=True, queryset=InvItem.objects.all(), required=False)
-    owner = serializers.ReadOnlyField(source='owner.username')
+    owner = serializers.ReadOnlyField(source='owner.email')
 
     class Meta:
         model = InvFile
@@ -51,7 +51,7 @@ class InvItemSerializer(serializers.ModelSerializer):
 
 class ItemMasterFileSerializer(serializers.ModelSerializer):
     items_masters = serializers.PrimaryKeyRelatedField(many=True, queryset=ItemMaster.objects.all(), required=False)
-    owner = serializers.ReadOnlyField(source='owner.username')
+    owner = serializers.ReadOnlyField(source='owner.email')
 
     class Meta:
         model = ItemMasterFile

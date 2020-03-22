@@ -22,7 +22,7 @@ const actions = {
   // Obtener lista de inv files
   async fetchAllInvFiles({ commit }) {
     await AxiosBase
-      .get("http://localhost:8000/api/v1.0/mrp/inv-files/")
+      .get("mrp/inv-files/")
       .then(response => {
         commit("setInvFiles", response.data);
       })
@@ -35,7 +35,7 @@ const actions = {
 
   async fetchInvFile({ commit }, file_id) {
     await AxiosBase
-      .get(`http://localhost:8000/api/v1.0/mrp/inv-files/${file_id}/`)
+      .get(`mrp/inv-files/${file_id}/`)
       .then(response => {
         commit("setInvFile", response.data);
       })
@@ -48,7 +48,7 @@ const actions = {
 
   createNewInvFile({ commit }, file) {
     AxiosBase
-      .post("http://localhost:8000/api/v1.0/mrp/inv-files/", file)
+      .post("mrp/inv-files/", file)
       .then(response => {
         commit("newInvFile", response.data);
       })
@@ -61,7 +61,7 @@ const actions = {
 
   async deleteInvFile({ commit }, file) {
     await AxiosBase
-      .put(`http://localhost:8000/api/v1.0/mrp/inv-files/${file.id}/`, file)
+      .put(`mrp/inv-files/${file.id}/`, file)
       .then(() => {
         commit("deletedInvFile", file);
       })

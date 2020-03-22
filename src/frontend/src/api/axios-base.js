@@ -1,6 +1,7 @@
 import axios from "axios";
 import store from "../store";
-const APIUrl = "http://localhost:8000";
+import functions from "../js/functions";
+const APIUrl = "http://localhost:8000/api/v1.0/";
 
 class AxiosBase {
   static config() {
@@ -20,6 +21,7 @@ class AxiosBase {
           resolve(response);
         })
         .catch(error => {
+          functions.handleError(error)
           AxiosBase.getApi(error);
           reject(error);
         });
@@ -34,6 +36,7 @@ class AxiosBase {
           resolve(response);
         })
         .catch(error => {
+          functions.handleError(error)
           AxiosBase.getApi(error);
           reject(error);
         });
@@ -48,6 +51,7 @@ class AxiosBase {
           resolve(response);
         })
         .catch(error => {
+          functions.handleError(error)
           AxiosBase.getApi(error);
           reject(error);
         });
@@ -62,6 +66,7 @@ class AxiosBase {
           resolve(response);
         })
         .catch(error => {
+          functions.handleError(error)
           AxiosBase.getApi(error);
           reject(error);
         });

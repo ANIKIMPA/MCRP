@@ -5,41 +5,83 @@
 				<h3 id="form-title">REGISTER ACCOUNT</h3>
 				<p v-if="errors.detail" class="errornote">{{ errors.detail }}</p>
 				<div class="mx-5 form_container">
-					<form @submit.prevent="onSubmit">
-						<ul>
-							<li v-for="(error, i) in errors.email" :key="i" class="errorlist">{{ error }}</li>
-						</ul>
-						<div class="input-group mb-3">
-							<div class="input-group-append">
-								<span class="input-group-text"><i class="fas fa-envelope-square"></i></span>
+					<b-form @submit.prevent="onSubmit">
+						<b-form-group label-for="email" description="We'll never share your email with anyone else.">
+							<ul>
+								<li v-for="(error, i) in errors.email" :key="i" class="errorlist">{{ error }}</li>
+							</ul>
+							<div class="input-group">
+								<div class="input-group-append">
+									<span class="input-group-text"><i class="fas fa-envelope-square"></i></span>
+								</div>
+								<b-form-input id="email" v-model="form.email" type="email" placeholder="Email address..." required></b-form-input>
 							</div>
-							<input type="email" v-model="form.email" placeholder="Email address..." class="form-control">
-						</div>
+						</b-form-group>
 
-						<ul>
-							<li v-for="(error, i) in errors.password1" :key="i" class="errorlist">{{ error }}</li>
-						</ul>
-						<div class="input-group mb-3">
-							<div class="input-group-append">
-								<span class="input-group-text"><i class="fas fa-key"></i></span>
+						<b-form-group label-for="first_name">
+							<ul>
+								<li v-for="(error, i) in errors.first_name" :key="i" class="errorlist">{{ error }}</li>
+							</ul>
+							<div class="input-group">
+								<div class="input-group-append">
+									<span class="input-group-text"><i class="fas fa-signature"></i></span>
+								</div>
+								<b-form-input id="first_name" v-model="form.first_name" type="text" placeholder="First name..." required></b-form-input>
 							</div>
-							<input type="password" v-model="form.password1" placeholder="Password..." required class="form-control">
-						</div>
+						</b-form-group>
 
-						<ul>
-							<li v-for="(error, i) in errors.password2" :key="i" class="errorlist">{{ error }}</li>
-						</ul>
-						<div class="input-group mb-2">
-							<div class="input-group-append">
-								<span class="input-group-text"><i class="fas fa-key"></i></span>
+						<b-form-group label-for="last_name">
+							<ul>
+								<li v-for="(error, i) in errors.last_name" :key="i" class="errorlist">{{ error }}</li>
+							</ul>
+							<div class="input-group">
+								<div class="input-group-append">
+									<span class="input-group-text"><i class="fas fa-signature"></i></span>
+								</div>
+								<b-form-input id="last_name" v-model="form.last_name" type="text" placeholder="Last name..." required></b-form-input>
 							</div>
-							<input type="password" v-model="form.password2" placeholder="Password confirmation..." required class="form-control">
-						</div>
+						</b-form-group>
+
+						<b-form-group label-for="gender">
+							<ul>
+								<li v-for="(error, i) in errors.gender" :key="i" class="errorlist">{{ error }}</li>
+							</ul>
+							<div class="input-group">
+								<div class="input-group-append">
+									<span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+								</div>
+								<b-form-select id="gender" v-model="form.gender" :options="choices" required></b-form-select>
+							</div>
+						</b-form-group>
+
+						<b-form-group label-for="password1" description="Your password can’t be too similar to your other personal information.">
+							<ul>
+								<li v-for="(error, i) in errors.password1" :key="i" class="errorlist">{{ error }}</li>
+							</ul>
+							<div class="input-group">
+								<div class="input-group-append">
+									<span class="input-group-text"><i class="fas fa-key"></i></span>
+								</div>
+								<b-form-input id="password1" v-model="form.password1" type="password" placeholder="Password..." required></b-form-input>
+							</div>
+						</b-form-group>
+						
+						<b-form-group label-for="password2" description="Enter the same password as before, for verification.">
+							<ul>
+								<li v-for="(error, i) in errors.password2" :key="i" class="errorlist">{{ error }}</li>
+							</ul>
+							<div class="input-group">
+								<div class="input-group-append">
+									<span class="input-group-text"><i class="fas fa-key"></i></span>
+								</div>
+								<b-form-input id="password2" v-model="form.password2" type="password" placeholder="Password confirmation..." required></b-form-input>
+							</div>
+						</b-form-group>
 
 						<div class="d-flex justify-content-center mt-3 login_container">
 							<b-button type="submit" class="login_btn" variant="login_btn">Register</b-button>
 						</div>
-					</form>
+					</b-form>
 
 				</div>
 
@@ -86,8 +128,16 @@ export default {
 			form: {
 				email: "",
 				password1: "",
-				password2: ""
+				password2: "",
+				first_name: "",
+				last_name: "",
+				gender: null
 			},
+			choices: [
+				{ value: null, text: "Gender...", disabled: true },
+				{ value: "M", text: "Male" },
+				{ value: "F", text: "Female" }
+			],
 			errors: {},
 			show: true
 		};
@@ -101,7 +151,7 @@ export default {
 				})
 				.catch(error => {
 					this.errors = error;
-					this.errors.detail = "Please correct the error below."
+					this.errors.detail = "Please correct the error below.";
 				});
 		},
 		reset() {

@@ -12,6 +12,22 @@
 <script>
 export default {
 	name: "home",
+	// onIdle() {
+	// 	this.$bvToast.toast("Tamo onIdle", {
+    //     title: 'Probando',
+    //     variant: "info",
+    //     solid: true,
+    //     autoHideDelay: 5000,
+    //   })
+	// },
+	// onActive() {
+	// 	this.$bvToast.toast("Tamo onActive", {
+    //     title: 'Probando',
+    //     variant: "info",
+    //     solid: true,
+    //     autoHideDelay: 5000,
+    //   })
+	// }
 };
 </script>
 

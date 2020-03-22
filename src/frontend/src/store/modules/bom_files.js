@@ -21,21 +21,20 @@ const getters = {
 const actions = {
   // Obtener lista de bom files
   async fetchAllBomFiles({ commit }) {
-    await AxiosBase.get("/api/v1.0/mrp/bom-files/")
+    return new Promise((resolve, reject) => {
+      AxiosBase.get("mrp/bom-files/")
       .then(response => {
         commit("setBomFiles", response.data);
+        resolve();
       })
-      .catch(error => {
-        commit(
-          "throwError",
-          error.response.data[Object.keys(error.response.data)[0]][0],
-          { root: true }
-        );
+      .catch(() => {
+        reject()
       });
+    })
   },
 
   async fetchBomFile({ commit }, file_id) {
-    await AxiosBase.get(`/api/v1.0/mrp/bom-files/${file_id}/`)
+    await AxiosBase.get(`mrp/bom-files/${file_id}/`)
       .then(response => {
         commit("setBomFile", response.data);
       })
@@ -49,7 +48,7 @@ const actions = {
   },
 
   createNewBomFile({ commit }, file) {
-    AxiosBase.post("/api/v1.0/mrp/bom-files/", file)
+    AxiosBase.post("mrp/bom-files/", file)
       .then(response => {
         commit("newBomFile", response.data);
       })
@@ -63,7 +62,7 @@ const actions = {
   },
 
   async deleteBomFile({ commit }, file) {
-    await AxiosBase.put(`/api/v1.0/mrp/bom-files/${file.id}/`, file)
+    await AxiosBase.put(`mrp/bom-files/${file.id}/`, file)
       .then(() => {
         commit("deletedBomFile", file);
       })

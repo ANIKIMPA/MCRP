@@ -13,7 +13,7 @@ const actions = {
   // Obtener lista de invItems
   async fetchInvItems({ commit }, file_id) {
     await AxiosBase
-      .get(`http://localhost:8000/api/v1.0/mrp/inv-files/${file_id}/inv-items`)
+      .get(`mrp/inv-files/${file_id}/inv-items`)
       .then(response => {
         commit("setInvItems", response.data);
       })
@@ -26,7 +26,7 @@ const actions = {
 
   async addInvItems({ commit }, data) {
     await AxiosBase
-      .post("http://localhost:8000/api/v1.0/mrp/inv-items/", data)
+      .post("mrp/inv-items/", data)
       .then(response => {
         if(response.data.length > 1)
           commit("setInvItems", response.data);
@@ -42,7 +42,7 @@ const actions = {
 
   async updateInvItem({ commit }, item) {
     await AxiosBase
-      .put(`http://localhost:8000/api/v1.0/mrp/inv-items/${item.id}/`, item)
+      .put(`mrp/inv-items/${item.id}/`, item)
       .then(response => {
         commit("updatedInvItem", response.data);
       })
@@ -55,7 +55,7 @@ const actions = {
 
   async deleteInvItem({ commit }, item) {
     await AxiosBase
-      .delete(`http://localhost:8000/api/v1.0/mrp/inv-items/${item.id}/`, item)
+      .delete(`mrp/inv-items/${item.id}/`, item)
       .then(() => {
         commit("deletedInvItem", item);
       })

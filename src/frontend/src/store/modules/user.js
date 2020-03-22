@@ -1,4 +1,5 @@
 import axios from "axios"
+import { AxiosBase } from "@/api/axios-base";
 
 const state = {
   user: {}
@@ -26,24 +27,25 @@ const actions = {
   logoutUser(context) {
     if (context.getters.loggedIn) {
       return new Promise((resolve) => {
-        axios
-          .post("http://localhost:8000/api/token/logout/")
-          .then(response => {
-						context.commit("setUser", response.data);
+        AxiosBase
+          .post("logout/", {
+            "refresh_token": localStorage.getItem("refresh_token")
+          })
+          .then(() => {
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
-            context.commit("destroyToken");
+            context.commit("destroyToken", { root: true });
           })
           .catch(error => {
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
-            context.commit("destroyToken");
+            context.commit("destroyToken", { root: true });
             resolve(error);
           });
       });
     }
   },
-  loginUser({ commit }, credentials) {
+  loginUser({ commit, dispatch }, credentials) {
     return new Promise((resolve, reject) => {
       // send the username and password to the backend API:
       axios
@@ -52,11 +54,20 @@ const actions = {
         .then(response => {
           commit("updateLocalStorage", response.data, { root: true }); // store the access and refresh token in localstorage
           resolve();
+          dispatch("fetchUserProfile");     
         })
         .catch(error => {
           reject(error.response.data);
         });
     });
+  },
+
+  fetchUserProfile({commit}) {
+    console.log("fetchUser")
+    AxiosBase.get("profile/").then((response) => {
+      commit("setUser", response.data);
+    }).catch(() => {
+    })
   }
 };
 

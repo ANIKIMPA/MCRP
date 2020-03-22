@@ -13,7 +13,7 @@ const actions = {
   // Obtener lista de mastItems
   async fetchMastItems({ commit }, file_id) {
     await AxiosBase
-      .get(`http://localhost:8000/api/v1.0/mrp/mast-files/${file_id}/mast-items`)
+      .get(`mast-files/${file_id}/mast-items`)
       .then(response => {
         commit("setMastItems", response.data);
       })
@@ -25,7 +25,7 @@ const actions = {
   },
   // Agregar item
   addMastItems({ commit }, data) {
-    AxiosBase.post("http://localhost:8000/api/v1.0/mrp/mast-items/", data)
+    AxiosBase.post("mast-items/", data)
       .then(response => {
         if(response.data.length > 1)
           commit("setMastItems", response.data);
@@ -41,7 +41,7 @@ const actions = {
 
   async updateMastItem({ commit }, item) {
     await AxiosBase
-      .put(`http://localhost:8000/api/v1.0/mrp/mast-items/${item.id}/`, item)
+      .put(`mast-items/${item.id}/`, item)
       .then(response => {
         commit("updatedMastItem", response.data);
       })
@@ -54,7 +54,7 @@ const actions = {
 
   async deleteMastItem({ commit }, item) {
     await AxiosBase
-      .delete(`http://localhost:8000/api/v1.0/mrp/mast-items/${item.id}/`, item)
+      .delete(`mast-items/${item.id}/`, item)
       .then(() => {
         commit("deletedMastItem", item);
       })

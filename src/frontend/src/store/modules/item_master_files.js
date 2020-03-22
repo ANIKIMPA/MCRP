@@ -22,7 +22,7 @@ const actions = {
   // Obtener lista de item master files
   async fetchAllItemMasterFiles({ commit }) {
     await AxiosBase
-      .get("http://localhost:8000/api/v1.0/mrp/item-master-files/")
+      .get("mrp/item-master-files/")
       .then(response => {
         commit("setItemMasterFiles", response.data);
       })
@@ -35,7 +35,7 @@ const actions = {
 
   async fetchItemMasterFile({ commit }, file_id) {
     await AxiosBase
-      .get(`http://localhost:8000/api/v1.0/mrp/item-master-files/${file_id}/`)
+      .get(`mrp/item-master-files/${file_id}/`)
       .then(response => {
         commit("setItemMasterFile", response.data);
       })
@@ -48,7 +48,7 @@ const actions = {
 
   createNewItemMasterFile({ commit }, file) {
     AxiosBase
-      .post("http://localhost:8000/api/v1.0/mrp/item-master-files/", file)
+      .post("mrp/item-master-files/", file)
       .then(response => {
         commit("newItemMasterFile", response.data);
       })
@@ -61,7 +61,7 @@ const actions = {
 
   async deleteItemMasterFile({ commit }, file) {
     await AxiosBase
-      .put(`http://localhost:8000/api/v1.0/mrp/item-master-files/${file.id}/`, file)
+      .put(`mrp/item-master-files/${file.id}/`, file)
       .then(() => {
         commit("deletedItemMasterFile", file);
       })

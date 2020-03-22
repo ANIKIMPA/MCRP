@@ -22,7 +22,7 @@ const actions = {
   // Obtener lista de files
   async fetchAllMastFiles({ commit }) {
     await AxiosBase
-      .get("http://localhost:8000/api/v1.0/mrp/mast-files/")
+      .get("mrp/mast-files/")
       .then(response => {
         commit("setMastFiles", response.data);
       })
@@ -35,7 +35,7 @@ const actions = {
 
   async fetchMastFile({ commit }, file_id) {
     await AxiosBase
-      .get(`http://localhost:8000/api/v1.0/mrp/mast-files/${file_id}/`)
+      .get(`mrp/mast-files/${file_id}/`)
       .then(response => {
         commit("setMastFile", response.data);
       })
@@ -48,7 +48,7 @@ const actions = {
 
   createNewMastFile({ commit }, file) {
     AxiosBase
-      .post("http://localhost:8000/api/v1.0/mrp/mast-files/", file)
+      .post("mrp/mast-files/", file)
       .then(response => {
         commit("newMastFile", response.data);
       })
@@ -61,7 +61,7 @@ const actions = {
 
   async deleteMastFile({ commit }, file) {
     await AxiosBase
-      .put(`http://localhost:8000/api/v1.0/mrp/mast-files/${file.id}/`, file)
+      .put(`mrp/mast-files/${file.id}/`, file)
       .then(() => {
         commit("deletedMastFile", file);
       })

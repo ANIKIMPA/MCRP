@@ -28,6 +28,12 @@
 						<li>Paste</li>
 					</ul>
 				</li>
+				<li class="parent"><a href="#">Account <i class="fas fa-caret-down"></i></a>
+					<ul class="child">		
+						<li>Profile</li>
+						<li @click="logOut">Log out</li>
+					</ul>
+				</li>
 				<ReportSetup/>
 			</ul>
 		</nav>
@@ -46,7 +52,7 @@ import MastFilesList from "./masterSchedule/FilesList"
 import InvFilesList from "./inventoryStatus/FilesList"
 import ItemMasterFilesList from "./itemMaster/FilesList"
 import ReportSetup from "./report/Setup"
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
 	components: {
 		ModuleListModal,
@@ -63,7 +69,14 @@ export default {
 			fileTypeSelected: ""
 		};
 	},
+	onIdle () { // dispatch logoutUser if no activity detected
+      this.$store.dispatch('logoutUser')
+        .then(() => {
+          this.$router.push('/login')
+        })
+    },
 	methods: {
+		...mapActions(["logoutUser"]),
 		goHome() {
 			this.$router.push("/");
 		},
@@ -79,8 +92,11 @@ export default {
 		newWindow() {
 			window.open("http://localhost:8080/", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=90,left=500,width=1200,height=800");
 		},
-		runReport() {
-
+		logOut() {
+			this.logoutUser()
+			.then(() => {
+				this.$router.push('login')
+			})
 		}
 	},
 	computed: {

@@ -13,7 +13,7 @@
 							<div class="input-group-append">
 								<span class="input-group-text"><i class="fas fa-envelope-square"></i></span>
 							</div>
-							<input type="email" v-model="form.email" placeholder="Email address..." class="form-control">
+							<input type="email" v-model="form.email" placeholder="Email address..." class="form-control" required>
 						</div>
 						<ul>
 							<li v-for="(error, i) in errors.password" :key="i" class="errorlist">{{ error }}</li>

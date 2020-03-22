@@ -3,7 +3,11 @@
     <li @click="openModal">BOM Files</li>
     <b-modal id="bom-file-list" v-model="modalOpenned" title="Bill of Material Files" hide-footer>
       <p class="mb-2">Select BOM File:</p>
+
       <b-list-group class="overflow-auto mh-300">
+        <b-list-group-item v-if="loading" class="text-center">
+          <b-spinner label="Spinning"></b-spinner>
+        </b-list-group-item>
         <b-list-group-item
           button
           v-for="file in allBomFiles"
@@ -37,7 +41,8 @@ export default {
   name: "BomfileList",
   data() {
     return {
-      modalOpenned: false
+      modalOpenned: false,
+      loading: true
     };
   },
   filters: {
@@ -59,7 +64,10 @@ export default {
     },
     openModal() {
       this.modalOpenned = true;
-      this.fetchAllBomFiles();
+      this.fetchAllBomFiles()
+      .then(() => {
+        this.loading = false;
+      });
     },
     deleteFile(file) {
 			if (this.bomFile.id === file.id) {

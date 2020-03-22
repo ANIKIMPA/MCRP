@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/token/refresh/', TokenRefreshView.as_view()),
     path('api/v1.0/', include('users.urls')),
-    path('api/v1.0/', include('mrp.urls')),
+    path('api/v1.0/mrp/', include('mrp.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 
     # path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

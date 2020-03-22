@@ -1,76 +1,28 @@
-# from .forms import RegistrationForm
-from rest_framework import status, generics, response, permissions
-from .serializers import UsuarioRegistrationSerializer, UsuarioLoginSerializer
+from rest_framework import status, generics, response, permissions, viewsets
+from .models import Usuario
+from rest_framework.response import Response
+from .serializers import UsuarioRegistrationSerializer, UsuarioLoginSerializer, UsuarioSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .models import Profile
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
+from .forms import RegistrationForm
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = Usuario.objects.all()
+    serializer_class = UsuarioSerializer
+    permission_classes = [permissions.IsAdminUser]
 
-class UserRegistrationView(generics.CreateAPIView):
-    serializer_class = UsuarioRegistrationSerializer
-    permission_classes = (permissions.AllowAny,)
-
-    # @action(detail=False, methods=['post'])
-    # def register(self, request):
-    #     form = RegistrationForm(request.data)
-    #     if form.is_valid():
-    #         serializer = UsuarioSerializer(request.data)
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     else:
-    #         return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        response = {
-            'success' : 'True',
-            'status code' : status.HTTP_200_OK,
-            'message': 'User registered  successfully',
-            }
-        status_code = status.HTTP_200_OK
-        return response.Response(response, status=status_code)
-
-
-class UserLoginView(TokenObtainPairView):
-    serializer_class = UsuarioLoginSerializer
-    permission_classes = (permissions.AllowAny,)
-
-# class UserLoginView(generics.RetrieveAPIView):
-#     permission_classes = (permissions.AllowAny,)
-#     serializer_class = UsuarioLoginSerializer
-
-#     def post(self, request):
-#         serializer = self.serializer_class(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         response = {
-#             'success' : 'True',
-#             'status code' : status.HTTP_200_OK,
-#             'message': 'User logged in  successfully',
-#             'token' : serializer.data['token'],
-#             }
-#         status_code = status.HTTP_200_OK
-
-#         return response.Response(response, status=status_code)
-
-
-class ProfileView(generics.RetrieveAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+class UserProfileView(generics.RetrieveAPIView):
 
     def get(self, request):
         try:
-            user_profile = Profile.objects.get(user=request.user)
+            user_profile = Usuario.objects.get(pk=request.user.pk)
             status_code = status.HTTP_200_OK
             response = {
-                'success': 'true',
-                'status code': status_code,
-                'message': 'User profile fetched successfully',
-                'data': [{
                     'first_name': user_profile.first_name,
                     'last_name': user_profile.last_name,
-                    'phone_number': user_profile.phone_number,
-                    'age': user_profile.age,
-                    'gender': user_profile.gender,
-                    }]
+                    'gender': user_profile.gender
                 }
 
         except Exception as e:
@@ -81,4 +33,40 @@ class ProfileView(generics.RetrieveAPIView):
                 'message': 'User does not exists',
                 'error': str(e)
                 }
-        return response.Response(response, status=status_code)
+        return Response(response, status=status_code)
+
+
+class UserRegistrationView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        form = RegistrationForm(request.data)
+        if form.is_valid():
+            form.save()
+            status_code = status.HTTP_201_CREATED
+            response = {
+                'success' : 'True',
+                'status code' : status_code,
+                'message': 'User registered  successfully',
+            }
+            return Response(response, status=status_code)
+        else:
+            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UserLoginView(TokenObtainPairView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = UsuarioLoginSerializer
+
+class LogoutAndBlacklistRefreshTokenForUserView(APIView):
+    def post(self, request):
+        try:
+            print("\n\n\n-------------------")
+            print(request.data)
+            refresh_token = request.data["refresh_token"]
+            token = RefreshToken(refresh_token)
+            print(token)
+            token.blacklist()
+            print("line 76")
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
