@@ -3,6 +3,9 @@
 		<li @click="openModal">ITEM Files</li>
 		<b-modal id="item-master-file-list" v-model="modalOpenned" title="Item Master Files" hide-footer>
 			<p class="mb-2">Select ITEM File:</p>
+			<b-list-group-item v-if="loading" class="text-center">
+				<b-spinner label="Spinning"></b-spinner>
+			</b-list-group-item>
 			<b-list-group class="overflow-auto mh-300">
 				<b-list-group-item button v-for="file in allItemMasterFiles" @click="openItemMaster(file)" :key="file.id" class="d-flex justify-content-between">
 					<span style="width: 50%"><i class="fas fa-file-alt"></i> {{ file.title }}</span>
@@ -21,7 +24,8 @@ export default {
 	name: "ItemMasterFilesList",
 	data() {
 		return {
-			modalOpenned: false
+			modalOpenned: false,
+			loading: true
 		};
 	},
 	filters: {
@@ -44,13 +48,15 @@ export default {
 		},
 		openModal() {
 			this.modalOpenned = true;
-			this.fetchAllItemMasterFiles();
+			this.fetchAllItemMasterFiles().then(() => {
+				this.loading = false;
+			});
 		},
-    deleteFile(file) {
-      if (this.itemMasterFile.id === file.id) {
-        this.$router.push("/");
-      }
-      file.removed = true
+		deleteFile(file) {
+			if (this.itemMasterFile.id === file.id) {
+				this.$router.push("/");
+			}
+			file.removed = true;
 			this.deleteItemMasterFile(file);
 		}
 	},

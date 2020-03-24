@@ -21,16 +21,17 @@ const getters = {
 const actions = {
   // Obtener lista de inv files
   async fetchAllInvFiles({ commit }) {
-    await AxiosBase
-      .get("mrp/inv-files/")
-      .then(response => {
-        commit("setInvFiles", response.data);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+    return new Promise((resolve, reject) => {
+      AxiosBase
+        .get("mrp/inv-files/")
+        .then(response => {
+          commit("setInvFiles", response.data);
+          resolve()
+        })
+        .catch(() => {
+          reject()
+        })
+    })
   },
 
   async fetchInvFile({ commit }, file_id) {
@@ -38,12 +39,7 @@ const actions = {
       .get(`mrp/inv-files/${file_id}/`)
       .then(response => {
         commit("setInvFile", response.data);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+      })      
   },
 
   createNewInvFile({ commit }, file) {
@@ -51,12 +47,7 @@ const actions = {
       .post("mrp/inv-files/", file)
       .then(response => {
         commit("newInvFile", response.data);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+      })      
   },
 
   async deleteInvFile({ commit }, file) {
@@ -64,12 +55,7 @@ const actions = {
       .put(`mrp/inv-files/${file.id}/`, file)
       .then(() => {
         commit("deletedInvFile", file);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+      })      
   }
 };
 

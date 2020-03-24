@@ -12,70 +12,42 @@ const getters = {
 const actions = {
   // Obtener lista de mastItems
   async fetchMastItems({ commit }, file_id) {
-    await AxiosBase
-      .get(`mast-files/${file_id}/mast-items`)
-      .then(response => {
-        commit("setMastItems", response.data);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+    await AxiosBase.get(`mast-files/${file_id}/mast-items`).then(response => {
+      commit("setMastItems", response.data);
+    });
   },
   // Agregar item
   addMastItems({ commit }, data) {
-    AxiosBase.post("mast-items/", data)
-      .then(response => {
-        if(response.data.length > 1)
-          commit("setMastItems", response.data);
-        else
-          commit("newMastItem", response.data[0]);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+    AxiosBase.post("mast-items/", data).then(response => {
+      if (response.data.length > 1) commit("setMastItems", response.data);
+      else commit("newMastItem", response.data[0]);
+    });
   },
 
   async updateMastItem({ commit }, item) {
-    await AxiosBase
-      .put(`mast-items/${item.id}/`, item)
-      .then(response => {
-        commit("updatedMastItem", response.data);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+    await AxiosBase.put(`mast-items/${item.id}/`, item).then(response => {
+      commit("updatedMastItem", response.data);
+    });
   },
 
   async deleteMastItem({ commit }, item) {
-    await AxiosBase
-      .delete(`mast-items/${item.id}/`, item)
-      .then(() => {
-        commit("deletedMastItem", item);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+    await AxiosBase.delete(`mast-items/${item.id}/`, item).then(() => {
+      commit("deletedMastItem", item);
+    });
   }
 };
 
 const mutations = {
   // Set all mastItems to state
-  setMastItems: (state, items) => state.mastItems = items.map(item => convertPeriods(item)),
+  setMastItems: (state, items) =>
+    (state.mastItems = items.map(item => functions.convertPeriods(item))),
 
   //Add item to state
-  newMastItem: (state, item) => state.mastItems.push(convertPeriods(item)),
-  
+  newMastItem: (state, item) => state.mastItems.push(functions.convertPeriods(item)),
+
   // Update item in state
   updatedMastItem: (state, mastItem) => {
-    const updItem = convertPeriods(mastItem);
+    const updItem = functions.convertPeriods(mastItem);
 
     const index = state.mastItems.findIndex(item => item.id === updItem.id);
     if (index !== -1) {
@@ -83,7 +55,8 @@ const mutations = {
     }
   },
   // Delete item in state
-  deletedMastItem: (state, mastItem) => functions.remove(state.mastItems, mastItem)
+  deletedMastItem: (state, mastItem) =>
+    functions.remove(state.mastItems, mastItem)
 };
 
 export default {
@@ -92,12 +65,3 @@ export default {
   actions,
   mutations
 };
-
-function convertPeriods(item) {
-  let periods = item.periods.split(",");
-  for(let i=0; i<periods.length; i++) {
-    item[`period${i + 1}`] = periods[i]
-  }
-
-  return item
-}

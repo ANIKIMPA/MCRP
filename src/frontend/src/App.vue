@@ -3,18 +3,8 @@
 		<Navbar v-if="$route.name != 'login' && $route.name != 'register'"/>
 		<router-view :key="$route.fullPath" />
 
-    <!-- Error Toast -->
-    <b-toast id="error-toast" variant="danger" solid>
-      <template v-slot:toast-title>
-        <div class="d-flex flex-grow-1 align-items-baseline">
-          <strong class="mr-auto">OOPS! Something went wrong</strong>
-        </div>
-      </template>
-      {{ getError }}
-    </b-toast>
-
     <!-- Saved Toast -->
-    <b-toast ref="toast" id="saved-toast" variant="success" solid>
+    <b-toast ref="toast" id="saved-toast" variant="success" solid toaster="b-toaster-bottom-right">
       <template v-slot:toast-title>
         <div class="d-flex flex-grow-1 align-items-baseline">
           <strong class="mr-auto">Storm 5.0</strong>
@@ -38,6 +28,7 @@ export default {
     getError() {
       this.$bvToast.toast(this.getError, {
         title: 'OOPS! Something went wrong',
+        toaster: "b-toaster-bottom-right",
         variant: "danger",
         solid: true,
         autoHideDelay: 5000,

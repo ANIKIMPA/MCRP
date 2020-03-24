@@ -21,55 +21,34 @@ const getters = {
 const actions = {
   // Obtener lista de item master files
   async fetchAllItemMasterFiles({ commit }) {
-    await AxiosBase
-      .get("mrp/item-master-files/")
-      .then(response => {
-        commit("setItemMasterFiles", response.data);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+    return new Promise((resolve, reject) => {
+      AxiosBase.get("mrp/item-master-files/")
+        .then(response => {
+          commit("setItemMasterFiles", response.data);
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
+    });
   },
 
   async fetchItemMasterFile({ commit }, file_id) {
-    await AxiosBase
-      .get(`mrp/item-master-files/${file_id}/`)
-      .then(response => {
-        commit("setItemMasterFile", response.data);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+    await AxiosBase.get(`mrp/item-master-files/${file_id}/`).then(response => {
+      commit("setItemMasterFile", response.data);
+    });
   },
 
   createNewItemMasterFile({ commit }, file) {
-    AxiosBase
-      .post("mrp/item-master-files/", file)
-      .then(response => {
-        commit("newItemMasterFile", response.data);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+    AxiosBase.post("mrp/item-master-files/", file).then(response => {
+      commit("newItemMasterFile", response.data);
+    });
   },
 
   async deleteItemMasterFile({ commit }, file) {
-    await AxiosBase
-      .put(`mrp/item-master-files/${file.id}/`, file)
-      .then(() => {
-        commit("deletedItemMasterFile", file);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+    await AxiosBase.put(`mrp/item-master-files/${file.id}/`, file).then(() => {
+      commit("deletedItemMasterFile", file);
+    });
   }
 };
 
@@ -79,7 +58,8 @@ const mutations = {
   setItemMasterFiles: (state, files) => (state.allItemMasterFiles = files),
   setItemMasterFile: (state, file) => (state.itemMasterFile = file),
   newItemMasterFile: (state, file) => (state.itemMasterFile = file),
-  deletedItemMasterFile: (state, file) =>  functions.remove(state.allItemMasterFiles, file)
+  deletedItemMasterFile: (state, file) =>
+    functions.remove(state.allItemMasterFiles, file)
 };
 
 export default {

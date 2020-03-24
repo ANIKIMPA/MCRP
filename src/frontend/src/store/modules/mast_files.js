@@ -21,55 +21,37 @@ const getters = {
 const actions = {
   // Obtener lista de files
   async fetchAllMastFiles({ commit }) {
-    await AxiosBase
-      .get("mrp/mast-files/")
-      .then(response => {
-        commit("setMastFiles", response.data);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+    return new Promise((resolve, reject) => {
+      AxiosBase.get("mrp/mast-files/")
+        .then(response => {
+          commit("setMastFiles", response.data);
+          resolve();
+        })
+        .catch(() => {
+          reject();
+        });
+    });
   },
 
   async fetchMastFile({ commit }, file_id) {
-    await AxiosBase
-      .get(`mrp/mast-files/${file_id}/`)
+    await AxiosBase.get(`mrp/mast-files/${file_id}/`)
       .then(response => {
         commit("setMastFile", response.data);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+      })      
   },
 
   createNewMastFile({ commit }, file) {
-    AxiosBase
-      .post("mrp/mast-files/", file)
+    AxiosBase.post("mrp/mast-files/", file)
       .then(response => {
         commit("newMastFile", response.data);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+      })      
   },
 
   async deleteMastFile({ commit }, file) {
-    await AxiosBase
-      .put(`mrp/mast-files/${file.id}/`, file)
+    await AxiosBase.put(`mrp/mast-files/${file.id}/`, file)
       .then(() => {
         commit("deletedMastFile", file);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+      })      
   }
 };
 
@@ -79,7 +61,7 @@ const mutations = {
   setMastFiles: (state, files) => (state.allMastFiles = files),
   setMastFile: (state, file) => (state.mastFile = file),
   newMastFile: (state, file) => (state.mastFile = file),
-  deletedMastFile: (state, file) =>  functions.remove(state.allMastFiles, file)
+  deletedMastFile: (state, file) => functions.remove(state.allMastFiles, file)
 };
 
 export default {

@@ -45,7 +45,7 @@ const actions = {
       });
     }
   },
-  loginUser({ commit, dispatch }, credentials) {
+  loginUser({ commit }, credentials) {
     return new Promise((resolve, reject) => {
       // send the username and password to the backend API:
       axios
@@ -53,8 +53,7 @@ const actions = {
         //if successful update local storage:
         .then(response => {
           commit("updateLocalStorage", response.data, { root: true }); // store the access and refresh token in localstorage
-          resolve();
-          dispatch("fetchUserProfile");     
+          resolve();    
         })
         .catch(error => {
           reject(error.response.data);

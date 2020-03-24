@@ -63,6 +63,7 @@ export default {
 					this.$router.push({ name: "home" });
 				})
 				.catch(error => {
+					console.log(error)
 					this.form.password = "";
 					this.errors.detail = "Please correct the error below.";
 					this.errors = error;

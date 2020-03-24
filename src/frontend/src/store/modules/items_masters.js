@@ -12,64 +12,38 @@ const getters = {
 const actions = {
   // Obtener lista de itemsMasters
   async fetchItemsMasters({ commit }, file_id) {
-    await AxiosBase
-      .get(`mrp/item-master-files/${file_id}/items-masters`)
-      .then(response => {
+    await AxiosBase.get(`mrp/item-master-files/${file_id}/items-masters`).then(
+      response => {
         commit("setItemsMasters", response.data);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+      }
+    );
   },
   // Agregar item
   addItemsMasters({ commit }, data) {
-    AxiosBase
-      .post("mrp/items-masters/", data)
-      .then(response => {
-        if(response.data.length > 1)
-          commit("setItemsMasters", response.data);
-        else
-          commit("newItemMaster", response.data[0]);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+    AxiosBase.post("mrp/items-masters/", data).then(response => {
+      if (response.data.length > 1) commit("setItemsMasters", response.data);
+      else commit("newItemMaster", response.data[0]);
+    });
   },
 
   async updateItemMaster({ commit }, item) {
-    await AxiosBase
-      .put(`mrp/items-masters/${item.id}/`, item)
-      .then(response => {
+    await AxiosBase.put(`mrp/items-masters/${item.id}/`, item).then(
+      response => {
         commit("updatedItemMaster", response.data);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+      }
+    );
   },
 
   async deleteItemMaster({ commit }, item) {
-    await AxiosBase
-      .delete(`mrp/items-masters/${item.id}/`, item)
-      .then(() => {
-        commit("deletedItemMaster", item);
-      })
-      .catch(error => {
-        for (let value of Object.values(error.response.data)) {
-          commit("throwError", value, { root: true });
-        }
-      });
+    await AxiosBase.delete(`mrp/items-masters/${item.id}/`, item).then(() => {
+      commit("deletedItemMaster", item);
+    });
   }
 };
 
 const mutations = {
   // Set all itemsMasters to state
-  setItemsMasters: (state, itemsMasters) => state.itemsMasters = itemsMasters,
+  setItemsMasters: (state, itemsMasters) => (state.itemsMasters = itemsMasters),
 
   //Add item to state
   newItemMaster: (state, item) => state.itemsMasters.push(item),
