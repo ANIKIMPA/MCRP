@@ -160,7 +160,7 @@ export default {
 				items_number: 1,
 				part_numbers: "-",
 				order: this.getAllItemsMasters.length,
-				file: this.itemMasterFile.i
+				file: this.itemMasterFile.id
 			});
 		}
 	}

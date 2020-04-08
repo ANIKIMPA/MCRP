@@ -74,7 +74,7 @@
 
       <template v-slot:modal-footer>
         <div class="w-100 text-center">
-          <b-button variant="secondary" class="mx-3 w-10" :disabled="!checkBox.explosionReport">Ok</b-button>
+          <b-button variant="secondary" class="mx-3 w-10" @click="openFinalReport" :disabled="!checkBox.explosionReport">Ok</b-button>
           <b-button
             variant="secondary"
             class="mx-3 w-10"
@@ -109,6 +109,14 @@ export default {
         allItems: false
       }
     };
+  },
+  methods: {
+    openFinalReport() {
+      this.$router.push({
+        name: "final_report"
+      });
+      this.$bvModal.hide('report-options')
+    }
   }
 };
 </script>

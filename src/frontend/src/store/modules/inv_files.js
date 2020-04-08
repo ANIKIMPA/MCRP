@@ -35,7 +35,7 @@ const actions = {
   },
 
   async fetchInvFile({ commit }, file_id) {
-    await AxiosBase
+    return await AxiosBase
       .get(`mrp/inv-files/${file_id}/`)
       .then(response => {
         commit("setInvFile", response.data);
@@ -43,7 +43,7 @@ const actions = {
   },
 
   createNewInvFile({ commit }, file) {
-    AxiosBase
+    return AxiosBase
       .post("mrp/inv-files/", file)
       .then(response => {
         commit("newInvFile", response.data);
@@ -51,7 +51,7 @@ const actions = {
   },
 
   async deleteInvFile({ commit }, file) {
-    await AxiosBase
+    return await AxiosBase
       .put(`mrp/inv-files/${file.id}/`, file)
       .then(() => {
         commit("deletedInvFile", file);

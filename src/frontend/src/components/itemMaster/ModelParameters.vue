@@ -49,29 +49,6 @@ export default {
 					this.form.number_of_items = 1;
 				}
 		});
-
-		const unsubscribe = this.$store.subscribe(mutation => {
-			if (mutation.type === "newItemMasterFile") {
-				// Add items to the file
-				this.addItemsMasters({
-					items_number: this.form.number_of_items,
-					part_numbers: this.getAllBomItems.map(item => this.createFromBomFile ? item.part_number : "-"),
-					file: this.itemMasterFile.id
-				});
-			}
-
-			if (this.mutation === "setItemsMasters") {
-				// Redirect to home page
-				this.$router.push({
-					name: "item_master",
-					params: {
-						file: this.itemMasterFile.id
-					}
-				});
-
-				unsubscribe();
-			}
-		});
 	},
 	methods: {
 		...mapActions(["addItemsMasters", "createNewItemMasterFile"]),
@@ -80,6 +57,21 @@ export default {
 				this.createNewItemMasterFile({
 					title: this.form.title,
 					number_of_items: this.form.number_of_items
+				}).then(() => {
+					this.addItemsMasters({
+						items_number: this.form.number_of_items,
+						part_numbers: this.getAllBomItems.map(item =>
+							this.createFromBomFile ? item.part_number : "-"
+						),
+						file: this.itemMasterFile.id
+					}).then(() => {
+						this.$router.push({
+							name: "item_master",
+							params: {
+								file: this.itemMasterFile.id
+							}
+						});
+					});
 				});
 
 				this.$nextTick(() => {

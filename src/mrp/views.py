@@ -70,7 +70,7 @@ class MastFileViewSet(viewsets.ModelViewSet):
         return current_user_files(self.request.user, MastFile)
 
     def create(self, request):
-        return create_file(request, MastFile)
+        return create_file(request, MastFileSerializer)
 
 
 class MastItemViewSet(viewsets.ModelViewSet):

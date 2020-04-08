@@ -12,26 +12,26 @@ const getters = {
 const actions = {
   // Obtener lista de mastItems
   async fetchMastItems({ commit }, file_id) {
-    await AxiosBase.get(`mast-files/${file_id}/mast-items`).then(response => {
+    return await AxiosBase.get(`mrp/mast-files/${file_id}/mast-items`).then(response => {
       commit("setMastItems", response.data);
     });
   },
   // Agregar item
   addMastItems({ commit }, data) {
-    AxiosBase.post("mast-items/", data).then(response => {
+    return AxiosBase.post("mrp/mast-items/", data).then(response => {
       if (response.data.length > 1) commit("setMastItems", response.data);
       else commit("newMastItem", response.data[0]);
     });
   },
 
   async updateMastItem({ commit }, item) {
-    await AxiosBase.put(`mast-items/${item.id}/`, item).then(response => {
+    return await AxiosBase.put(`mrp/mast-items/${item.id}/`, item).then(response => {
       commit("updatedMastItem", response.data);
     });
   },
 
   async deleteMastItem({ commit }, item) {
-    await AxiosBase.delete(`mast-items/${item.id}/`, item).then(() => {
+    return await AxiosBase.delete(`mrp/mast-items/${item.id}/`, item).then(() => {
       commit("deletedMastItem", item);
     });
   }

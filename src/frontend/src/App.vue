@@ -1,5 +1,5 @@
 <template>
-	<div id="app">
+	<div id="app" class="outer">
 		<Navbar v-if="$route.name != 'login' && $route.name != 'register'"/>
 		<router-view :key="$route.fullPath" />
 

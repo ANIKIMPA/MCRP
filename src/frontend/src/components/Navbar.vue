@@ -25,8 +25,8 @@
 				</b-navbar-nav>
 			</b-collapse>
 		</b-navbar>
-		<nav class="bg-white border" style="height:50px;">
-			<ul id="menu" class="mt-2">
+		<nav class="bg-nav" style="height:50px;">
+			<ul id="menu" class="pt-2">
 				<li class="parent"><a href="#">File <i class="fas fa-caret-down"></i></a>
 					<ul class="child">
 						<li v-b-modal.modal-1>New</li>
@@ -86,12 +86,12 @@ export default {
 	},
 	onIdle() {
 		// dispatch logoutUser if no activity detected
-		this.$store.dispatch("logoutUser").then(() => {
-			this.$router.push("/login");
+		this.logoutUser().then(() => {
+			this.$router.push("login");
 		});
 	},
 	methods: {
-		...mapActions(["logoutUser", "fetchUserProfile"]),
+		...mapActions(["logoutUser"]),
 		goHome() {
 			this.$router.push("/");
 		},
@@ -119,9 +119,6 @@ export default {
 	},
 	computed: {
 		...mapGetters(["getUser"])
-	},
-	mounted() {
-		this.fetchUserProfile()
 	}
 };
 </script>

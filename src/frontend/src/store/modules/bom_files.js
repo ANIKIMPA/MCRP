@@ -34,45 +34,24 @@ const actions = {
   },
 
   async fetchBomFile({ commit }, file_id) {
-    await AxiosBase.get(`mrp/bom-files/${file_id}/`)
+    return await AxiosBase.get(`mrp/bom-files/${file_id}/`)
       .then(response => {
         commit("setBomFile", response.data);
       })
-      .catch(error => {
-        commit(
-          "throwError",
-          error.response.data[Object.keys(error.response.data)[0]][0],
-          { root: true }
-        );
-      });
   },
 
   createNewBomFile({ commit }, file) {
-    AxiosBase.post("mrp/bom-files/", file)
+    return AxiosBase.post("mrp/bom-files/", file)
       .then(response => {
         commit("newBomFile", response.data);
       })
-      .catch(error => {
-        commit(
-          "throwError",
-          error.response.data[Object.keys(error.response.data)[0]][0],
-          { root: true }
-        );
-      });
   },
 
   async deleteBomFile({ commit }, file) {
-    await AxiosBase.put(`mrp/bom-files/${file.id}/`, file)
+    return await AxiosBase.put(`mrp/bom-files/${file.id}/`, file)
       .then(() => {
         commit("deletedBomFile", file);
-      })
-      .catch(error => {
-        commit(
-          "throwError",
-          error.response.data[Object.keys(error.response.data)[0]][0],
-          { root: true }
-        );
-      });
+      }) 
   }
 };
 

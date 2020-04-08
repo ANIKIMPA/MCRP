@@ -87,7 +87,7 @@
 
 				<div class="mt-4">
 					<div class="d-flex justify-content-center links">
-						Already have an account? <router-link class="ml-2" to="login">Login</router-link>
+						Already have an account? <router-link class="ml-2 link" to="login">Login</router-link>
 					</div>
 				</div>
 			</div>

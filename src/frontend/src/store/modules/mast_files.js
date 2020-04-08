@@ -34,21 +34,21 @@ const actions = {
   },
 
   async fetchMastFile({ commit }, file_id) {
-    await AxiosBase.get(`mrp/mast-files/${file_id}/`)
+    return await AxiosBase.get(`mrp/mast-files/${file_id}/`)
       .then(response => {
         commit("setMastFile", response.data);
       })      
   },
 
   createNewMastFile({ commit }, file) {
-    AxiosBase.post("mrp/mast-files/", file)
+    return AxiosBase.post("mrp/mast-files/", file)
       .then(response => {
         commit("newMastFile", response.data);
       })      
   },
 
   async deleteMastFile({ commit }, file) {
-    await AxiosBase.put(`mrp/mast-files/${file.id}/`, file)
+    return await AxiosBase.put(`mrp/mast-files/${file.id}/`, file)
       .then(() => {
         commit("deletedMastFile", file);
       })      

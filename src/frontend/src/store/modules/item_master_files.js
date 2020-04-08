@@ -34,19 +34,19 @@ const actions = {
   },
 
   async fetchItemMasterFile({ commit }, file_id) {
-    await AxiosBase.get(`mrp/item-master-files/${file_id}/`).then(response => {
+    return await AxiosBase.get(`mrp/item-master-files/${file_id}/`).then(response => {
       commit("setItemMasterFile", response.data);
     });
   },
 
   createNewItemMasterFile({ commit }, file) {
-    AxiosBase.post("mrp/item-master-files/", file).then(response => {
+    return AxiosBase.post("mrp/item-master-files/", file).then(response => {
       commit("newItemMasterFile", response.data);
     });
   },
 
   async deleteItemMasterFile({ commit }, file) {
-    await AxiosBase.put(`mrp/item-master-files/${file.id}/`, file).then(() => {
+    return await AxiosBase.put(`mrp/item-master-files/${file.id}/`, file).then(() => {
       commit("deletedItemMasterFile", file);
     });
   }

@@ -27,21 +27,22 @@ const actions = {
   logoutUser(context) {
     if (context.getters.loggedIn) {
       return new Promise((resolve) => {
-        AxiosBase
-          .post("logout/", {
-            "refresh_token": localStorage.getItem("refresh_token")
-          })
-          .then(() => {
+        // AxiosBase
+        //   .post("logout/", {
+        //     "refresh_token": localStorage.getItem("refresh_token")
+        //   })
+        //   .then(() => {
+        //     localStorage.removeItem("access_token");
+        //     localStorage.removeItem("refresh_token");
+        //     context.commit("destroyToken", { root: true });
+        //     resolve();
+        //   })
+        //   .catch(() => {
             localStorage.removeItem("access_token");
             localStorage.removeItem("refresh_token");
             context.commit("destroyToken", { root: true });
-          })
-          .catch(error => {
-            localStorage.removeItem("access_token");
-            localStorage.removeItem("refresh_token");
-            context.commit("destroyToken", { root: true });
-            resolve(error);
-          });
+            resolve();
+          // });
       });
     }
   },

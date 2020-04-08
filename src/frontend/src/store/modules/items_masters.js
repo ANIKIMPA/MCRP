@@ -12,7 +12,7 @@ const getters = {
 const actions = {
   // Obtener lista de itemsMasters
   async fetchItemsMasters({ commit }, file_id) {
-    await AxiosBase.get(`mrp/item-master-files/${file_id}/items-masters`).then(
+    return await AxiosBase.get(`mrp/item-master-files/${file_id}/items-masters`).then(
       response => {
         commit("setItemsMasters", response.data);
       }
@@ -20,14 +20,14 @@ const actions = {
   },
   // Agregar item
   addItemsMasters({ commit }, data) {
-    AxiosBase.post("mrp/items-masters/", data).then(response => {
-      if (response.data.length > 1) commit("setItemsMasters", response.data);
-      else commit("newItemMaster", response.data[0]);
-    });
+    return AxiosBase.post("mrp/items-masters/", data).then(response => {
+          if (response.data.length > 1) commit("setItemsMasters", response.data);
+          else commit("newItemMaster", response.data[0]);
+      })
   },
 
   async updateItemMaster({ commit }, item) {
-    await AxiosBase.put(`mrp/items-masters/${item.id}/`, item).then(
+    return await AxiosBase.put(`mrp/items-masters/${item.id}/`, item).then(
       response => {
         commit("updatedItemMaster", response.data);
       }
@@ -35,7 +35,7 @@ const actions = {
   },
 
   async deleteItemMaster({ commit }, item) {
-    await AxiosBase.delete(`mrp/items-masters/${item.id}/`, item).then(() => {
+    return await AxiosBase.delete(`mrp/items-masters/${item.id}/`, item).then(() => {
       commit("deletedItemMaster", item);
     });
   }

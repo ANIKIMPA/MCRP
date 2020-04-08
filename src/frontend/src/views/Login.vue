@@ -34,7 +34,7 @@
 
 				<div class="mt-4">
 					<div class="d-flex justify-content-center links">
-						Don't have an account? <router-link class="ml-2" to="register">Sign Up</router-link>
+						Don't have an account? <router-link class="ml-2 link" to="register">Sign Up</router-link>
 					</div>
 				</div>
 			</div>
@@ -56,11 +56,12 @@ export default {
 		};
 	},
 	methods: {
-		...mapActions(["loginUser"]),
+		...mapActions(["loginUser", "fetchUserProfile"]),
 		onSubmit() {
 			this.loginUser(this.form)
 				.then(() => {
 					this.$router.push({ name: "home" });
+					this.fetchUserProfile();
 				})
 				.catch(error => {
 					console.log(error)

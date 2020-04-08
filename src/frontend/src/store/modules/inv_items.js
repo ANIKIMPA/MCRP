@@ -12,26 +12,26 @@ const getters = {
 const actions = {
   // Obtener lista de invItems
   async fetchInvItems({ commit }, file_id) {
-    await AxiosBase.get(`mrp/inv-files/${file_id}/inv-items`).then(response => {
+    return await AxiosBase.get(`mrp/inv-files/${file_id}/inv-items`).then(response => {
       commit("setInvItems", response.data);
     });
   },
 
   async addInvItems({ commit }, data) {
-    await AxiosBase.post("mrp/inv-items/", data).then(response => {
+    return await AxiosBase.post("mrp/inv-items/", data).then(response => {
       if (response.data.length > 1) commit("setInvItems", response.data);
       else commit("newInvItem", response.data[0]);
     });
   },
 
   async updateInvItem({ commit }, item) {
-    await AxiosBase.put(`mrp/inv-items/${item.id}/`, item).then(response => {
+    return await AxiosBase.put(`mrp/inv-items/${item.id}/`, item).then(response => {
       commit("updatedInvItem", response.data);
     });
   },
 
   async deleteInvItem({ commit }, item) {
-    await AxiosBase.delete(`mrp/inv-items/${item.id}/`, item).then(() => {
+    return await AxiosBase.delete(`mrp/inv-items/${item.id}/`, item).then(() => {
       commit("deletedInvItem", item);
     });
   }

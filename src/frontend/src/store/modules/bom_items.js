@@ -13,14 +13,14 @@ const getters = {
 const actions = {
   // Obtener lista de bomItems
   async fetchBomItems({ commit }, file_id) {
-    await AxiosBase.get(`mrp/bom-files/${file_id}/bom-items`)
+    return await AxiosBase.get(`mrp/bom-files/${file_id}/bom-items`)
       .then(response => {
         commit("setBomItems", response.data);
       });
   },
   // Agregar item
   addBomItems({ commit }, data) {
-    AxiosBase.post("mrp/bom-items/", data)
+    return AxiosBase.post("mrp/bom-items/", data)
       .then(response => {
         if (response.data.length > 1) {
           commit("setBomItems", response.data);
@@ -29,14 +29,14 @@ const actions = {
   },
 
   async updateBomItem({ commit }, item) {
-    await AxiosBase.put(`mrp/bom-items/${item.id}/`, item)
+    return await AxiosBase.put(`mrp/bom-items/${item.id}/`, item)
       .then(response => {
         commit("updatedBomItem", response.data);
       });
   },
 
   async deleteBomItem({ commit }, item) {
-    await AxiosBase.delete(`mrp/bom-items/${item.id}/`)
+    return await AxiosBase.delete(`mrp/bom-items/${item.id}/`)
       .then(() => {
         commit("deletedBomItem", item);
       });

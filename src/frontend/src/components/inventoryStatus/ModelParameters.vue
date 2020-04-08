@@ -4,7 +4,7 @@
 			<div class="form-group row">
 				<label class="col-form-label col-2" for="title">Title:</label>
 				<div class="col-10">
-					<input type="text" class="form-control" v-model="form.title" id="title"/>
+					<input type="text" class="form-control" v-model="form.title" id="title" />
 				</div>
 			</div>
 
@@ -37,7 +37,7 @@ export default {
 			form: {
 				title: "Inventory Status",
 				number_of_periods: 1,
-                number_of_items : 1,
+				number_of_items: 1
 			}
 		};
 	},
@@ -45,55 +45,48 @@ export default {
 		...mapGetters(["invFile", "getAllBomItems"])
 	},
 	mounted() {
-		this.$root.$on('bv::modal::show', (bvEvent, modalId) => {
-			if(modalId === "modal-parameters")
-				if(this.createFromBomFile) {
+		this.$root.$on("bv::modal::show", (bvEvent, modalId) => {
+			if (modalId === "modal-parameters")
+				if (this.createFromBomFile) {
 					this.form.title = this.getAllBomItems[0].part_number;
 					this.form.number_of_items = this.getAllBomItems.length;
 				} else {
-					this.form.title = null
-					this.form.number_of_items = 1
+					this.form.title = null;
+					this.form.number_of_items = 1;
 				}
-		})
-
-		const unsubscribe = this.$store.subscribe(mutation => {
-			if (mutation.type === "newInvFile") {
-				// Add items to the file
-				this.addInvItems({
-					items_number: this.form.number_of_items,
-					part_numbers: this.getAllBomItems.map(item => this.createFromBomFile ? item.part_number : "-"),
-					receipts: "0",
-					file: this.invFile.id
-				});
-			}
-
-			if (mutation.type === "setInvItems") {
-				// Redirect to home page
-				this.$router.push({
-					name: "inventory_status",
-					params: {
-						file: this.invFile.id
-					}
-				});
-
-				unsubscribe();
-			}
 		});
-
 	},
 	methods: {
 		...mapActions(["addInvItems", "createNewInvFile"]),
 		onSubmit() {
-			if(this.form.title && this.form.title.trim() != "") {
+			if (this.form.title && this.form.title.trim() != "") {
 				this.createNewInvFile({
 					title: this.form.title,
 					number_of_items: this.form.number_of_items,
-                    number_of_periods: this.form.number_of_periods,
+					number_of_periods: this.form.number_of_periods
+				}).then(() => {
+					// Add items to the file
+					this.addInvItems({
+						items_number: this.form.number_of_items,
+						part_numbers: this.getAllBomItems.map(item =>
+							this.createFromBomFile ? item.part_number : "-"
+						),
+						receipts: "0",
+						file: this.invFile.id
+					}).then(() => {
+						// Redirect to home page
+						this.$router.push({
+							name: "inventory_status",
+							params: {
+								file: this.invFile.id
+							}
+						});
+					});
 				});
 
 				this.$nextTick(() => {
-					this.$bvModal.hide('modal-parameters')
-				})
+					this.$bvModal.hide("modal-parameters");
+				});
 			}
 		}
 	}
