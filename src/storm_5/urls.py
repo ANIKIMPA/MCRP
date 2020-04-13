@@ -18,6 +18,7 @@ from django.conf.urls import include
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenRefreshView
 urlpatterns = [
+    path('export/', include('excel.urls')),
     path('admin/', admin.site.urls),
     path('api/token/refresh/', TokenRefreshView.as_view()),
     path('api/v1.0/', include('users.urls')),

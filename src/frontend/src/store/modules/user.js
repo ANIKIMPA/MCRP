@@ -63,7 +63,6 @@ const actions = {
   },
 
   fetchUserProfile({commit}) {
-    console.log("fetchUser")
     AxiosBase.get("profile/").then((response) => {
       commit("setUser", response.data);
     }).catch(() => {

@@ -50,7 +50,14 @@
 						<li>Paste</li>
 					</ul>
 				</li>
-				<ReportSetup />
+				<li class="parent"><a href="#">Report <i class="fas fa-caret-down"></i></a>
+					<ul class="child">
+						<ReportSetup />
+						<li>
+							<a href="http://localhost:8000/export/report-xls/">Export to Excel</a>
+						</li>
+					</ul>
+				</li>
 			</ul>
 		</nav>
 

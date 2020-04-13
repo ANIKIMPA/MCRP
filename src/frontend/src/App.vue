@@ -1,5 +1,5 @@
 <template>
-	<div id="app" class="outer">
+	<div id="app" class="main-outer">
 		<Navbar v-if="$route.name != 'login' && $route.name != 'register'"/>
 		<router-view :key="$route.fullPath" />
 
@@ -25,25 +25,29 @@ export default {
     ...mapGetters(["getError", "getInfo"])
   },
   watch: {
-    getError() {
-      this.$bvToast.toast(this.getError, {
-        title: 'OOPS! Something went wrong',
-        toaster: "b-toaster-bottom-right",
-        variant: "danger",
-        solid: true,
-        autoHideDelay: 5000,
-      })
-    },
     getInfo() {
       console.log(this.$refs.toast.$slots.default[0].text = this.getInfo)
       this.$bvToast.show("saved-toast");
     }
+  },
+  mounted() {
+    this.$store.subscribe((mutation) => {
+      if(mutation.type === "throwError") {
+        this.$bvToast.toast(this.getError, {
+          title: 'OOPS! Something went wrong',
+          toaster: "b-toaster-bottom-right",
+          variant: "danger",
+          solid: true,
+          autoHideDelay: 5000,
+        })
+      }
+    })
   }
 };
 </script>
 
 <style>
-@import "./assets/styles/account.css";
+@import "./assets/styles/main.css";
 #app {
 	font-family: "Avenir", Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;

@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'users.apps.UsersConfig',
-    'mrp.apps.MrpConfig'
+    'mrp.apps.MrpConfig',
+    'excel.apps.ExcelConfig'
 ]
 
 MIDDLEWARE = [

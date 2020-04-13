@@ -101,12 +101,12 @@ export default {
         { value: "g", text: "This is option g" }
       ],
       checkBox: {
-        explosionReport: false,
+        explosionReport: true,
         indentedBom: false,
         whereUsedReport: false
       },
       radio: {
-        allItems: false
+        allItems: true
       }
     };
   },

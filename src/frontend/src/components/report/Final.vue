@@ -1,5 +1,6 @@
 <template>
-	<div class="row justify-content-between no-gutters">
+	<div class="row justify-content-between no-gutters" v-if="isValidData">
+
 		<table class="col-lg-5half mb-4" v-for="(bomItem, idx) in getAllBomItems" :key="idx">
 			<tr>
 				<td width="22%" class="border-dark bg-azulito">Item Number</td>
@@ -62,29 +63,82 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex"
+import { mapGetters, mapMutations } from "vuex"
 
 export default {
 	name: "FinalReport",
+	data() {
+		return {
+			isValidData: false
+		}
+	},
 	computed: {
 		...mapGetters(["getAllBomItems", "getAllInvItems", "getAllMastItems", "getAllItemsMasters"])
 	},
 	methods: {
+		...mapMutations(["throwError"]),
 		periods: function(idx) {
 			if(idx < this.getAllMastItems.length) {
 				return this.getAllMastItems[idx].periods.split(",");
 			} else {
 				return ["", "", "", "", "", "", "", "", "", ""];
 			}
+		},
+		dataFilesMatch() {
+			if(this.getAllBomItems.length <= 0 || this.getAllInvItems.length <= 0 ||
+				this.getAllItemsMasters.length <= 0 || this.getAllMastItems.length <= 0) {
+				this.$router.push({
+					name: "home"
+				})
+				return false
+			}
+
+			const bomItems = this.getAllBomItems.map((item) => item.part_number)
+			const invItems = this.getAllInvItems.map((item) => item.part_number)
+			const itemsMasters = this.getAllItemsMasters.map((item) => item.part_number)
+
+			// Validate part numbers in Master Schedule file match.
+			this.getAllMastItems.map((item) => item.part_number).forEach((part_number) => {
+				if(!bomItems.includes(part_number)) {
+					this.throwError(`The part number: ${part_number} doesn't match in Master Schedule.`)
+					this.$router.push({
+						name: "home"
+					})
+					return false
+				}
+			})
+
+			// Validate part numbers in inventory status file
+			// and item master files matches.
+			for(let idx=0; idx<bomItems.length; idx++) {
+				if(bomItems[idx] !== invItems[idx]) {
+					this.throwError(`The part number: ${invItems[idx]} doesn't match in Inventory Status.`)
+					this.$router.push({
+						name: "home"
+					})
+					return false
+				} else if(bomItems[idx] !== itemsMasters[idx]) {
+					this.throwError(`The part number: ${itemsMasters[idx]} doesn't match in Item Master.`)
+					this.$router.push({
+						name: "home"
+					})
+					return false
+				}
+			}
+
+			return true
 		}
 	},
 	filters: {
 		percentage(value) {
-			return parseFloat(value).toFixed(1)+"%";
+			return parseFloat(value * 100).toFixed(1) + "%";
 		},
 		dollarFormat(value) {
 			return "$" + parseFloat(value).toFixed(2);
 		}
+	},
+	mounted() {
+		this.isValidData = this.dataFilesMatch()
 	}
 };
 </script>
@@ -112,19 +166,19 @@ tr:first-child .empty-cell:nth-last-child(3) {
 }
 
 .col-lg-5half {
-    position: relative;
-    min-height: 1px;
-    padding-right: 15px;
+	position: relative;
+	min-height: 1px;
+	padding-right: 15px;
 	padding-left: 15px;
 	width: 100%;
 }
 
 @media (min-width: 960px) {
-    .col-lg-5half {
-        float: left;
-    }
-    .col-lg-5half {
-        width: 49%;
-    }
+	.col-lg-5half {
+		float: left;
+	}
+	.col-lg-5half {
+		width: 49%;
+	}
 }
 </style>

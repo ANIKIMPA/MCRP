@@ -1,8 +1,6 @@
 <template>
   <div>
-    <li class="parent" @click.prevent="openModal">
-      <a href="#">Report</a>
-    </li>
+    <li @click.prevent="openModal">Setup</li>
     <b-modal id="report-setup" size="xl" v-model="modalOpenned" title="MRP : Filename Setup">
       <table class="w-100">
         <tr>
@@ -46,7 +44,7 @@
       <template v-slot:modal-footer>
         <div class="w-100 text-center">
           <div>*Note*: Reports are generated from the last saved versions of the above files.</div>
-          <b-button variant="secondary" class="mx-3" @click="showSetupOptionsModal">Report</b-button>
+          <b-button variant="secondary" class="mx-3" @click="openFinalReport" :disabled="!files.billOfMaterial || !files.masterSchedule || !files.inventoryStatus || !files.itemMaster">Report</b-button>
           <b-button variant="secondary" class="mx-3" @click="modalOpenned=false">Cancel</b-button>
         </div>
       </template>
@@ -76,10 +74,10 @@ export default {
     return {
       modalOpenned: false,
       files: {
-        billOfMaterial: "",
-        masterSchedule: "",
-        inventoryStatus: "",
-        itemMaster: ""
+        billOfMaterial: null,
+        masterSchedule: null,
+        inventoryStatus: null,
+        itemMaster: null
       }
     };
   },
@@ -90,6 +88,12 @@ export default {
     showSetupOptionsModal() {
       this.$bvModal.show('report-options');
       this.modalOpenned = false;
+    },
+    openFinalReport() {
+      this.$router.push({
+        name: "final_report"
+      });
+      this.$bvModal.hide('report-setup')
     }
   },
   watch: {
