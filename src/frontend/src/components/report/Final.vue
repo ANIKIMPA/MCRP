@@ -51,12 +51,12 @@
 				<td class="border-dark">{{ getAllInvItems[idx].on_hand }}</td>
 				<td class="border-dark bg-azulito">Net Requirement</td>
 			</tr>
-			<tr v-for="(period, i) in periods(idx)" :key="i">
+			<tr v-for="(data, i) in data(idx)" :key="i">
 				<td class="border-dark">{{ i + 1 }}</td>
-				<td class="border-dark">{{ period }}</td>
-				<td class="border-dark"></td>
-				<td class="border-dark"></td>
-				<td class="border-dark"></td>
+				<td class="border-dark">{{ data.period }}</td>
+				<td class="border-dark">{{ data.receipt }}</td>
+				<td class="border-dark">{{ data.on_hand }}</td>
+				<td class="border-dark">{{ data.net_requirement }}</td>
 			</tr>
 		</table>
 	</div>
@@ -77,13 +77,37 @@ export default {
 	},
 	methods: {
 		...mapMutations(["throwError"]),
-		periods: function(idx) {
-			if(idx < this.getAllMastItems.length) {
-				return this.getAllMastItems[idx].periods.split(",");
+		data: function(index) {
+			let data = []
+			let periods = []
+			if(this.getAllBomItems[index].parent) {
+				return ""
 			} else {
-				return ["", "", "", "", "", "", "", "", "", ""];
+				periods = this.getAllMastItems[index].periods.split(",").map((period) => period * this.getAllBomItems[index].qty);
 			}
+
+			let receipts = this.getAllInvItems[index].receipts.split(",");
+			let on_hand = this.getAllInvItems[index].on_hand;
+			let net_requirement = 0
+			let receipt = 0
+
+			for(let idx=0; idx<periods.length; idx++) {
+				receipt = ((receipts[idx] ? receipts[idx] : 0) + net_requirement) * 1
+				on_hand += receipt - periods[idx]
+				net_requirement = periods[idx + 1] ? periods[idx + 1] : 0 - on_hand
+
+				data.push({
+					period: periods[idx],
+					receipt: receipt,
+					on_hand: on_hand,
+					net_requirement: net_requirement
+				})
+			}
+			
+
+			return data
 		},
+
 		dataFilesMatch() {
 			if(this.getAllBomItems.length <= 0 || this.getAllInvItems.length <= 0 ||
 				this.getAllItemsMasters.length <= 0 || this.getAllMastItems.length <= 0) {
