@@ -1,38 +1,38 @@
 <template>
 	<div class="row justify-content-between no-gutters" v-if="isValidData">
 
-		<table class="col-lg-5half mb-4" v-for="(bomItem, idx) in getAllBomItems" :key="idx">
+		<table class="col-lg-5half mb-4" v-for="(item, idx) in data" :key="idx">
 			<tr>
 				<td width="22%" class="border-dark bg-azulito">Item Number</td>
-				<td width="22%" class="border-dark">{{ bomItem.part_number }}</td>
+				<td width="22%" class="border-dark">{{ item.part_number }}</td>
 				<td width="12%" class="border-dark empty-cell">&nbsp;</td>
 				<td width="22%" class="border-dark bg-azulito">Yield (%)</td>
-				<td width="22%" class="border-dark">{{ getAllItemsMasters[idx].yield_percent | percentage }}</td>
+				<td width="22%" class="border-dark">{{ item.yield_percent | percentage }}</td>
 			</tr>
 			<tr>
 				<td class="border-dark bg-azulito">Lead Time</td>
-				<td class="border-dark">{{ getAllItemsMasters[idx].lead_time }}</td>
+				<td class="border-dark">{{ item.lead_time }}</td>
 				<td class="border-dark empty-cell">&nbsp;</td>
 				<td class="border-dark bg-azulito">Order Cost</td>
-				<td class="border-dark">{{ getAllItemsMasters[idx].order_cost | dollarFormat }}</td>
+				<td class="border-dark">{{ item.order_cost | dollarFormat }}</td>
 			</tr>
 			<tr>
 				<td class="border-dark bg-azulito">Parent</td>
-				<td class="border-dark">{{ bomItem.parent }}</td>
+				<td class="border-dark">{{ item.parent }}</td>
 				<td class="border-dark empty-cell">&nbsp;</td>
 				<td class="border-dark bg-azulito">Carrying Cost</td>
-				<td class="border-dark">{{ getAllItemsMasters[idx].carrying_cost | dollarFormat }}</td>
+				<td class="border-dark">{{ item.carrying_cost | dollarFormat }}</td>
 			</tr>
 			<tr>
 				<td class="border-dark bg-azulito">Quantity</td>
-				<td class="border-dark">{{ bomItem.qty }}</td>
+				<td class="border-dark">{{ item.qty }}</td>
 				<td class="border-dark empty-cell">&nbsp;</td>
 				<td class="border-dark bg-azulito">Lot Size</td>
-				<td class="border-dark">{{ getAllItemsMasters[idx].lot_size }}</td>
+				<td class="border-dark">{{ item.lot_size }}</td>
 			</tr>
 			<tr>
 				<td class="border-dark bg-azulito">Safety Stock</td>
-				<td class="border-dark">{{ getAllInvItems[idx].safe_stock }}</td>
+				<td class="border-dark">{{ item.safe_stock }}</td>
 				<td class="border-dark empty-cell">&nbsp;</td>
 				<td class="border-dark bg-azulito">Factor</td>
 				<td class="border-dark">&nbsp;</td>
@@ -48,15 +48,15 @@
 				<td class="border-dark bg-azulito">Period</td>
 				<td class="border-dark bg-azulito">Gross Requirement</td>
 				<td class="border-dark bg-azulito">Receipts</td>
-				<td class="border-dark">{{ getAllInvItems[idx].on_hand }}</td>
+				<td class="border-dark">{{ item.on_hand }}</td>
 				<td class="border-dark bg-azulito">Net Requirement</td>
 			</tr>
-			<tr v-for="(data, i) in data(idx)" :key="i">
+			<tr v-for="(period, i) in item.periods" :key="i">
 				<td class="border-dark">{{ i + 1 }}</td>
-				<td class="border-dark">{{ data.period }}</td>
-				<td class="border-dark">{{ data.receipt }}</td>
-				<td class="border-dark">{{ data.on_hand }}</td>
-				<td class="border-dark">{{ data.net_requirement }}</td>
+				<td class="border-dark">{{ period.gross_requirement }}</td>
+				<td class="border-dark">{{ period.receipt }}</td>
+				<td class="border-dark">{{ period.on_hand }}</td>
+				<td class="border-dark">{{ period.net_requirement }}</td>
 			</tr>
 		</table>
 	</div>
@@ -69,7 +69,8 @@ export default {
 	name: "FinalReport",
 	data() {
 		return {
-			isValidData: false
+			isValidData: false,
+			data: []
 		}
 	},
 	computed: {
@@ -77,35 +78,51 @@ export default {
 	},
 	methods: {
 		...mapMutations(["throwError"]),
-		data: function(index) {
-			let data = []
-			let periods = []
+		periodsData: function(index) {
+			let items = []
+
+			// Obtain gross requirements regarding whether item has a parent or not.
+			let gross_requirements = []
 			if(this.getAllBomItems[index].parent) {
-				return ""
+				gross_requirements = this.data.find((item) => item.part_number == this.getAllBomItems[index].parent).periods.map((period) => period.net_requirement * this.getAllBomItems[index].qty)
 			} else {
-				periods = this.getAllMastItems[index].periods.split(",").map((period) => period * this.getAllBomItems[index].qty);
+				gross_requirements = this.getAllMastItems[index].periods.split(",").map((period) => period * this.getAllBomItems[index].qty);
 			}
 
-			let receipts = this.getAllInvItems[index].receipts.split(",");
-			let on_hand = this.getAllInvItems[index].on_hand;
-			let net_requirement = 0
-			let receipt = 0
+			let prev_receipts = this.getAllInvItems[index].receipts.split(",").map((receipt) => parseInt(receipt));
+			let on_hands = [];
+			let net_requirements = [];
+			let receipts = [];
 
-			for(let idx=0; idx<periods.length; idx++) {
-				receipt = ((receipts[idx] ? receipts[idx] : 0) + net_requirement) * 1
-				on_hand += receipt - periods[idx]
-				net_requirement = periods[idx + 1] ? periods[idx + 1] : 0 - on_hand
+			// First receipts and on hands before lead time.
+			for(let idx=0; idx<this.getAllItemsMasters[index].lead_time; idx++) {
+				receipts[idx] = prev_receipts[idx] ? prev_receipts[idx] : 0;
+				on_hands[idx] = (idx === 0 ? this.getAllInvItems[index].on_hand : on_hands[idx - 1]) + receipts[idx] - gross_requirements[idx];
+			}
+			
+			for(let idx=0; idx<gross_requirements.length; idx++) {
+				let idxAfter = idx + this.getAllItemsMasters[index].lead_time;
+				
+				net_requirements[idx] = (gross_requirements[idxAfter] ? gross_requirements[idxAfter] : 0) + this.getAllInvItems[index].safe_stock - (on_hands[idxAfter - 1]);
+				receipts[idxAfter] = (prev_receipts[idxAfter] ? prev_receipts[idxAfter] : 0) + net_requirements[idx];
+				on_hands[idxAfter] = on_hands[idxAfter - 1] + receipts[idxAfter] - (gross_requirements[idxAfter] ? gross_requirements[idxAfter] : 0);
 
-				data.push({
-					period: periods[idx],
-					receipt: receipt,
-					on_hand: on_hand,
-					net_requirement: net_requirement
+				// Ajusting net requirement
+				if(on_hands[idxAfter] > this.getAllInvItems[index].safe_stock || net_requirements[idx] < 0) {					
+					net_requirements[idx] = 0
+					receipts[idxAfter] = (prev_receipts[idxAfter] ? prev_receipts[idxAfter] : 0);
+					on_hands[idxAfter] = on_hands[idxAfter - 1] + receipts[idxAfter] - (gross_requirements[idxAfter] ? gross_requirements[idxAfter] : 0);
+				}
+
+				items.push({
+					gross_requirement: gross_requirements[idx],
+					receipt: receipts[idx],
+					on_hand: on_hands[idx],
+					net_requirement: net_requirements[idx]
 				})
 			}
 			
-
-			return data
+			return items
 		},
 
 		dataFilesMatch() {
@@ -162,7 +179,26 @@ export default {
 		}
 	},
 	mounted() {
-		this.isValidData = this.dataFilesMatch()
+		if(this.dataFilesMatch()) {
+			this.isValidData = true
+
+			for(let idx = 0; idx < this.getAllBomItems.length; idx++) {
+				this.data.push({
+					part_number: this.getAllBomItems[idx].part_number,
+					yield_percent: this.getAllItemsMasters[idx].yield_percent,
+					lead_time: this.getAllItemsMasters[idx].lead_time,
+					order_cost: this.getAllItemsMasters[idx].order_cost,
+					parent: this.getAllBomItems[idx].parent,
+					carrying_cost: this.getAllItemsMasters[idx].carrying_cost,
+					qty: this.getAllBomItems[idx].qty,
+					lot_size: this.getAllItemsMasters[idx].lot_size,
+					factor: "",
+					safe_stock: this.getAllInvItems[idx].safe_stock,
+					on_hand: this.getAllInvItems[idx].on_hand,
+					periods: this.periodsData(idx)
+				})
+			}
+		}
 	}
 };
 </script>
