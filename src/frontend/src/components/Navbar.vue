@@ -36,8 +36,10 @@
 								<MastFilesList />
 								<InvFilesList />
 								<ItemMasterFilesList />
+								<SelectReport />
 							</ul>
 						</li>
+						<li @click="saveReport">Save</li>
 						<li @click="goHome">Close</li>
 						<li @click="newTab">New Tab</li>
 						<li @click="closeTab">Close Tab</li>
@@ -53,8 +55,8 @@
 				<li class="parent"><a href="#">Report <i class="fas fa-caret-down"></i></a>
 					<ul class="child">
 						<ReportSetup />
-						<li>
-							<a href="http://localhost:8000/export/report-xls/">Export to Excel</a>
+						<li v-if="$route.name === 'final_report'">
+							<a href="#" @click.prevent="exportExcel">Export to Excel</a>
 						</li>
 					</ul>
 				</li>
@@ -63,6 +65,7 @@
 
 		<ModuleListModal />
 		<DataConfigurationModal @bomFile="saveFile" />
+		<SaveReportModal/>
 	</div>
 </template>
 
@@ -73,7 +76,9 @@ import BomFilesList from "./billOfMaterial/FilesList";
 import MastFilesList from "./masterSchedule/FilesList";
 import InvFilesList from "./inventoryStatus/FilesList";
 import ItemMasterFilesList from "./itemMaster/FilesList";
+import SaveReportModal from "./report/SaveReportModal";
 import ReportSetup from "./report/Setup";
+import SelectReport from "./report/SelectReport";
 import { mapGetters, mapActions } from "vuex";
 export default {
 	components: {
@@ -83,7 +88,9 @@ export default {
 		MastFilesList,
 		InvFilesList,
 		ItemMasterFilesList,
-		ReportSetup
+		ReportSetup,
+		SaveReportModal,
+		SelectReport
 	},
 	data() {
 		return {
@@ -98,7 +105,7 @@ export default {
 		});
 	},
 	methods: {
-		...mapActions(["logoutUser"]),
+		...mapActions(["logoutUser", "updateReport", "fetchUserProfile"]),
 		goHome() {
 			this.$router.push("/");
 		},
@@ -122,10 +129,24 @@ export default {
 			this.logoutUser().then(() => {
 				this.$router.push("login");
 			});
+		},
+		saveReport() {
+			if(this.$route.name === "final_report") {
+				if(isNaN(this.report.id) || this.report.id <= 0) {
+					this.$bvModal.show('save-report');
+				}
+			}
+		},
+		exportExcel() {
+			if(this.report.id && this.report.id >= 1)
+				window.location.href = `http://localhost:8000/export/report-xls/${this.report.id}`;
 		}
 	},
 	computed: {
-		...mapGetters(["getUser"])
+		...mapGetters(["getUser","report"])
+	},
+	mounted() {
+		this.fetchUserProfile();
 	}
 };
 </script>

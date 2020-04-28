@@ -90,13 +90,9 @@ class AxiosBase {
             .then(response => {
               // if successfully received the data store it in store.state.APIData so that 'Downloads' component can grab the
               // data from it and display to the client.
-              console.log("Success getting the Data");
               store.state.APIData = response.data;
             })
             .catch(err => {
-              console.log(
-                "Got the new access token but error while trying to fetch data from the API using it"
-              );
               return Promise.reject(err);
             });
         })
@@ -131,13 +127,9 @@ getAPI.interceptors.response.use(undefined, function(err) {
           .then(response => {
             // if successfully received the data store it in store.state.APIData so that 'Downloads' component can grab the
             // data from it and display to the client.
-            console.log("Success getting the Data");
             store.state.APIData = response.data;
           })
           .catch(err => {
-            console.log(
-              "Got the new access token but error while trying to fetch data from the API using it"
-            );
             return Promise.reject(err);
           });
       })

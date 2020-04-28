@@ -36,6 +36,8 @@ router.register(r'inv-items', views.InvItemViewSet)
 router.register(r'item-master-files', views.ItemMasterFileViewSet)
 router.register(r'items-masters', views.ItemMasterViewSet)
 
+router.register(r'reports', views.ReportViewSet)
+
 urlpatterns = [
     path('bom-files/<int:file_id>/bom-items', file_bom_items, name='file-bom-items'),
     path('mast-files/<int:file_id>/mast-items', file_mast_items, name='file-mast-items'),

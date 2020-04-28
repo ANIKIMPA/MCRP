@@ -100,7 +100,7 @@ nav.bg-nav {
     position: absolute;
     height: 100%;
     width: 100%;
-    background: #bbc2ca;
+    background: #f0f0f0;
   }
 
   .main-outer {
@@ -108,7 +108,7 @@ nav.bg-nav {
     position: absolute;
     min-height: 100%;
     width: 100%;
-    background: #bbc2ca;
+    background: #f0f0f0;
   }
   
   .middle {

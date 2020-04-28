@@ -69,7 +69,7 @@ const routes = [
     }
   },
   {
-    path: '/final-report',
+    path: '/final-report/:report',
     name: 'final_report',
     component: FinalReport,
     meta: {

@@ -44,12 +44,6 @@ export default {
         return this.pairsHelper(arr, idx - 1, pairs)
       }
     },
-
-    main() {
-      let numbers = [19, 23, 26, 12, 6, 2, 30, 3, 7, 0, 1]
-
-      console.log(this.pairs(numbers, numbers.length - 1))
-    }
   },
   mounted() {
     this.main();

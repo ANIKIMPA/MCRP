@@ -26,7 +26,6 @@ export default {
   },
   watch: {
     getInfo() {
-      console.log(this.$refs.toast.$slots.default[0].text = this.getInfo)
       this.$bvToast.show("saved-toast");
     }
   },

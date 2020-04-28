@@ -1,8 +1,8 @@
 <template>
   <div>
-    <li @click="openModal">BOM Files</li>
-    <b-modal id="bom-file-list" v-model="modalOpenned" title="Bill of Material Files" hide-footer>
-      <p class="mb-2">Select BOM File:</p>
+    <li @click="openModal">Reports</li>
+    <b-modal id="report-list" v-model="modalOpenned" title="Report Files" hide-footer>
+      <p class="mb-2">Select Report:</p>
 
       <b-list-group class="overflow-auto mh-300">
         <b-list-group-item v-if="loading" class="text-center">
@@ -10,19 +10,19 @@
         </b-list-group-item>
         <b-list-group-item
           button
-          v-for="file in allBomFiles"
-          @click="openBom(file)"
-          :key="file.id"
+          v-for="report in allReports"
+          @click="openReport(report)"
+          :key="report.id"
           class="d-flex justify-content-between"
         >
           <span style="width: 50%">
             <i class="fas fa-file-alt"></i>
-            {{ file.title }}
+            {{ report.title }}
           </span>
-          <small style="font-style: italic;">{{ file.created_date | formatDate }}</small>
+          <small style="font-style: italic;">{{ report.created_date | formatDate }}</small>
           <a
             href="#"
-            @click.stop.prevent="deleteFile(file)"
+            @click.stop.prevent="deleteFile(report)"
             class="text-danger px-1"
             style="text-align:right;"
           >
@@ -38,7 +38,7 @@
 import moment from "moment";
 import { mapActions, mapGetters } from "vuex";
 export default {
-  name: "BomfileList",
+  name: "SelectReport",
   data() {
     return {
       modalOpenned: false,
@@ -51,33 +51,33 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["fetchAllBomFiles", "deleteBomFile"]),
-    openBom(file) {
+    ...mapActions(["fetchAllReports", "deleteReport"]),
+    openReport(report) {
       this.$router.push({
-        name: "bill_of_material",
+        name: "final_report",
         params: {
-          file: file.id
+          report: report.id
         }
       });
-      this.$bvModal.hide("bom-file-list");
+      this.$bvModal.hide("report-list");
     },
     openModal() {
       this.modalOpenned = true;
-      this.fetchAllBomFiles()
+      this.fetchAllReports()
       .then(() => {
         this.loading = false;
       });
     },
-    deleteFile(file) {
-			if (this.bomFile.id === file.id) {
-				this.$router.push("/");
-			}
-      file.removed = true;
-      this.deleteBomFile(file);
+    deleteFile(report) {
+        if (this.report.id === report.id) {
+            this.$router.push("/");
+        }
+        report.removed = true;
+        this.deleteReport(report);
     }
   },
   computed: {
-    ...mapGetters(["allBomFiles", "bomFile"])
+    ...mapGetters(["allReports", "report"])
   }
 };
 </script>

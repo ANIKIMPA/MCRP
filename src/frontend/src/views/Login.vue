@@ -64,7 +64,6 @@ export default {
 					this.fetchUserProfile();
 				})
 				.catch(error => {
-					console.log(error)
 					this.form.password = "";
 					this.errors.detail = "Please correct the error below.";
 					this.errors = error;

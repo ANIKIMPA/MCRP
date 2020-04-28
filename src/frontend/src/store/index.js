@@ -9,6 +9,7 @@ import invFiles from "./modules/inv_files";
 import invItems from "./modules/inv_items";
 import itemMasterFiles from "./modules/item_master_files";
 import itemsMasters from "./modules/items_masters";
+import reports from "./modules/report";
 import token from "./modules/token";
 import error from "./modules/error";
 
@@ -26,6 +27,7 @@ export default new Vuex.Store({
     invItems,
     itemMasterFiles,
     itemsMasters,
+    reports,
     token,
     error
   }

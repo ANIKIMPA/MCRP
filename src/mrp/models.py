@@ -160,3 +160,65 @@ class ItemMaster(models.Model):
         return f"File: {self.file}, Part Number: {self.part_number}"
 
 
+class Report(models.Model):
+    title = models.CharField(max_length=50, default="Untitled Report")
+    owner = models.ForeignKey(Usuario, related_name='reports', on_delete=models.CASCADE)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    removed = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-created_date', 'title']
+        verbose_name = 'Report'
+        verbose_name_plural = 'Reports'
+
+    def __str__(self):
+        return self.title
+
+
+class ReportItem(models.Model):
+    LOT_SIZE_CHOICES = [
+        ('LFL', 'LFL'), ('FP', 'FP'), ('FQ', 'FQ'), ('EOQ', 'EOQ')
+    ]
+    part_number = models.CharField(max_length=12)
+    yield_percent = models.DecimalField(default=0, max_digits=4, decimal_places=3, validators=[MaxValueValidator(1), MinValueValidator(0)])
+    lead_time = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    order_cost = models.DecimalField(default=0, max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    parent = models.CharField(max_length=12, blank=True, null=True)
+    carrying_cost = models.DecimalField(default=0, max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+    qty = models.PositiveIntegerField(default=1, validators=[MinValueValidator(0)])
+    lot_size = models.CharField(max_length=5, choices=LOT_SIZE_CHOICES, default="LFL")
+    safe_stock = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    factor = models.CharField(max_length=30, null=True, blank=True)
+    on_hand = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    report = models.ForeignKey(Report, related_name='items', on_delete=models.CASCADE)
+    order = models.DecimalField(default=0, max_digits=10, decimal_places=2)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+    created_date = models.DateTimeField(default=datetime.now)
+    removed = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['report', 'order']
+        verbose_name = 'ReportItem'
+        verbose_name_plural = 'ReportItems'
+
+    def __str__(self):
+        return f"Report: {self.report}, Part Number: {self.part_number}"
+
+class ReportPeriod(models.Model):
+    period = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
+    gross_requirement = models.IntegerField(default=0)
+    receipt = models.IntegerField(default=0)
+    on_hand = models.IntegerField(default=0)
+    net_requirement = models.IntegerField(default=0)
+    item = models.ForeignKey(ReportItem, related_name='periods', on_delete=models.CASCADE)
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+    created_date = models.DateTimeField(default=datetime.now)
+
+    class Meta:
+        ordering = ['item', 'period']
+        verbose_name = 'ReportPeriod'
+        verbose_name_plural = 'ReportPeriods'
+
+    def __str__(self):
+        return f"Item: {self.item}, Period: {self.period}"

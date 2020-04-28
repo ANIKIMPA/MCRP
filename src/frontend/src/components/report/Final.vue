@@ -1,13 +1,13 @@
 <template>
 	<div class="row justify-content-between no-gutters" v-if="isValidData">
 
-		<table class="col-lg-5half mb-4" v-for="(item, idx) in data" :key="idx">
+		<table class="col-lg-5half mb-5 shadow" v-for="(item, idx) in data" :key="idx">
 			<tr>
-				<td width="22%" class="border-dark bg-azulito">Item Number</td>
+				<td width="20%" class="border-dark bg-azulito">Part Number</td>
 				<td width="22%" class="border-dark">{{ item.part_number }}</td>
-				<td width="12%" class="border-dark empty-cell">&nbsp;</td>
-				<td width="22%" class="border-dark bg-azulito">Yield (%)</td>
-				<td width="22%" class="border-dark">{{ item.yield_percent | percentage }}</td>
+				<td width="18%" class="border-dark empty-cell">&nbsp;</td>
+				<td width="20%" class="border-dark bg-azulito">Yield (%)</td>
+				<td width="20%" class="border-dark">{{ item.yield_percent | percentage }}</td>
 			</tr>
 			<tr>
 				<td class="border-dark bg-azulito">Lead Time</td>
@@ -41,7 +41,7 @@
 				<td class="border-dark empty-cell">&nbsp;</td>
 				<td class="border-dark empty-cell">&nbsp;</td>
 				<td class="border-dark empty-cell">&nbsp;</td>
-				<td class="border-dark bg-azulito">On hand</td>
+				<td class="border-dark bg-azulito">On Hand</td>
 				<td class="border-dark empty-cell">&nbsp;</td>
 			</tr>
 			<tr>
@@ -58,12 +58,31 @@
 				<td class="border-dark">{{ period.on_hand }}</td>
 				<td class="border-dark">{{ period.net_requirement }}</td>
 			</tr>
+			<tbody>
+				<tr>
+					<td colspan="5" class="border-dark empty-cell">&nbsp;</td>
+				</tr>
+				<tr>
+					<th class="border-dark bg-azulito">Total Inventory</th>
+					<th class="border-dark bg-azulito">Average Inventory</th>
+					<th class="border-dark bg-azulito">Hauling Cost</th>
+					<th class="border-dark bg-azulito">Order Cost</th>
+					<th class="border-dark bg-azulito">Total Cost</th>
+				</tr>
+				<tr>
+					<td class="border-dark">{{ item.totalInventory }}</td>
+					<td class="border-dark">{{ item.averageInventory }}</td>
+					<td class="border-dark">{{ item.haulingCost | dollarFormat }}</td>
+					<td class="border-dark">{{ item.orderCost | dollarFormat }}</td>
+					<td class="border-dark">{{ item.totalCost | dollarFormat }}</td>
+				</tr>
+			</tbody>
 		</table>
 	</div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex"
+import { mapGetters, mapMutations, mapActions } from "vuex"
 
 export default {
 	name: "FinalReport",
@@ -74,10 +93,11 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(["getAllBomItems", "getAllInvItems", "getAllMastItems", "getAllItemsMasters"])
+		...mapGetters(["getAllBomItems", "getAllInvItems", "getAllMastItems", "getAllItemsMasters", "report"])
 	},
 	methods: {
-		...mapMutations(["throwError"]),
+		...mapActions(["fetchReport"]),
+		...mapMutations(["throwError", "setReportItems"]),
 		periodsData: function(index) {
 			let items = []
 
@@ -125,6 +145,50 @@ export default {
 			return items
 		},
 
+		calculateTotal() {
+			this.data.forEach((item) => {
+				item.totalInventory = this.totalInventory(item);
+				item.averageInventory = this.averageInventory(item);
+				item.haulingCost = this.haulingCost(item);
+				item.orderCost = this.orderCost(item)
+				item.totalCost = this.totalCost(item);
+			})
+		},
+
+		totalInventory(item) {
+			let allOnHands = item.periods.map((period) => period.on_hand)
+			let sum = 0
+			allOnHands.forEach((value) => {
+				sum += value;
+			})
+
+			return sum;
+		},
+
+		averageInventory(item) {
+			return item.totalInventory/item.periods.length
+		},
+
+		haulingCost(item) {
+			return item.averageInventory * item.carrying_cost;
+		},
+
+		orderCost(item) {
+			let count = 0
+
+			item.periods.map((period) => period.net_requirement).forEach((value) => {
+				if(value > 0) {
+					count++
+				}
+			})
+
+			return count * item.order_cost;
+		},
+
+		totalCost(item) {
+			return item.haulingCost + item.orderCost
+		},
+
 		dataFilesMatch() {
 			if(this.getAllBomItems.length <= 0 || this.getAllInvItems.length <= 0 ||
 				this.getAllItemsMasters.length <= 0 || this.getAllMastItems.length <= 0) {
@@ -166,7 +230,6 @@ export default {
 					return false
 				}
 			}
-
 			return true
 		}
 	},
@@ -179,7 +242,7 @@ export default {
 		}
 	},
 	mounted() {
-		if(this.dataFilesMatch()) {
+		if(isNaN(this.$route.params.report) && this.dataFilesMatch()) {
 			this.isValidData = true
 
 			for(let idx = 0; idx < this.getAllBomItems.length; idx++) {
@@ -195,9 +258,19 @@ export default {
 					factor: "",
 					safe_stock: this.getAllInvItems[idx].safe_stock,
 					on_hand: this.getAllInvItems[idx].on_hand,
+					order: idx,
 					periods: this.periodsData(idx)
 				})
 			}
+
+			this.calculateTotal();
+			this.setReportItems(this.data)
+		} else if(this.$route.params.report >= 1) {
+			this.fetchReport(this.$route.params.report).then(() => {
+				this.data = this.report.items;
+				this.isValidData = true;
+				this.calculateTotal();
+			});
 		}
 	}
 };

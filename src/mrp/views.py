@@ -1,6 +1,7 @@
 from datetime import datetime
 from .models import (
-    BomFile, BomItem, MastFile, MastItem, InvFile, InvItem, ItemMasterFile, ItemMaster
+    BomFile, BomItem, MastFile, MastItem, InvFile, InvItem, ItemMasterFile,
+    ItemMaster, Report, ReportItem, ReportPeriod
 )
 from .serializers import (
     BomFileSerializer,
@@ -11,9 +12,13 @@ from .serializers import (
     InvItemSerializer,
     ItemMasterFileSerializer,
     ItemMasterSerializer,
+    ReportSerializer,
+    ReportItemSerializer,
+    ReportPeriodSerializer
 )
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from .functions import current_user_files, create_file, current_user_items, items_in_file
 
@@ -155,7 +160,6 @@ class ItemMasterFileViewSet(viewsets.ModelViewSet):
     def create(self, request):
         return create_file(request, ItemMasterFileSerializer)
 
-
 class ItemMasterViewSet(viewsets.ModelViewSet):
     queryset = ItemMaster.objects.all()
     serializer_class = ItemMasterSerializer
@@ -190,3 +194,18 @@ class ItemMasterViewSet(viewsets.ModelViewSet):
         itemsMasters = ItemMaster.objects.filter(created_date=now)
         serializer = ItemMasterSerializer(itemsMasters, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class ReportViewSet(viewsets.ModelViewSet):
+    queryset = Report.objects.filter(removed=0)
+    serializer_class = ReportSerializer
+
+    def get_queryset(self):
+        return current_user_files(self.request.user, Report)
+
+    def create(self, request, *args, **kwargs):
+        serializer = ReportSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
