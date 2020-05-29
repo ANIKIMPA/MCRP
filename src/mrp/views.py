@@ -1,3 +1,4 @@
+# The view is where you declare the logic.
 from datetime import datetime
 from .models import (
     BomFile, BomItem, MastFile, MastItem, InvFile, InvItem, ItemMasterFile,

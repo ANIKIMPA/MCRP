@@ -51,8 +51,8 @@
 				<td class="border-dark">{{ item.on_hand }}</td>
 				<td class="border-dark bg-azulito">Net Requirement</td>
 			</tr>
-			<tr v-for="(period, i) in item.periods" :key="i">
-				<td class="border-dark">{{ i + 1 }}</td>
+			<tr v-for="period in item.periods" :key="period.period">
+				<td class="border-dark">{{ period.period }}</td>
 				<td class="border-dark">{{ period.gross_requirement }}</td>
 				<td class="border-dark">{{ period.receipt }}</td>
 				<td class="border-dark">{{ period.on_hand }}</td>
@@ -65,16 +65,33 @@
 				<tr>
 					<th class="border-dark bg-azulito">Total Inventory</th>
 					<th class="border-dark bg-azulito">Average Inventory</th>
-					<th class="border-dark bg-azulito">Hauling Cost</th>
+					<th class="border-dark bg-azulito">Carrying Cost</th>
 					<th class="border-dark bg-azulito">Order Cost</th>
 					<th class="border-dark bg-azulito">Total Cost</th>
 				</tr>
 				<tr>
 					<td class="border-dark">{{ item.totalInventory }}</td>
-					<td class="border-dark">{{ item.averageInventory }}</td>
-					<td class="border-dark">{{ item.haulingCost | dollarFormat }}</td>
+					<td class="border-dark">{{ item.averageInventory | round }}</td>
+					<td class="border-dark">{{ item.carryingCost | dollarFormat }}</td>
 					<td class="border-dark">{{ item.orderCost | dollarFormat }}</td>
 					<td class="border-dark">{{ item.totalCost | dollarFormat }}</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table class="mx-auto w-50 mb-5 shadow">
+			<thead>
+				<tr>
+					<th width="30%" class="border-dark bg-azulito">Total Carrying Cost</th>
+					<th width="30%" class="border-dark bg-azulito">Total Order Cost</th>
+					<th width="30%" class="border-dark bg-azulito">Total Cost</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="border-dark">{{ totalCarryingCost | dollarFormat }}</td>
+					<td class="border-dark">{{ totalOrderCost | dollarFormat }}</td>
+					<td class="border-dark">{{ finalTotalCost | dollarFormat }}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -93,7 +110,16 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(["getAllBomItems", "getAllInvItems", "getAllMastItems", "getAllItemsMasters", "report"])
+		...mapGetters(["getAllBomItems", "getAllInvItems", "getAllMastItems", "getAllItemsMasters", "report"]),
+		totalCarryingCost() {
+			return this.data.map((item) => item.carryingCost).reduce((total, value) => total + value);
+		},
+		totalOrderCost() {
+			return this.data.map((item) => item.orderCost).reduce((total, value) => total + value);
+		},
+		finalTotalCost() {
+			return this.totalCarryingCost + this.totalOrderCost;
+		}
 	},
 	methods: {
 		...mapActions(["fetchReport"]),
@@ -123,18 +149,19 @@ export default {
 			for(let idx=0; idx<gross_requirements.length; idx++) {
 				let idxAfter = idx + this.getAllItemsMasters[index].lead_time;
 				
-				net_requirements[idx] = (gross_requirements[idxAfter] ? gross_requirements[idxAfter] : 0) + this.getAllInvItems[index].safe_stock - (on_hands[idxAfter - 1]);
+				net_requirements[idx] = (gross_requirements[idxAfter] ? gross_requirements[idxAfter] : 0) + this.getAllInvItems[index].safe_stock - (on_hands[idxAfter - 1]) - (prev_receipts[idxAfter] ? prev_receipts[idxAfter] : 0);
 				receipts[idxAfter] = (prev_receipts[idxAfter] ? prev_receipts[idxAfter] : 0) + net_requirements[idx];
 				on_hands[idxAfter] = on_hands[idxAfter - 1] + receipts[idxAfter] - (gross_requirements[idxAfter] ? gross_requirements[idxAfter] : 0);
 
 				// Ajusting net requirement
-				if(on_hands[idxAfter] > this.getAllInvItems[index].safe_stock || net_requirements[idx] < 0) {					
+				if(on_hands[idxAfter] > this.getAllInvItems[index].safe_stock || net_requirements[idx] < 0) {
 					net_requirements[idx] = 0
 					receipts[idxAfter] = (prev_receipts[idxAfter] ? prev_receipts[idxAfter] : 0);
 					on_hands[idxAfter] = on_hands[idxAfter - 1] + receipts[idxAfter] - (gross_requirements[idxAfter] ? gross_requirements[idxAfter] : 0);
 				}
 
 				items.push({
+					period: idx + 1,
 					gross_requirement: gross_requirements[idx],
 					receipt: receipts[idx],
 					on_hand: on_hands[idx],
@@ -149,7 +176,7 @@ export default {
 			this.data.forEach((item) => {
 				item.totalInventory = this.totalInventory(item);
 				item.averageInventory = this.averageInventory(item);
-				item.haulingCost = this.haulingCost(item);
+				item.carryingCost = this.carryingCost(item);
 				item.orderCost = this.orderCost(item)
 				item.totalCost = this.totalCost(item);
 			})
@@ -159,7 +186,8 @@ export default {
 			let allOnHands = item.periods.map((period) => period.on_hand)
 			let sum = 0
 			allOnHands.forEach((value) => {
-				sum += value;
+				if(value > 0)
+					sum += value;
 			})
 
 			return sum;
@@ -169,7 +197,7 @@ export default {
 			return item.totalInventory/item.periods.length
 		},
 
-		haulingCost(item) {
+		carryingCost(item) {
 			return item.averageInventory * item.carrying_cost;
 		},
 
@@ -186,7 +214,7 @@ export default {
 		},
 
 		totalCost(item) {
-			return item.haulingCost + item.orderCost
+			return item.carryingCost + item.orderCost
 		},
 
 		dataFilesMatch() {
@@ -238,11 +266,27 @@ export default {
 			return parseFloat(value * 100).toFixed(1) + "%";
 		},
 		dollarFormat(value) {
-			return "$" + parseFloat(value).toFixed(2);
+			let format = ""
+			if(value < 0) {
+				value = value * -1
+				format = `(${(value).toLocaleString('en-US', {
+							style: 'currency',
+							currency: 'USD',
+						})})`
+			} else {
+				format = (value).toLocaleString('en-US', {
+							style: 'currency',
+							currency: 'USD',
+						});
+			}
+			return format
+		},
+		round(value) {
+			return Math.round((value + Number.EPSILON) * 100) / 100
 		}
 	},
 	mounted() {
-		if(isNaN(this.$route.params.report) && this.dataFilesMatch()) {
+		if(this.$route.params.report === -1 && this.dataFilesMatch()) {
 			this.isValidData = true
 
 			for(let idx = 0; idx < this.getAllBomItems.length; idx++) {

@@ -26,8 +26,7 @@ class FileViewSet(viewsets.ModelViewSet):
     """
     queryset = File.objects.all()
     serializer_class = FileSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     # @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
     # def highlight(self, request, *args, **kwargs):

@@ -13,7 +13,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UsuarioSerializer
     permission_classes = [permissions.IsAdminUser]
 
-class UserProfileView(generics.RetrieveAPIView):
+class UserProfileView(generics.RetrieveUpdateAPIView):
 
     def get(self, request):
         try:
@@ -22,18 +22,26 @@ class UserProfileView(generics.RetrieveAPIView):
             response = {
                     'first_name': user_profile.first_name,
                     'last_name': user_profile.last_name,
-                    'gender': user_profile.gender
+                    'email': user_profile.email
                 }
 
         except Exception as e:
             status_code = status.HTTP_400_BAD_REQUEST
             response = {
-                'success': 'false',
-                'status code': status.HTTP_400_BAD_REQUEST,
-                'message': 'User does not exists',
-                'error': str(e)
+                    'success': 'false',
+                    'status code': status.HTTP_400_BAD_REQUEST,
+                    'message': 'User does not exists',
+                    'error': str(e)
                 }
         return Response(response, status=status_code)
+    
+    def put(self, request, pk=-1):
+        user = request.user
+        serializer = UsuarioSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserRegistrationView(APIView):

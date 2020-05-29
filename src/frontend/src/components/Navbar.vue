@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<b-navbar toggleable="lg" type="dark" variant="dark" class="shadow-sm">
-			<b-navbar-brand href="#" @click="goHome">STORM 5.0</b-navbar-brand>
+			<b-navbar-brand href="#" @click="goHome" class="p-0"><img src="../assets/img/logo_mcrp_transparent.png" width="50px" alt="LOGO"> MCRP</b-navbar-brand>
 			<b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
 			<b-collapse id="nav-collapse" is-nav>
@@ -17,9 +17,10 @@
 						<template v-slot:button-content>
 							<em><i class="fas fa-user-circle"></i></em>
 						</template>
-						<b-dropdown-item disabled>{{ getUser.first_name }} {{ getUser.last_name }}</b-dropdown-item>
+						<b-dropdown-item disabled>Hi, {{ getUser.first_name }} {{ getUser.last_name }}</b-dropdown-item>
 						<b-dropdown-divider></b-dropdown-divider>
-						<b-dropdown-item>Profile</b-dropdown-item>
+						<b-dropdown-item @click="showProfile">My Profile</b-dropdown-item>
+						<b-dropdown-item @click="showProfile">Change Password</b-dropdown-item>
 						<b-dropdown-item @click.prevent="logOut">Sign Out</b-dropdown-item>
 					</b-nav-item-dropdown>
 				</b-navbar-nav>
@@ -36,7 +37,6 @@
 								<MastFilesList />
 								<InvFilesList />
 								<ItemMasterFilesList />
-								<SelectReport />
 							</ul>
 						</li>
 						<li @click="saveReport">Save</li>
@@ -46,15 +46,14 @@
 						<li @click="newWindow">New Window</li>
 					</ul>
 				</li>
-				<li class="parent"><a href="#">Edit <i class="fas fa-caret-down"></i></a>
-					<ul class="child">
-						<li>Copy</li>
-						<li>Paste</li>
-					</ul>
-				</li>
 				<li class="parent"><a href="#">Report <i class="fas fa-caret-down"></i></a>
 					<ul class="child">
 						<ReportSetup />
+						<li class="parent">Open... <span class="expand">»</span>
+							<ul class="child">
+								<SelectReport />
+							</ul>
+						</li>
 						<li v-if="$route.name === 'final_report'">
 							<a href="#" @click.prevent="exportExcel">Export to Excel</a>
 						</li>
@@ -127,7 +126,9 @@ export default {
 		},
 		logOut() {
 			this.logoutUser().then(() => {
-				this.$router.push("login");
+				this.$router.push({
+					name: "login"
+				});
 			});
 		},
 		saveReport() {
@@ -138,8 +139,16 @@ export default {
 			}
 		},
 		exportExcel() {
-			if(this.report.id && this.report.id >= 1)
+			if(this.report.id && this.report.id >= 1) {
 				window.location.href = `http://localhost:8000/export/report-xls/${this.report.id}`;
+			} else {
+				this.saveReport();
+			}
+		},
+		showProfile() {
+			this.$router.push({
+				name: "profile"
+			});
 		}
 	},
 	computed: {

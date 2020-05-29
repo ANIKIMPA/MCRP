@@ -9,8 +9,13 @@ const functions = {
   },
 
   handleError(error) {
-    for (let value of Object.values(error.response.data)) {
-      store.commit("throwError", value);
+    console.log(error.response);
+    if(error.response.status === 401) {
+      store.commit("throwError", "There was an error on the server");
+    } else {
+      for (let value of Object.values(error.response.data)) {
+        store.commit("throwError", value);
+      }
     }
   },
 

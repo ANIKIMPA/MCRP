@@ -4,7 +4,7 @@ from .models import (
     ItemMasterFile, ItemMaster, Report, ReportItem, ReportPeriod
 )
 
-
+# Serializer for BomFile.
 class BomFileSerializer(serializers.ModelSerializer):
     bom_items = serializers.PrimaryKeyRelatedField(many=True, queryset=BomItem.objects.all(), required=False)
     owner = serializers.ReadOnlyField(source='owner.email')
@@ -13,13 +13,13 @@ class BomFileSerializer(serializers.ModelSerializer):
         model = BomFile
         fields = ('id', 'owner', 'title', 'number_of_items', 'bom_items', 'created_date', 'removed')
 
-
+# Serializer for BomItem.
 class BomItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = BomItem
         fields = ('id', 'part_number', 'tipo', 'parent', 'qty', 'file')
 
-
+# Serializer for MastFile.
 class MastFileSerializer(serializers.ModelSerializer):
     mast_items = serializers.PrimaryKeyRelatedField(many=True, queryset=MastItem.objects.all(), required=False)
     owner = serializers.ReadOnlyField(source='owner.email')
@@ -29,12 +29,13 @@ class MastFileSerializer(serializers.ModelSerializer):
         fields = ('id', 'owner', 'title', 'mast_items', 'created_date',
                   'number_of_items', 'planning_horizon_length', 'number_time_buckets', 'removed')
 
-
+# Serializer for MastItem.
 class MastItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = MastItem
         fields = ('id', 'part_number', 'periods', 'order', 'file')
 
+# Serializer for InvFile.
 class InvFileSerializer(serializers.ModelSerializer):
     inv_items = serializers.PrimaryKeyRelatedField(many=True, queryset=InvItem.objects.all(), required=False)
     owner = serializers.ReadOnlyField(source='owner.email')
@@ -44,12 +45,13 @@ class InvFileSerializer(serializers.ModelSerializer):
         fields = ('id', 'owner', 'title', 'inv_items', 'created_date',
                   'number_of_items', 'lead_time', 'number_of_periods', 'annual_carrying', 'removed')
 
-
+# Serializer for InvItem.
 class InvItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = InvItem
         fields = ('id', 'part_number', 'safe_stock', 'on_hand', 'past_due', 'receipts', 'order', 'file')
 
+# Serializer for ItemMasterFile.
 class ItemMasterFileSerializer(serializers.ModelSerializer):
     items_masters = serializers.PrimaryKeyRelatedField(many=True, queryset=ItemMaster.objects.all(), required=False)
     owner = serializers.ReadOnlyField(source='owner.email')
@@ -58,14 +60,14 @@ class ItemMasterFileSerializer(serializers.ModelSerializer):
         model = ItemMasterFile
         fields = ('id', 'owner', 'title', 'items_masters', 'created_date', 'number_of_items', 'removed')
 
-
+# Serializer for ItemMaster.
 class ItemMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model = ItemMaster
         fields = ('id', 'part_number', 'clase', 'lot_size', 'multiple', 'lead_time', 'yield_percent',
             'unit_value', 'order_cost', 'carrying_cost', 'demand', 'order', 'file')
 
-
+# Serializer for ReportPeriod.
 class ReportPeriodSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -73,7 +75,7 @@ class ReportPeriodSerializer(serializers.ModelSerializer):
         fields = ('period', 'gross_requirement', 'receipt', 'on_hand',
             'net_requirement')
 
-
+# Serializer for ReportItem.
 class ReportItemSerializer(serializers.ModelSerializer):
     periods = ReportPeriodSerializer(many=True)
     
@@ -92,6 +94,7 @@ class ReportItemSerializer(serializers.ModelSerializer):
         periods = serializer.create(item_validated_data)
         return item
 
+# Serializer for Report.
 class ReportSerializer(serializers.ModelSerializer):
     items = ReportItemSerializer(many=True)
 
@@ -107,4 +110,3 @@ class ReportSerializer(serializers.ModelSerializer):
             each['report'] = report
         items = reportSerializer.create(report_validated_data)
         return report
-

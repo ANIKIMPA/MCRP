@@ -66,6 +66,14 @@ const actions = {
       commit("setUser", response.data);
     }).catch(() => {
     })
+  },
+
+  async updateUserProfile({commit}, user) {
+    return await AxiosBase.put(`profile/`, user).then(
+      response => {
+        commit("setUser", response.data);
+      }
+    );
   }
 };
 

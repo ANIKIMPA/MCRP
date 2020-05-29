@@ -7,14 +7,14 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
-        fields = ['first_name', 'last_name', 'gender', 'is_staff', 'is_active']
+        fields = ['first_name', 'last_name', 'email']
 
 
 class UsuarioRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Usuario
-        fields = ['email', 'password', 'first_name', 'last_name', 'gender']
+        fields = ['email', 'password', 'first_name', 'last_name']
         extra_kwargs = {'password': {'write_only': True}}
 
         def create(self, validated_data):
@@ -22,8 +22,7 @@ class UsuarioRegistrationSerializer(serializers.ModelSerializer):
                 'email': validated_data['email'],
                 'password': validated_data['password'],
                 'first_name': validated_data['first_name'],
-                'last_name': validated_data['last_name'],
-                'gender': validated_data['gender']
+                'last_name': validated_data['last_name']
             })
             return user
 

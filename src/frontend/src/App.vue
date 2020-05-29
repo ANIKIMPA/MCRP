@@ -1,4 +1,5 @@
 <template>
+  <!-- Main component -->
 	<div id="app" class="main-outer">
 		<Navbar v-if="$route.name != 'login' && $route.name != 'register'"/>
 		<router-view :key="$route.fullPath" />
@@ -7,7 +8,7 @@
     <b-toast ref="toast" id="saved-toast" variant="success" solid toaster="b-toaster-bottom-right">
       <template v-slot:toast-title>
         <div class="d-flex flex-grow-1 align-items-baseline">
-          <strong class="mr-auto">Storm 5.0</strong>
+          <strong class="mr-auto">MCRP</strong>
         </div>
       </template>
       Saved successfully!

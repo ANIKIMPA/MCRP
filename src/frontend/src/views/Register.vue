@@ -42,18 +42,6 @@
 							</div>
 						</b-form-group>
 
-						<b-form-group label-for="gender">
-							<ul>
-								<li v-for="(error, i) in errors.gender" :key="i" class="errorlist">{{ error }}</li>
-							</ul>
-							<div class="input-group">
-								<div class="input-group-append">
-									<span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
-								</div>
-								<b-form-select id="gender" v-model="form.gender" :options="choices" required></b-form-select>
-							</div>
-						</b-form-group>
-
 						<b-form-group label-for="password1" description="Your password can’t be too similar to your other personal information.">
 							<ul>
 								<li v-for="(error, i) in errors.password1" :key="i" class="errorlist">{{ error }}</li>
@@ -74,7 +62,7 @@
 								<div class="input-group-append">
 									<span class="input-group-text"><i class="fas fa-key"></i></span>
 								</div>
-								<b-form-input id="password2" v-model="form.password2" type="password" placeholder="Password confirmation..." required></b-form-input>
+								<b-form-input id="password2" v-model="form.password2" type="password" placeholder="Re-Enter Password..." required></b-form-input>
 							</div>
 						</b-form-group>
 
@@ -93,29 +81,6 @@
 			</div>
 		</div>
 	</div>
-	<!-- <b-container>
-		<h1>Register Page</h1>
-
-		<b-form @submit.prevent="onSubmit" @reset.prevent="onReset" v-if="show">
-			<b-form-group label="Email address:" label-for="input-1" description="We'll never share your email with anyone else.">
-				<p v-for="(error, i) in errors.email" :key="i" class="text-danger">{{ error }}</p>
-				<b-form-input id="input-1" v-model="form.email" type="email" required placeholder="Enter email"></b-form-input>
-			</b-form-group>
-
-			<b-form-group label="Password:" label-for="input-2">
-				<p v-for="(error, i) in errors.password1" :key="i" class="text-danger">{{ error }}</p>
-				<b-form-input id="input-2" v-model="form.password1" type="password" required placeholder="Enter password"></b-form-input>
-			</b-form-group>
-
-			<b-form-group label="Password confirmation:" label-for="input-3">
-				<p v-for="(error, i) in errors.password2" :key="i" class="text-danger">{{ error }}</p>
-				<b-form-input id="input-3" v-model="form.password2" type="password" required></b-form-input>
-			</b-form-group>
-
-			<b-button type="submit" variant="primary">Submit</b-button>
-			<b-button type="reset" variant="danger">Reset</b-button>
-		</b-form>
-	</b-container> -->
 </template>
 
 <script>
@@ -130,14 +95,8 @@ export default {
 				password1: "",
 				password2: "",
 				first_name: "",
-				last_name: "",
-				gender: null
+				last_name: ""
 			},
-			choices: [
-				{ value: null, text: "Gender...", disabled: true },
-				{ value: "M", text: "Male" },
-				{ value: "F", text: "Female" }
-			],
 			errors: {},
 			show: true
 		};

@@ -1,4 +1,4 @@
-#!c:\users\niova\documents\python\django\storm_5.0\scripts\python.exe
+#!c:\users\niova\documents\python\django\mcrp\scripts\python.exe
 from django.core import management
 
 if __name__ == "__main__":

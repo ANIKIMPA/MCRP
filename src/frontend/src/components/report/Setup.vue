@@ -91,7 +91,10 @@ export default {
     },
     openFinalReport() {
       this.$router.push({
-        name: "final_report"
+        name: "final_report",
+        params: {
+          report: -1
+        }
       });
       this.$bvModal.hide('report-setup')
     }

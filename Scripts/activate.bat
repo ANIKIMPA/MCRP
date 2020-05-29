@@ -1,6 +1,6 @@
 @echo off
 
-set "VIRTUAL_ENV=C:\Users\niova\Documents\Python\Django\storm_5.0"
+set "VIRTUAL_ENV=C:\Users\niova\Documents\Python\Django\mcrp"
 
 if defined _OLD_VIRTUAL_PROMPT (
     set "PROMPT=%_OLD_VIRTUAL_PROMPT%"
@@ -13,7 +13,7 @@ if defined _OLD_VIRTUAL_PROMPT (
     )
 )
 if not defined VIRTUAL_ENV_DISABLE_PROMPT (
-    set "PROMPT=(storm_5.0) %PROMPT%"
+    set "PROMPT=(mcrp) %PROMPT%"
 )
 
 REM Don't use () to avoid problems with them in %PATH%

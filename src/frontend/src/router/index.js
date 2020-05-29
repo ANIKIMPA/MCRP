@@ -1,98 +1,108 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Login from '../views/Login.vue'
-import Register from '../views/Register.vue'
-import Home from '../views/Home.vue'
-import BillOfMaterial from '@/components/billOfMaterial/DataGrid'
-import MasterSchedule from '@/components/masterSchedule/DataGrid.vue'
-import InventoryStatus from '@/components/inventoryStatus/DataGrid.vue'
-import ItemMaster from '@/components/itemMaster/DataGrid.vue'
-import FinalReport from '@/components/report/Final.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Login from "../views/Login.vue";
+import Register from "../views/Register.vue";
+import Home from "../views/Home.vue";
+import BillOfMaterial from "@/components/billOfMaterial/DataGrid";
+import MasterSchedule from "@/components/masterSchedule/DataGrid.vue";
+import InventoryStatus from "@/components/inventoryStatus/DataGrid.vue";
+import ItemMaster from "@/components/itemMaster/DataGrid.vue";
+import FinalReport from "@/components/report/Final.vue";
+import Profile from "../views/Profile.vue";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/register',
-    name: 'register',
+    path: "/register",
+    name: "register",
     component: Register,
     meta: {
       requiresLogged: true
     }
   },
   {
-    path: '/login',
-    name: 'login',
+    path: "/login",
+    name: "login",
     component: Login,
     meta: {
       requiresLogged: true
     }
   },
   {
-    path: '/',
-    name: 'home',
+    path: "/",
+    name: "home",
     component: Home,
     meta: {
       requiresAuth: true
     }
   },
   {
-    path: '/bill-of-material/:file',
-    name: 'bill_of_material',
+    path: "/bill-of-material/:file",
+    name: "bill_of_material",
     component: BillOfMaterial,
     meta: {
       requiresAuth: true
     }
   },
   {
-    path: '/master-schedule/:file',
-    name: 'master_schedule',
+    path: "/master-schedule/:file",
+    name: "master_schedule",
     component: MasterSchedule,
     meta: {
       requiresAuth: true
     }
   },
   {
-    path: '/inventory-status/:file',
-    name: 'inventory_status',
+    path: "/inventory-status/:file",
+    name: "inventory_status",
     component: InventoryStatus,
     meta: {
       requiresAuth: true
     }
   },
   {
-    path: '/item-master/:file',
-    name: 'item_master',
+    path: "/item-master/:file",
+    name: "item_master",
     component: ItemMaster,
     meta: {
       requiresAuth: true
     }
   },
   {
-    path: '/final-report/:report',
-    name: 'final_report',
+    path: "/final-report/:report",
+    name: "final_report",
     component: FinalReport,
     meta: {
       requiresAuth: true
     }
   },
   {
-    path: '/about',
-    name: 'about',
+    path: "/profile",
+    name: "profile",
+    component: Profile,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/about",
+    name: "about",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/About.vue"),
     meta: {
       requiresAuth: true
     }
   }
-]
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes
-})
+});
 
-export default router
+export default router;

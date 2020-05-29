@@ -28,7 +28,7 @@ def _deactivate(args):
 _deactivate(["nondestructive"])
 aliases["deactivate"] = _deactivate
 
-$VIRTUAL_ENV = r"C:\Users\niova\Documents\Python\Django\storm_5.0"
+$VIRTUAL_ENV = r"C:\Users\niova\Documents\Python\Django\mcrp"
 
 $_OLD_VIRTUAL_PATH = $PATH
 $PATH = $PATH[:]

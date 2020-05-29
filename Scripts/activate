@@ -46,7 +46,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="$(if [ "$OSTYPE" "==" "cygwin" ]; then cygpath -u 'C:\Users\niova\Documents\Python\Django\storm_5.0'; else echo '/C/Users/niova/Documents/Python/Django/storm_5.0'; fi;)"
+VIRTUAL_ENV="$(if [ "$OSTYPE" "==" "cygwin" ]; then cygpath -u 'C:\Users\niova\Documents\Python\Django\mcrp'; else echo '/C/Users/niova/Documents/Python/Django/mcrp'; fi;)"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

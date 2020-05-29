@@ -42,6 +42,12 @@ export default {
 					this.setReportTitle(this.form.title);
 					this.createNewReport(this.report).then(() => {
 						this.$bvToast.show("saved-toast");
+						this.$router.push({
+							name: "final_report",
+							params: {
+								report: this.report.id
+							}
+						});
 					});
 				}
 			}

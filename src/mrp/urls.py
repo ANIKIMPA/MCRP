@@ -1,12 +1,3 @@
-# from rest_framework import routers
-# from .viewsets import FileViewSet, BomItemViewSet
-
-# router = routers.SimpleRouter()
-# router.register("files", FileViewSet)
-# router.register("files", BomItemViewSet)
-
-# urlpatterns = router.urls
-
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
@@ -38,6 +29,7 @@ router.register(r'items-masters', views.ItemMasterViewSet)
 
 router.register(r'reports', views.ReportViewSet)
 
+# Dynamic urls
 urlpatterns = [
     path('bom-files/<int:file_id>/bom-items', file_bom_items, name='file-bom-items'),
     path('mast-files/<int:file_id>/mast-items', file_mast_items, name='file-mast-items'),
