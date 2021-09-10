@@ -16,7 +16,7 @@ PyJWT==2.0.1
 pylint==2.6.0
 pytz==2020.5
 six==1.15.0
-sqlparse==0.4.1
+sqlparse==0.4.2
 toml==0.10.2
 virtualenv==20.4.1
 wrapt==1.12.1
