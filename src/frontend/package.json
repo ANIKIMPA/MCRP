@@ -15,7 +15,7 @@
     "axios": "^0.19.2",
     "bootstrap-vue": "^2.4.0",
     "core-js": "^3.4.4",
-    "handsontable": "^7.3.0",
+    "handsontable": "^10.0.0",
     "idle-vue": "^2.0.5",
     "moment": "^2.24.0",
     "vue": "^2.6.10",
